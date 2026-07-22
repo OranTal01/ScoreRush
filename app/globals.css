@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/**
+ * Design tokens as CSS custom properties, mirroring lib/design-tokens.ts
+ * (the canonical source — see that file's header comment). Keep values in
+ * sync with the Premium Fantasy Refined spec at
+ * docs/design-reference/premium-fantasy-refined/PREMIUM_FANTASY_REFINED_IMPLEMENTATION_SPEC.md.
+ */
+:root {
+  /* Colors */
+  --bg-page: #080b14;
+  --bg-elevated: #0e1320;
+  --surface-card: #151b2a;
+  --surface-card-2: #1b2233;
+  --surface-plum: #241d32;
+  --interactive: #5fa8d3;
+  --interactive-2: #7c83c9;
+  --gold: #d6b56e;
+  --silver: #aeb6c2;
+  --bronze: #c9a876;
+  --success: #4faf83;
+  --coral: #c87878;
+  --danger: #d85c6a;
+  --text-primary: #f2f4f8;
+  --text-secondary: #98a2b3;
+  --text-muted: #6b7688;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.1);
+  --overlay: rgba(8, 11, 20, 0.72);
+  --focus-ring: #5fa8d3;
+  --focus-ring-halo: rgba(95, 168, 211, 0.35);
+
+  /* Radii */
+  --radius-card: 22px;
+  --radius-card-hero: 24px;
+  --radius-button: 16px;
+  --radius-pill: 20px;
+  --radius-tile: 14px;
+  --radius-row: 12px;
+
+  /* Motion */
+  --motion-fast: 120ms;
+  --motion-normal: 220ms;
+  --motion-slow: 420ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-emphasis: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@theme inline {
+  --color-bg-page: var(--bg-page);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-surface-card: var(--surface-card);
+  --color-surface-card-2: var(--surface-card-2);
+  --color-surface-plum: var(--surface-plum);
+  --color-interactive: var(--interactive);
+  --color-interactive-2: var(--interactive-2);
+  --color-gold: var(--gold);
+  --color-silver: var(--silver);
+  --color-bronze: var(--bronze);
+  --color-success: var(--success);
+  --color-coral: var(--coral);
+  --color-danger: var(--danger);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+
+  --radius-card: var(--radius-card);
+  --radius-card-hero: var(--radius-card-hero);
+  --radius-button: var(--radius-button);
+  --radius-pill: var(--radius-pill);
+  --radius-tile: var(--radius-tile);
+  --radius-row: var(--radius-row);
+
+  --font-sans: var(--font-rubik);
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+/* LTR isolation utility for scores, dates/times, and Latin names inside RTL flow. */
+.ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+/* Tabular numerals for every changing number (points, scores, countdowns). */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
