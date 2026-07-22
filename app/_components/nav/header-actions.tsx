@@ -1,0 +1,27 @@
+import Link from "next/link";
+import { colors } from "@/lib/design-tokens";
+import { currentParticipant } from "@/lib/mock";
+import { Avatar } from "../ui";
+import { IconAdmin } from "../icons";
+
+/** Profile avatar + admin entry point (admins only) — shared by mobile header and desktop top bar. */
+export function HeaderActions() {
+  const isAdmin = currentParticipant.role === "tournament_admin";
+  return (
+    <div className="flex items-center gap-3">
+      {isAdmin && (
+        <Link
+          href="/admin"
+          aria-label="ניהול טורניר"
+          className="flex h-8 w-8 items-center justify-center rounded-full"
+          style={{ background: colors.surfaceCard2, color: colors.textSecondary }}
+        >
+          <IconAdmin width={17} height={17} aria-hidden />
+        </Link>
+      )}
+      <Link href="/profile" aria-label="פרופיל">
+        <Avatar initials={currentParticipant.avatarInitials} self size={32} />
+      </Link>
+    </div>
+  );
+}

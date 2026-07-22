@@ -1,18 +1,18 @@
 import { colors, typography } from "@/lib/design-tokens";
-import { RiseDemo } from "./_components/rise-demo";
+import { RiseDemo } from "../_components/rise-demo";
 
 const colorEntries = Object.entries(colors);
 
-export default function Home() {
+export default function TokensDebugPage() {
   return (
     <main className="mx-auto flex w-full max-w-[480px] flex-col gap-6 px-4 py-10">
       <header className="flex flex-col gap-1">
         <h1 className="text-2xl font-extrabold text-[var(--text-primary)]">
-          ScoreRush
+          ScoreRush — Design tokens
         </h1>
         <p className="text-sm font-medium text-[var(--text-secondary)]">
-          שלב 1 — יסודות הכלים ומערכת העיצוב. זהו שלד לבדיקה בלבד; המסכים
-          האמיתיים נבנים בשלב 2.
+          דף פנימי לבדיקת מערכת העיצוב (לא חלק מהאפליקציה). המסכים האמיתיים
+          נמצאים תחת הניווט הראשי.
         </p>
       </header>
 

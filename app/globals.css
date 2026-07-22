@@ -38,6 +38,18 @@
   --radius-tile: 14px;
   --radius-row: 12px;
 
+  /* Spacing (mirrors lib/design-tokens.ts `spacing`) */
+  --spacing-page-padding-x: 16px;
+  --spacing-page-padding-bottom: 90px;
+  --spacing-card-padding: 16px;
+  --spacing-card-padding-hero: 18px;
+  --spacing-card-padding-compact: 10px;
+  --spacing-inter-card-gap: 14px;
+  --spacing-bottom-nav-height: 56px;
+  --spacing-desktop-gutter: 18px;
+  --spacing-desktop-top-bar-height: 72px;
+  --spacing-desktop-max-width: 1320px;
+
   /* Motion */
   --motion-fast: 120ms;
   --motion-normal: 220ms;
