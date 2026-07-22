@@ -71,7 +71,12 @@ export function Avatar({
   return (
     <div
       className="flex shrink-0 items-center justify-center p-[2px]"
-      style={{ width: size, height: size, borderRadius: "50%", background: ring }}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background: ring,
+      }}
     >
       <div
         className="flex h-full w-full items-center justify-center text-[var(--text-primary)]"
@@ -88,7 +93,8 @@ export function Avatar({
   );
 }
 
-export type StatusTone = "success" | "danger" | "interactive" | "muted" | "gold";
+export type StatusTone =
+  "success" | "danger" | "interactive" | "muted" | "gold";
 
 const TONE_STYLES: Record<StatusTone, { bg: string; fg: string }> = {
   success: { bg: "rgba(79,175,131,0.16)", fg: colors.success },
@@ -127,7 +133,8 @@ export function Pill({
 }
 
 export function RankBadge({ rank }: { rank: number }) {
-  const tone: StatusTone = rank === 1 ? "gold" : rank <= 3 ? "interactive" : "muted";
+  const tone: StatusTone =
+    rank === 1 ? "gold" : rank <= 3 ? "interactive" : "muted";
   return (
     <span
       className="flex h-7 w-7 shrink-0 items-center justify-center text-xs font-extrabold tabular-nums"

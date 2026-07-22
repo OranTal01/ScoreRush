@@ -26,13 +26,27 @@ export default function GroupsPage() {
               <table className="w-full text-xs">
                 <thead>
                   <tr className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                    <th className="py-1 text-start font-semibold">{content.tableHeaders.team}</th>
-                    <th className="py-1 text-center font-semibold">{content.tableHeaders.played}</th>
-                    <th className="py-1 text-center font-semibold">{content.tableHeaders.won}</th>
-                    <th className="py-1 text-center font-semibold">{content.tableHeaders.drawn}</th>
-                    <th className="py-1 text-center font-semibold">{content.tableHeaders.lost}</th>
-                    <th className="py-1 text-center font-semibold">{content.tableHeaders.goalDiff}</th>
-                    <th className="py-1 text-center font-semibold">{content.tableHeaders.points}</th>
+                    <th className="py-1 text-start font-semibold">
+                      {content.tableHeaders.team}
+                    </th>
+                    <th className="py-1 text-center font-semibold">
+                      {content.tableHeaders.played}
+                    </th>
+                    <th className="py-1 text-center font-semibold">
+                      {content.tableHeaders.won}
+                    </th>
+                    <th className="py-1 text-center font-semibold">
+                      {content.tableHeaders.drawn}
+                    </th>
+                    <th className="py-1 text-center font-semibold">
+                      {content.tableHeaders.lost}
+                    </th>
+                    <th className="py-1 text-center font-semibold">
+                      {content.tableHeaders.goalDiff}
+                    </th>
+                    <th className="py-1 text-center font-semibold">
+                      {content.tableHeaders.points}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -50,8 +64,14 @@ export default function GroupsPage() {
                               className="ltr flex h-5 w-5 shrink-0 items-center justify-center text-[10.5px] font-extrabold tabular-nums"
                               style={{
                                 borderRadius: "50%",
-                                background: index < 2 ? "rgba(79,175,131,0.16)" : colors.surfaceCard2,
-                                color: index < 2 ? colors.success : colors.textSecondary,
+                                background:
+                                  index < 2
+                                    ? "rgba(79,175,131,0.16)"
+                                    : colors.surfaceCard2,
+                                color:
+                                  index < 2
+                                    ? colors.success
+                                    : colors.textSecondary,
                               }}
                             >
                               {index + 1}
@@ -60,22 +80,22 @@ export default function GroupsPage() {
                             {team.shortName}
                           </span>
                         </td>
-                        <td className="ltr py-2 text-center tabular-nums text-[var(--text-secondary)]">
+                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
                           {row.played}
                         </td>
-                        <td className="ltr py-2 text-center tabular-nums text-[var(--text-secondary)]">
+                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
                           {row.won}
                         </td>
-                        <td className="ltr py-2 text-center tabular-nums text-[var(--text-secondary)]">
+                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
                           {row.drawn}
                         </td>
-                        <td className="ltr py-2 text-center tabular-nums text-[var(--text-secondary)]">
+                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
                           {row.lost}
                         </td>
-                        <td className="ltr py-2 text-center tabular-nums text-[var(--text-secondary)]">
+                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
                           {row.goalDiff > 0 ? `+${row.goalDiff}` : row.goalDiff}
                         </td>
-                        <td className="ltr py-2 text-center font-extrabold tabular-nums text-[var(--text-primary)]">
+                        <td className="ltr py-2 text-center font-extrabold text-[var(--text-primary)] tabular-nums">
                           {row.points}
                         </td>
                       </tr>
@@ -86,14 +106,19 @@ export default function GroupsPage() {
             </div>
 
             {prediction && (
-              <div className="border-t pt-3" style={{ borderColor: colors.border }}>
+              <div
+                className="border-t pt-3"
+                style={{ borderColor: colors.border }}
+              >
                 <p className="mb-1.5 text-[10.5px] font-semibold text-[var(--text-muted)]">
                   {content.predictionLabel}
                 </p>
                 <ol className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-[var(--text-primary)]">
                   {prediction.predictedOrder.map((teamId, index) => (
                     <li key={teamId} className="flex items-center gap-1">
-                      <span className="ltr text-[var(--text-muted)] tabular-nums">{index + 1}.</span>
+                      <span className="ltr text-[var(--text-muted)] tabular-nums">
+                        {index + 1}.
+                      </span>
                       <span>{teamById(teamId).shortName}</span>
                       {index < prediction.predictedOrder.length - 1 && (
                         <span aria-hidden className="text-[var(--text-muted)]">

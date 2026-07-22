@@ -9,7 +9,13 @@ import {
   syncLogs,
 } from "@/lib/mock";
 import { MatchCard } from "../../_components/match-card";
-import { Card, EmptyState, Pill, SectionHeader, type StatusTone } from "../../_components/ui";
+import {
+  Card,
+  EmptyState,
+  Pill,
+  SectionHeader,
+  type StatusTone,
+} from "../../_components/ui";
 
 const HEALTH_TONE: Record<typeof syncHealth, StatusTone> = {
   healthy: "success",
@@ -31,11 +37,15 @@ export default function AdminOverviewPage() {
       <Card className="flex flex-col gap-3">
         <SectionHeader
           title={content.syncStatusLabel}
-          action={<Pill tone={HEALTH_TONE[syncHealth]}>{content[syncHealth]}</Pill>}
+          action={
+            <Pill tone={HEALTH_TONE[syncHealth]}>{content[syncHealth]}</Pill>
+          }
         />
         <p className="text-xs text-[var(--text-secondary)]">
           {content.lastSyncLabel}:{" "}
-          <span className="ltr tabular-nums">{formatMatchTime(lastSyncAt)}</span>
+          <span className="ltr tabular-nums">
+            {formatMatchTime(lastSyncAt)}
+          </span>
         </p>
         <ul className="flex flex-col gap-2">
           {syncLogs.map((log) => (
@@ -45,11 +55,13 @@ export default function AdminOverviewPage() {
               style={{ borderColor: colors.border }}
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="ltr tabular-nums text-[var(--text-secondary)]">
+                <span className="ltr text-[var(--text-secondary)] tabular-nums">
                   {formatMatchTime(log.timestamp)}
                 </span>
                 <Pill tone={log.outcome === "success" ? "success" : "danger"}>
-                  {log.outcome === "success" ? content.syncAttemptSuccess : content.syncAttemptFailed}{" "}
+                  {log.outcome === "success"
+                    ? content.syncAttemptSuccess
+                    : content.syncAttemptFailed}{" "}
                   · <span className="ltr tabular-nums">{log.durationMs}ms</span>
                 </Pill>
               </div>
@@ -86,13 +98,19 @@ export default function AdminOverviewPage() {
                 className="flex flex-col gap-1 border-b pb-2.5 text-xs last:border-b-0 last:pb-0"
                 style={{ borderColor: colors.border }}
               >
-                <p className="text-[var(--text-secondary)]">{override.reason}</p>
+                <p className="text-[var(--text-secondary)]">
+                  {override.reason}
+                </p>
                 <div className="flex items-center justify-between gap-2 text-[10.5px] text-[var(--text-muted)]">
                   <span>
                     {override.enteredBy} ·{" "}
-                    <span className="ltr tabular-nums">{formatMatchTime(override.timestamp)}</span>
+                    <span className="ltr tabular-nums">
+                      {formatMatchTime(override.timestamp)}
+                    </span>
                   </span>
-                  {override.reversible && <Pill tone="muted">{content.reversibleLabel}</Pill>}
+                  {override.reversible && (
+                    <Pill tone="muted">{content.reversibleLabel}</Pill>
+                  )}
                 </div>
               </li>
             ))}

@@ -21,7 +21,9 @@ export function TopBar() {
       }}
     >
       <div className="flex items-center gap-8">
-        <span className="text-lg font-black text-[var(--text-primary)]">ScoreRush</span>
+        <span className="text-lg font-black text-[var(--text-primary)]">
+          ScoreRush
+        </span>
         <TournamentSwitcher />
       </div>
 

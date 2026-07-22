@@ -35,7 +35,10 @@ function PodiumColumn({
       initial={reducedMotion ? "visible" : "hidden"}
       animate="visible"
       variants={bounceIn}
-      transition={{ ...motionTokens.spring.soft, delay: reducedMotion ? 0 : DELAY_SECONDS[rank] }}
+      transition={{
+        ...motionTokens.spring.soft,
+        delay: reducedMotion ? 0 : DELAY_SECONDS[rank],
+      }}
       className="flex flex-1 flex-col items-center gap-1.5"
     >
       {rank === 1 && (
@@ -43,18 +46,29 @@ function PodiumColumn({
           👑
         </span>
       )}
-      <Avatar initials={participant.avatarInitials} rank={rank} self={isSelf} size={44} />
+      <Avatar
+        initials={participant.avatarInitials}
+        rank={rank}
+        self={isSelf}
+        size={44}
+      />
       <span className="max-w-full truncate text-xs font-bold text-[var(--text-primary)]">
         {participant.displayName}
       </span>
-      <span className="ltr text-sm font-extrabold tabular-nums" style={{ color: pointsColor }}>
+      <span
+        className="ltr text-sm font-extrabold tabular-nums"
+        style={{ color: pointsColor }}
+      >
         {participant.totalPoints}
       </span>
       <div
         aria-hidden
         className={`flex w-full items-end justify-center pb-1.5 text-lg ${BLOCK_HEIGHT_CLASS[rank]}`}
         style={{
-          background: rank === 1 ? "linear-gradient(180deg, #D6B56E, #B89350)" : colors.surfaceCard2,
+          background:
+            rank === 1
+              ? "linear-gradient(180deg, #D6B56E, #B89350)"
+              : colors.surfaceCard2,
           borderRadius: "12px 12px 0 0",
         }}
       >
@@ -83,7 +97,11 @@ export function Podium({
   return (
     <div role="list" aria-label="הפודיום" className="flex items-end gap-2">
       {ordered.map((participant) => (
-        <PodiumColumn key={participant.id} participant={participant} selfId={selfId} />
+        <PodiumColumn
+          key={participant.id}
+          participant={participant}
+          selfId={selfId}
+        />
       ))}
     </div>
   );

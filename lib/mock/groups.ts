@@ -14,12 +14,24 @@ function computeStandings(group: "A" | "B"): GroupStanding[] {
   const table = new Map<string, GroupStanding>(
     groupTeamIds.map((id) => [
       id,
-      { teamId: id, played: 0, won: 0, drawn: 0, lost: 0, goalDiff: 0, points: 0 },
+      {
+        teamId: id,
+        played: 0,
+        won: 0,
+        drawn: 0,
+        lost: 0,
+        goalDiff: 0,
+        points: 0,
+      },
     ]),
   );
 
   for (const match of matches) {
-    if (match.group !== group || match.status !== "finished" || !match.regularResult) {
+    if (
+      match.group !== group ||
+      match.status !== "finished" ||
+      !match.regularResult
+    ) {
       continue;
     }
     const { home, away } = match.regularResult;

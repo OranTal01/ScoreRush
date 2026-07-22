@@ -21,14 +21,16 @@ export const syncLogs: SyncLogEntry[] = [
     timestamp: "2026-07-22T15:05:00+03:00",
     outcome: "error",
     durationMs: 3021,
-    errorDetail: "Timeout מול football-data.org (מוזג 3 פעמים, הצלחה בניסיון הבא)",
+    errorDetail:
+      "Timeout מול football-data.org (מוזג 3 פעמים, הצלחה בניסיון הבא)",
   },
 ];
 
 export const adminOverrides: AdminOverrideEntry[] = [
   {
     id: "ov-1",
-    reason: "תיקון סדר קבוצות (בית/חוץ) שהתקבל הפוך מהספק עבור בורוסיה דורטמונד נגד אינטר",
+    reason:
+      "תיקון סדר קבוצות (בית/חוץ) שהתקבל הפוך מהספק עבור בורוסיה דורטמונד נגד אינטר",
     enteredBy: "אורן ט.",
     timestamp: "2026-07-12T22:10:00+03:00",
     reversible: true,

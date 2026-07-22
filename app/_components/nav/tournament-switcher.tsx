@@ -58,7 +58,7 @@ export function TournamentSwitcher() {
             <motion.div
               role="dialog"
               aria-label={tournamentSwitcher.title}
-              className="fixed inset-x-0 bottom-0 z-50 flex flex-col gap-3 border-t p-4 md:absolute md:inset-x-auto md:bottom-auto md:top-full md:mt-2 md:w-72 md:rounded-[var(--radius-card)] md:border"
+              className="fixed inset-x-0 bottom-0 z-50 flex flex-col gap-3 border-t p-4 md:absolute md:inset-x-auto md:top-full md:bottom-auto md:mt-2 md:w-72 md:rounded-[var(--radius-card)] md:border"
               style={{
                 background: colors.bgElevated,
                 borderColor: colors.border,
@@ -66,9 +66,7 @@ export function TournamentSwitcher() {
                 borderTopRightRadius: "var(--radius-card-hero)",
                 paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)",
               }}
-              initial={
-                reducedMotion ? { opacity: 0 } : { opacity: 0, y: 24 }
-              }
+              initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
               animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
               exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
               transition={{ duration: reducedMotion ? 0 : 0.22 }}
@@ -77,8 +75,16 @@ export function TournamentSwitcher() {
                 <h2 className="text-sm font-extrabold text-[var(--text-primary)]">
                   {tournamentSwitcher.title}
                 </h2>
-                <button type="button" onClick={() => setOpen(false)} aria-label="סגירה">
-                  <IconClose width={18} height={18} style={{ color: colors.textSecondary }} />
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  aria-label="סגירה"
+                >
+                  <IconClose
+                    width={18}
+                    height={18}
+                    style={{ color: colors.textSecondary }}
+                  />
                 </button>
               </div>
 
@@ -90,14 +96,19 @@ export function TournamentSwitcher() {
                     style={{
                       borderRadius: "var(--radius-row)",
                       borderColor: colors.border,
-                      background: t.id === tournament.id ? colors.surfaceCard2 : "transparent",
+                      background:
+                        t.id === tournament.id
+                          ? colors.surfaceCard2
+                          : "transparent",
                     }}
                   >
                     <div className="flex flex-col">
                       <span className="text-sm font-bold text-[var(--text-primary)]">
                         {t.name}
                       </span>
-                      <span className="text-xs text-[var(--text-muted)]">{t.competition}</span>
+                      <span className="text-xs text-[var(--text-muted)]">
+                        {t.competition}
+                      </span>
                     </div>
                     {t.id === tournament.id ? (
                       <span className="text-[10.5px] font-semibold text-[var(--interactive)]">
@@ -115,11 +126,20 @@ export function TournamentSwitcher() {
                 ))}
               </ul>
 
-              <div className="flex flex-col gap-2 border-t pt-3" style={{ borderColor: colors.border }}>
-                <button type="button" className="text-start text-sm font-bold text-[var(--interactive)]">
+              <div
+                className="flex flex-col gap-2 border-t pt-3"
+                style={{ borderColor: colors.border }}
+              >
+                <button
+                  type="button"
+                  className="text-start text-sm font-bold text-[var(--interactive)]"
+                >
                   {tournamentSwitcher.joinAnother}
                 </button>
-                <button type="button" className="text-start text-sm font-bold text-[var(--gold)]">
+                <button
+                  type="button"
+                  className="text-start text-sm font-bold text-[var(--gold)]"
+                >
                   {tournamentSwitcher.createTournament}
                 </button>
               </div>

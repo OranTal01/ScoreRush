@@ -1,10 +1,21 @@
 import { colors } from "@/lib/design-tokens";
 import { predictions as predictionsContent } from "@/lib/content/he";
-import { MOCK_NOW, formatMatchTime, predictionForMatch, teamById } from "@/lib/mock";
+import {
+  MOCK_NOW,
+  formatMatchTime,
+  predictionForMatch,
+  teamById,
+} from "@/lib/mock";
 import type { Match } from "@/lib/mock/types";
 import { Card, Pill } from "./ui";
 
-function TeamLabel({ teamId, align }: { teamId: string; align: "start" | "end" }) {
+function TeamLabel({
+  teamId,
+  align,
+}: {
+  teamId: string;
+  align: "start" | "end";
+}) {
   if (!teamId) {
     return (
       <span
@@ -66,7 +77,7 @@ export function MatchCard({ match }: { match: Match }) {
       <div className="flex items-center gap-2">
         <TeamLabel teamId={match.homeTeamId} align="start" />
         {score ? (
-          <span className="ltr shrink-0 px-2 text-base font-black tabular-nums text-[var(--text-primary)]">
+          <span className="ltr shrink-0 px-2 text-base font-black text-[var(--text-primary)] tabular-nums">
             {score.home} – {score.away}
           </span>
         ) : (
@@ -83,7 +94,7 @@ export function MatchCard({ match }: { match: Match }) {
           style={{ borderColor: colors.border }}
         >
           הניחוש שלך:{" "}
-          <span className="ltr font-bold tabular-nums text-[var(--text-primary)]">
+          <span className="ltr font-bold text-[var(--text-primary)] tabular-nums">
             {prediction.predictedHome} – {prediction.predictedAway}
           </span>
           {prediction.pointsEarned !== null && (

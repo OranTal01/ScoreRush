@@ -9,7 +9,12 @@ export const tournament: Tournament = {
 
 /** A second, unrelated tournament — purely to give the switcher something to switch to. */
 export const otherTournaments: Tournament[] = [
-  { id: "euro-2028", name: "יורו 2028 — קבוצת החברים", competition: "יורו", status: "upcoming" },
+  {
+    id: "euro-2028",
+    name: "יורו 2028 — קבוצת החברים",
+    competition: "יורו",
+    status: "upcoming",
+  },
 ];
 
 export const prizes: Prize[] = [

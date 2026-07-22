@@ -38,15 +38,21 @@ describe("mock data referential integrity", () => {
   it("every participant's totalPoints equals matchPoints + groupRankingPoints + bonusPoints", () => {
     for (const participant of participants) {
       expect(participant.totalPoints).toBe(
-        participant.matchPoints + participant.groupRankingPoints + participant.bonusPoints,
+        participant.matchPoints +
+          participant.groupRankingPoints +
+          participant.bonusPoints,
       );
     }
   });
 
   it("group predictions only reference teams from the correct group", () => {
     for (const prediction of groupPredictions) {
-      const groupTeamIds = teams.filter((t) => t.group === prediction.group).map((t) => t.id);
-      expect([...prediction.predictedOrder].sort()).toEqual([...groupTeamIds].sort());
+      const groupTeamIds = teams
+        .filter((t) => t.group === prediction.group)
+        .map((t) => t.id);
+      expect([...prediction.predictedOrder].sort()).toEqual(
+        [...groupTeamIds].sort(),
+      );
     }
   });
 
@@ -59,7 +65,9 @@ describe("mock data referential integrity", () => {
   });
 
   it("leaderboard rank order matches descending totalPoints", () => {
-    const sorted = [...participants].sort((a, b) => b.totalPoints - a.totalPoints);
+    const sorted = [...participants].sort(
+      (a, b) => b.totalPoints - a.totalPoints,
+    );
     expect(sorted.map((p) => p.id)).toEqual(
       [...participants].sort((a, b) => a.rank - b.rank).map((p) => p.id),
     );

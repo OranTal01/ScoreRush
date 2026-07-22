@@ -18,7 +18,10 @@ export default function AppShellLayout({
       <TopBar />
       <main
         className="mx-auto w-full px-4 md:max-w-[var(--spacing-desktop-max-width,1320px)] md:px-7 md:py-6"
-        style={{ paddingBottom: "var(--spacing-page-padding-bottom, 90px)", paddingTop: 16 }}
+        style={{
+          paddingBottom: "var(--spacing-page-padding-bottom, 90px)",
+          paddingTop: 16,
+        }}
       >
         {children}
       </main>

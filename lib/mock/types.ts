@@ -14,11 +14,7 @@ export type MatchStage = "group" | "semifinal" | "final";
 export type MatchStatus = "scheduled" | "live" | "finished";
 
 export type PredictionOutcome =
-  | "exact"
-  | "winner_diff"
-  | "winner"
-  | "draw_correct"
-  | "wrong";
+  "exact" | "winner_diff" | "winner" | "draw_correct" | "wrong";
 
 export interface Team {
   id: string;

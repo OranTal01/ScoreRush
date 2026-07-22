@@ -115,7 +115,9 @@ export const bonusPredictions: BonusPrediction[] = [
   },
 ];
 
-export function bonusPredictionForCategory(categoryId: string): BonusPrediction | null {
+export function bonusPredictionForCategory(
+  categoryId: string,
+): BonusPrediction | null {
   return bonusPredictions.find((bp) => bp.categoryId === categoryId) ?? null;
 }
 

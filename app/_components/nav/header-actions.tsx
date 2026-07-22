@@ -14,7 +14,10 @@ export function HeaderActions() {
           href="/admin"
           aria-label="ניהול טורניר"
           className="flex h-8 w-8 items-center justify-center rounded-full"
-          style={{ background: colors.surfaceCard2, color: colors.textSecondary }}
+          style={{
+            background: colors.surfaceCard2,
+            color: colors.textSecondary,
+          }}
         >
           <IconAdmin width={17} height={17} aria-hidden />
         </Link>

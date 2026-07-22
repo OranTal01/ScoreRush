@@ -7,12 +7,20 @@ import {
   nextMatch,
   participants,
 } from "@/lib/mock";
-import { Avatar, Card, Pill, RankBadge, SectionHeader } from "../_components/ui";
+import {
+  Avatar,
+  Card,
+  Pill,
+  RankBadge,
+  SectionHeader,
+} from "../_components/ui";
 import { MatchCard } from "../_components/match-card";
 
 const latestFinished = [...matches]
   .filter((m) => m.status === "finished")
-  .sort((a, b) => new Date(b.kickoff).getTime() - new Date(a.kickoff).getTime())[0]!;
+  .sort(
+    (a, b) => new Date(b.kickoff).getTime() - new Date(a.kickoff).getTime(),
+  )[0]!;
 
 const topThree = [...participants].sort((a, b) => a.rank - b.rank).slice(0, 3);
 
@@ -26,14 +34,20 @@ const activity = [
     id: "a3",
     text: `מאיה בר ${scoring.winnerAndDifference} במשחק מנצ'סטר סיטי נגד אינטר`,
   },
-  { id: "a4", text: `ריאל מדריד ${scoring.scoredGoal} פעמיים במשחק החי מול אינטר` },
+  {
+    id: "a4",
+    text: `ריאל מדריד ${scoring.scoredGoal} פעמיים במשחק החי מול אינטר`,
+  },
 ];
 
 export default function HomePage() {
   const rankMoved = currentParticipant.previousRank - currentParticipant.rank;
 
   return (
-    <div className="flex flex-col gap-4 md:grid md:grid-cols-[340px_1fr_360px] md:items-start" style={{ gap: spacing.desktopGutter }}>
+    <div
+      className="flex flex-col gap-4 md:grid md:grid-cols-[340px_1fr_360px] md:items-start"
+      style={{ gap: spacing.desktopGutter }}
+    >
       {/* Left column (desktop) — rank hero */}
       <div className="flex flex-col gap-4">
         <Card padding="hero" className="relative overflow-hidden">
@@ -52,7 +66,7 @@ export default function HomePage() {
                   {content.rankHeroLabel}
                 </span>
                 <span
-                  className="ltr tabular-nums text-[var(--gold)]"
+                  className="ltr text-[var(--gold)] tabular-nums"
                   style={{
                     fontSize: typography.scale.heroRankNumber.mobile,
                     fontWeight: typography.scale.heroRankNumber.weight,
@@ -67,7 +81,7 @@ export default function HomePage() {
                   {content.totalPointsLabel}
                 </span>
                 <span
-                  className="ltr tabular-nums text-[var(--text-primary)]"
+                  className="ltr text-[var(--text-primary)] tabular-nums"
                   style={{
                     fontSize: typography.scale.heroTotalPoints.mobile,
                     fontWeight: typography.scale.heroTotalPoints.weight,
@@ -80,7 +94,8 @@ export default function HomePage() {
             </div>
             {rankMoved !== 0 && (
               <Pill tone={rankMoved > 0 ? "success" : "danger"}>
-                {rankMoved > 0 ? scoring.rankUp : scoring.rankDown} · {Math.abs(rankMoved)} מקומות
+                {rankMoved > 0 ? scoring.rankUp : scoring.rankDown} ·{" "}
+                {Math.abs(rankMoved)} מקומות
               </Pill>
             )}
           </div>
@@ -90,8 +105,12 @@ export default function HomePage() {
           <SectionHeader title={content.achievementsLabel} />
           <div className="flex flex-wrap gap-2">
             <Pill tone="gold">🎯 3 ניחושים מדויקים ברצף</Pill>
-            <Pill tone="interactive">🔥 רצף של {currentParticipant.streak}</Pill>
-            <Pill tone="muted">📈 {currentParticipant.accuracyPercent}% דיוק</Pill>
+            <Pill tone="interactive">
+              🔥 רצף של {currentParticipant.streak}
+            </Pill>
+            <Pill tone="muted">
+              📈 {currentParticipant.accuracyPercent}% דיוק
+            </Pill>
           </div>
         </Card>
       </div>
@@ -116,11 +135,16 @@ export default function HomePage() {
             {topThree.map((p) => (
               <li key={p.id} className="flex items-center gap-2.5">
                 <RankBadge rank={p.rank} />
-                <Avatar initials={p.avatarInitials} rank={p.rank} self={p.id === currentParticipant.id} size={30} />
+                <Avatar
+                  initials={p.avatarInitials}
+                  rank={p.rank}
+                  self={p.id === currentParticipant.id}
+                  size={30}
+                />
                 <span className="flex-1 truncate text-sm font-bold text-[var(--text-primary)]">
                   {p.displayName}
                 </span>
-                <span className="ltr text-sm font-extrabold tabular-nums text-[var(--gold)]">
+                <span className="ltr text-sm font-extrabold text-[var(--gold)] tabular-nums">
                   {p.totalPoints}
                 </span>
               </li>
@@ -132,19 +156,25 @@ export default function HomePage() {
           <SectionHeader title={content.tournamentLeadersLabel} />
           <ul className="flex flex-col gap-2">
             <li className="flex items-center justify-between text-xs">
-              <span className="text-[var(--text-secondary)]">{scoring.topScorer}</span>
+              <span className="text-[var(--text-secondary)]">
+                {scoring.topScorer}
+              </span>
               <span className="font-bold text-[var(--text-primary)]">
                 {bonusLeaders["bc-top-scorer"]![0]!.label}
               </span>
             </li>
             <li className="flex items-center justify-between text-xs">
-              <span className="text-[var(--text-secondary)]">{scoring.topAssistProvider}</span>
+              <span className="text-[var(--text-secondary)]">
+                {scoring.topAssistProvider}
+              </span>
               <span className="font-bold text-[var(--text-primary)]">
                 {bonusLeaders["bc-top-assists"]![0]!.label}
               </span>
             </li>
             <li className="flex items-center justify-between text-xs">
-              <span className="text-[var(--text-secondary)]">{scoring.topScoringTeam}</span>
+              <span className="text-[var(--text-secondary)]">
+                {scoring.topScoringTeam}
+              </span>
               <span className="font-bold text-[var(--text-primary)]">
                 {bonusLeaders["bc-top-team"]![0]!.label}
               </span>

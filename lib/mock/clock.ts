@@ -8,7 +8,10 @@
  */
 export const MOCK_NOW = new Date("2026-07-22T19:00:00+03:00");
 
-export function formatCountdown(targetIso: string, from: Date = MOCK_NOW): string {
+export function formatCountdown(
+  targetIso: string,
+  from: Date = MOCK_NOW,
+): string {
   const diffMs = new Date(targetIso).getTime() - from.getTime();
   if (diffMs <= 0) return "00:00:00";
   const totalSeconds = Math.floor(diffMs / 1000);
