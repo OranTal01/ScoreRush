@@ -66,7 +66,7 @@ export const home = {
   title: "בית",
   greeting: (name: string) => `שלום, ${name}`,
   rankHeroLabel: "המקום שלך",
-  totalPointsLabel: "סה\"כ נקודות",
+  totalPointsLabel: 'סה"כ נקודות',
   nextMatchLabel: "המשחק הבא",
   latestResultLabel: "התוצאה האחרונה",
   leaderboardPreviewLabel: "מובילים בטבלה",
@@ -155,6 +155,53 @@ export const profile = {
   rankUnchanged: "ללא שינוי מהמחזור הקודם",
 } as const;
 
+/**
+ * Login screen (UX-BLUEPRINT.md §3 screen 1) — Google OAuth + magic link,
+ * no password field (ARCHITECTURE.md §4, DECISIONS.md).
+ */
+export const auth = {
+  title: "כניסה ל-ScoreRush",
+  subtitle: "התחברו כדי להמשיך לטורנירים שלכם",
+  googleCta: "המשך עם Google",
+  divider: "או",
+  emailLabel: "כתובת אימייל",
+  emailPlaceholder: "you@example.com",
+  magicLinkCta: "שליחת קישור התחברות",
+  magicLinkSending: "שולח…",
+  magicLinkSentTitle: "הקישור נשלח!",
+  magicLinkSentBody: (email: string) =>
+    `שלחנו קישור התחברות לכתובת ${email}. בדקו את תיבת הדואר (וגם את הספאם) ולחצו על הקישור כדי להיכנס.`,
+  errorGeneric: "ההתחברות נכשלה. נסו שוב.",
+  errorInvalidEmail: "כתובת האימייל אינה תקינה",
+  errorCallback: "אימות ההתחברות נכשל. נסו להתחבר שוב.",
+  footerNote:
+    "אין צורך בסיסמה — הכניסה מתבצעת דרך Google או קישור חד־פעמי לאימייל.",
+  signOut: "התנתקות",
+} as const;
+
+/**
+ * Invitation landing screen (UX-BLUEPRINT.md §3 screen 3, flow A): resolves
+ * a token, shows a tournament summary, confirms join.
+ */
+export const join = {
+  title: "הצטרפות לטורניר",
+  invalidToken: "קישור ההזמנה אינו תקין",
+  statusExpired: "תוקף ההזמנה הזו פג",
+  statusConsumed: "ההזמנה הזו כבר נוצלה",
+  statusRevoked: "ההזמנה הזו בוטלה",
+  confirmPrompt: (tournamentName: string) =>
+    `אתם מוזמנים להצטרף לטורניר "${tournamentName}"`,
+  confirmCta: "הצטרפות לטורניר",
+  confirmPending: "מצטרפים…",
+  signInPrompt: "יש להתחבר כדי להצטרף לטורניר",
+  signInCta: "התחברות",
+  successMessage: "הצטרפת בהצלחה! מעבירים אותך לדף הבית…",
+  errorAlreadyMember: "אתם כבר משתתפים בטורניר הזה",
+  errorWrongEmail: "ההזמנה הזו משויכת לכתובת אימייל אחרת",
+  errorGeneric: "משהו השתבש בהצטרפות. נסו שוב.",
+  backHome: "חזרה לדף הבית",
+} as const;
+
 export const admin = {
   overviewTitle: "סקירת ניהול",
   syncStatusLabel: "סטטוס סנכרון",
@@ -164,7 +211,11 @@ export const admin = {
   healthy: "תקין",
   degraded: "מוגבל",
   failed: "נכשל",
+  noSyncYet: "טרם בוצע סנכרון",
   syncAttemptSuccess: "הצליח",
   syncAttemptFailed: "נכשל",
   reversibleLabel: "ניתן לביטול",
+  flaggedMatchesLabel: "משחקים שסומנו באזהרת נרמול",
+  flaggedMatchesEmpty: "אין כרגע משחקים המסומנים באזהרה",
+  noSyncLogsYet: "עדיין לא היו ניסיונות סנכרון",
 } as const;

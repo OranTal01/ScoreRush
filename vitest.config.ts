@@ -13,6 +13,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "."),
+      // See vitest/stubs/server-only.ts for why this is needed.
+      "server-only": path.resolve(__dirname, "vitest/stubs/server-only.ts"),
     },
   },
 });

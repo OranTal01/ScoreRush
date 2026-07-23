@@ -1,0 +1,15 @@
+[
+  {
+    "statKey": "top_scorer",
+    "entries": [
+      { "refId": "p1", "label": "Player One", "value": 5 },
+      { "refId": "p2", "label": "Player Two", "value": 5 },
+      { "refId": "p3", "label": "Player Three", "value": 2 },
+      { "refId": "p4", "label": "", "value": 1 }
+    ]
+  },
+  {
+    "statKey": "",
+    "entries": []
+  }
+]

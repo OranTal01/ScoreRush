@@ -100,3 +100,27 @@ export function IconClose(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+/** Google "G" brand mark — fixed multi-color per Google's brand guidelines, not a tokenized stroke icon like the rest of this file. Used only on the login screen's "Continue with Google" button. */
+export function IconGoogle(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 20 20" {...props}>
+      <path
+        fill="#4285F4"
+        d="M19.6 10.23c0-.68-.06-1.36-.18-2.02H10v3.83h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.23c1.9-1.75 2.99-4.32 2.99-7.33Z"
+      />
+      <path
+        fill="#34A853"
+        d="M10 20c2.7 0 4.96-.89 6.61-2.42l-3.23-2.5c-.9.6-2.05.95-3.38.95-2.6 0-4.8-1.75-5.59-4.11H1.08v2.59A10 10 0 0 0 10 20Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M4.41 11.92a5.99 5.99 0 0 1 0-3.84V5.49H1.08a10 10 0 0 0 0 9.02l3.33-2.59Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M10 3.98c1.47 0 2.79.5 3.83 1.5l2.87-2.87C14.95 1.02 12.7 0 10 0A10 10 0 0 0 1.08 5.49l3.33 2.59C5.2 5.72 7.4 3.98 10 3.98Z"
+      />
+    </svg>
+  );
+}

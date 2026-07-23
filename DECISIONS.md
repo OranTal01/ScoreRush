@@ -55,6 +55,20 @@ See §3 below for findings. Fixtures/results: **solved** — same provider as th
 
 Sources: [football-data.org coverage](https://www.football-data.org/coverage), [football-data.org](https://www.football-data.org/), [UEFA Champions League statistics](https://www.uefa.com/uefachampionsleague/statistics/).
 
+## 3a. Bonus/statistics data source — RESOLVED (2026-07-23, Phase 4 hands-on verification)
+
+The §3 open question is closed: **football-data.org itself is the bonus-stats source**, not a separate UEFA-internal API. The legacy `world-cup-bets` project already documented this for the World Cup (`docs/api-provider-decision.md`: `GET /v4/competitions/WC/scorers?season=2026&limit=100` — "Covers scorers and assists in a single API"), and this Phase 4 session confirmed the same `/scorers` endpoint works, on the same free-tier token, for both tournaments still open in ARCHITECTURE.md §6:
+
+- `GET /v4/competitions/CL/scorers?limit=5` → HTTP 200, real 2025-26 season data (Mbappé, Kane, etc. with `goals`/`assists`/`penalties`/`playedMatches`).
+- `GET /v4/competitions/EC/scorers?limit=5` → HTTP 200, real Euro 2024 season data.
+
+No hands-on UEFA.com network inspection was needed — the assumption in §3 that a separate provider integration would be required turned out to be unnecessary. Practical notes carried over from the legacy project's proven usage:
+- `assists` is sometimes `null` in the raw response — treat as 0, don't error.
+- The scorers endpoint is rate-limited more aggressively than matches/teams on football-data.org's free tier; the legacy project caches it for 5 minutes server-side. ScoreRush's sync job (running at most daily per the Vercel Cron plan constraint, ARCHITECTURE.md §7) is naturally well under this limit.
+- The manual-entry fallback for `bonus_stats` (already in the schema, DATABASE.md line 36) remains the answer for custom tournaments or if football-data.org ever lacks a competition's scorer data — this finding doesn't remove that path, just means it's the exception rather than the default for WC/CL/EC.
+
+**Rejected, confirmed again:** API-Football (api-football.com) — the legacy project's own decision doc already rejected it (free plan doesn't cover the relevant seasons). Not adopted for ScoreRush.
+
 ## 4. Remaining open decisions
 
 ### Native app-store distribution path

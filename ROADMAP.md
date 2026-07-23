@@ -34,7 +34,7 @@ Exit criteria: all seven documents exist, are internally consistent, and are rev
 ## Phase 4 — Tournament data pipeline
 
 - Build the provider adapter interface; implement a football-data.org-style adapter (confirmed in DECISIONS.md research to already cover World Cup, Champions League, and Euro fixtures/results on its free tier — this is largely a configuration exercise, not a new integration per competition) plus the "manual" adapter.
-- Investigate a bonus/statistics data source for the launch tournament (top scorer/assists) — for Champions League, check whether UEFA.com exposes an internal API analogous to FIFA's GameDay API (same reverse-engineering approach as the legacy project); fall back to the manual-entry bonus-stats path if none is found or it proves unreliable.
+- Bonus/statistics data source for the launch tournament (top scorer/assists) — **resolved without a new integration**: football-data.org's own `/scorers` endpoint covers World Cup, Champions League, and Euro on the same free-tier token already used for fixtures/results (DECISIONS.md §3a, confirmed via a real hands-on API call in Phase 4). Manual-entry bonus-stats path still exists as the fallback for custom tournaments or a competition football-data.org doesn't cover.
 - Raw storage → validation → normalization → canonical result, with diagnostics surfaced in the admin UI.
 - Scheduled sync job + sync logs.
   Exit criteria: real match schedule/results flow end-to-end into canonical results for at least one tournament, with a working manual-entry fallback path (for both match data and bonus stats) and full sync/diagnostic logging.

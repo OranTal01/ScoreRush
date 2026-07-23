@@ -1,7 +1,14 @@
 import { colors, gradients } from "@/lib/design-tokens";
-import { common, profile as content, scoring, tournamentSwitcher } from "@/lib/content/he";
+import {
+  auth as authContent,
+  common,
+  profile as content,
+  scoring,
+  tournamentSwitcher,
+} from "@/lib/content/he";
 import { currentParticipant, otherTournaments, tournament } from "@/lib/mock";
 import { Avatar, Card, Pill, SectionHeader } from "../../_components/ui";
+import { signOut } from "../../auth/actions";
 
 /** Screen 9/16 combined for Phase 2 (UX-BLUEPRINT.md): public-facing profile
  * — rank history, achievements, streaks, prediction accuracy — plus the
@@ -31,7 +38,7 @@ export default function ProfilePage() {
           </div>
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-center gap-0.5">
-              <span className="ltr text-2xl font-black tabular-nums text-[var(--gold)]">
+              <span className="ltr text-2xl font-black text-[var(--gold)] tabular-nums">
                 {currentParticipant.totalPoints}
               </span>
               <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
@@ -39,7 +46,7 @@ export default function ProfilePage() {
               </span>
             </div>
             <div className="flex flex-col items-center gap-0.5">
-              <span className="ltr text-2xl font-black tabular-nums text-[var(--text-primary)]">
+              <span className="ltr text-2xl font-black text-[var(--text-primary)] tabular-nums">
                 {currentParticipant.rank}
               </span>
               <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
@@ -50,7 +57,10 @@ export default function ProfilePage() {
           <button
             type="button"
             className="px-4 py-2 text-xs font-bold text-[var(--text-primary)]"
-            style={{ background: colors.surfaceCard2, borderRadius: "var(--radius-button)" }}
+            style={{
+              background: colors.surfaceCard2,
+              borderRadius: "var(--radius-button)",
+            }}
           >
             {content.editProfile}
           </button>
@@ -61,7 +71,8 @@ export default function ProfilePage() {
         <SectionHeader title={content.rankHistoryLabel} />
         {rankMoved !== 0 ? (
           <Pill tone={rankMoved > 0 ? "success" : "danger"}>
-            {rankMoved > 0 ? scoring.rankUp : scoring.rankDown} · {Math.abs(rankMoved)} מקומות
+            {rankMoved > 0 ? scoring.rankUp : scoring.rankDown} ·{" "}
+            {Math.abs(rankMoved)} מקומות
           </Pill>
         ) : (
           <Pill tone="muted">
@@ -87,10 +98,17 @@ export default function ProfilePage() {
         <SectionHeader title={content.linkedTournaments} />
         <ul className="flex flex-col gap-2">
           {[tournament, ...otherTournaments].map((t) => (
-            <li key={t.id} className="flex items-center justify-between gap-2 text-xs">
+            <li
+              key={t.id}
+              className="flex items-center justify-between gap-2 text-xs"
+            >
               <div className="flex flex-col">
-                <span className="font-bold text-[var(--text-primary)]">{t.name}</span>
-                <span className="text-[var(--text-muted)]">{t.competition}</span>
+                <span className="font-bold text-[var(--text-primary)]">
+                  {t.name}
+                </span>
+                <span className="text-[var(--text-muted)]">
+                  {t.competition}
+                </span>
               </div>
               {t.id === tournament.id && (
                 <Pill tone="interactive">{tournamentSwitcher.activeLabel}</Pill>
@@ -99,6 +117,19 @@ export default function ProfilePage() {
           ))}
         </ul>
       </Card>
+
+      <form action={signOut}>
+        <button
+          type="submit"
+          className="w-full py-3 text-xs font-bold text-[var(--danger)]"
+          style={{
+            background: colors.surfaceCard2,
+            borderRadius: "var(--radius-button)",
+          }}
+        >
+          {authContent.signOut}
+        </button>
+      </form>
     </div>
   );
 }

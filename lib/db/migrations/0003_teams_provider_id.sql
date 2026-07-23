@@ -1,0 +1,1 @@
+ALTER TABLE "teams" ADD COLUMN "provider_id" text;
