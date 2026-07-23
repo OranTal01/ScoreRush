@@ -125,6 +125,18 @@ export const bonuses = {
   pointsBreakdownLabel: "פירוט נקודות",
   duplicateAllowedHint: "ניתן לבחור אותו שחקן/קבוצה ביותר מבחירה אחת",
   terminalPendingHint: "הקטגוריה תיפתר רק בסיום הטורניר",
+  emptyState: "אין קטגוריות בונוס בטורניר זה",
+  pickPlaceholder: "הקלידו את הבחירה שלכם",
+  saveIdle: "שמירת בחירות",
+  saveLoading: "שומר…",
+  saveSuccess: "נשמר",
+  saveError: "השמירה נכשלה, נסה שוב",
+  editableUntilLock: "ניתן לערוך עד הנעילה",
+  lockedLabel: "ננעל",
+  errorLocked: "הקטגוריה ננעלה — לא ניתן לערוך יותר",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  errorInvalidInput: "הבחירות שהוזנו אינן תקינות",
+  errorUnauthenticated: "יש להתחבר כדי לשמור בחירות",
 } as const;
 
 export const groups = {
