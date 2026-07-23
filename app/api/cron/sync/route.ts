@@ -20,6 +20,15 @@
  * caught independently so it never blocks sync's own result or the next
  * tournament in the loop.
  *
+ * Immediately follows recompute with `captureLeaderboardSnapshot`
+ * (lib/scoring/snapshots.ts, ROADMAP.md Phase 6 task #53) — new scored
+ * points are exactly what should trigger a new leaderboard snapshot for
+ * rank-movement history, and only recompute changes `points_earned`, so
+ * "run right after recompute" is sufficient. Runs regardless of recompute's
+ * own outcome (there may still be a previously-scored state worth
+ * snapshotting) and its failure is caught independently for the same
+ * one-tournament-must-not-block-the-rest reason as recompute above.
+ *
  * Schedule (vercel.json): once daily. Vercel's Hobby plan restricts cron
  * jobs to at most one run/day — a Pro-plan upgrade or an external pinger
  * (e.g. a free GitHub Actions schedule, or cron-job.org) hitting this same
@@ -32,6 +41,7 @@ import { ne } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { tournaments } from "@/lib/db/schema/identity";
 import { recomputeTournamentScores } from "@/lib/scoring/recompute";
+import { captureLeaderboardSnapshot } from "@/lib/scoring/snapshots";
 import { syncTournamentMatches } from "@/lib/sync/run-sync";
 
 // Always run fresh — this is a write path triggered by cron/an authorized
@@ -74,12 +84,23 @@ export async function GET(request: Request) {
       recomputeError = err instanceof Error ? err.message : String(err);
     }
 
+    let snapshot: Awaited<ReturnType<typeof captureLeaderboardSnapshot>> | null =
+      null;
+    let snapshotError: string | null = null;
+    try {
+      snapshot = await captureLeaderboardSnapshot(row.id);
+    } catch (err) {
+      snapshotError = err instanceof Error ? err.message : String(err);
+    }
+
     results.push({
       name: row.name,
       status: row.status,
       ...syncResult,
       recompute,
       recomputeError,
+      snapshot,
+      snapshotError,
     });
   }
 
