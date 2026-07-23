@@ -12,6 +12,14 @@
  * catches its own errors (writing a `sync_logs` row regardless) — one
  * tournament failing must never stop the others from syncing.
  *
+ * Immediately follows each tournament's sync with `recomputeTournamentScores`
+ * (lib/scoring/recompute.ts, ROADMAP.md Phase 5 task #50) — new match
+ * results are exactly what should trigger rescoring. Recompute runs
+ * regardless of that tournament's sync outcome (rescoring against
+ * already-stored data is harmless when sync fails) and its own failure is
+ * caught independently so it never blocks sync's own result or the next
+ * tournament in the loop.
+ *
  * Schedule (vercel.json): once daily. Vercel's Hobby plan restricts cron
  * jobs to at most one run/day — a Pro-plan upgrade or an external pinger
  * (e.g. a free GitHub Actions schedule, or cron-job.org) hitting this same
@@ -23,6 +31,7 @@ import { NextResponse } from "next/server";
 import { ne } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { tournaments } from "@/lib/db/schema/identity";
+import { recomputeTournamentScores } from "@/lib/scoring/recompute";
 import { syncTournamentMatches } from "@/lib/sync/run-sync";
 
 // Always run fresh — this is a write path triggered by cron/an authorized
@@ -54,8 +63,24 @@ export async function GET(request: Request) {
 
   const results = [];
   for (const row of rows) {
-    const result = await syncTournamentMatches(row.id);
-    results.push({ name: row.name, status: row.status, ...result });
+    const syncResult = await syncTournamentMatches(row.id);
+
+    let recompute: Awaited<ReturnType<typeof recomputeTournamentScores>> | null =
+      null;
+    let recomputeError: string | null = null;
+    try {
+      recompute = await recomputeTournamentScores(row.id);
+    } catch (err) {
+      recomputeError = err instanceof Error ? err.message : String(err);
+    }
+
+    results.push({
+      name: row.name,
+      status: row.status,
+      ...syncResult,
+      recompute,
+      recomputeError,
+    });
   }
 
   return NextResponse.json({
