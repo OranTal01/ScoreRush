@@ -4,10 +4,10 @@ import { motion } from "motion/react";
 import { colors } from "@/lib/design-tokens";
 import { leaderboard as content } from "@/lib/content/he";
 import { rise, useReducedMotionSafe } from "@/lib/motion/variants";
-import type { Participant } from "@/lib/mock/types";
 import { Avatar, RankBadge } from "../ui";
+import type { LeaderboardParticipant } from "./types";
 
-function MovementIndicator({ participant }: { participant: Participant }) {
+function MovementIndicator({ participant }: { participant: LeaderboardParticipant }) {
   const delta = participant.previousRank - participant.rank;
   if (delta === 0) {
     return (
@@ -35,7 +35,7 @@ export function RankRow({
   selfId,
   index,
 }: {
-  participant: Participant;
+  participant: LeaderboardParticipant;
   selfId: string;
   index: number;
 }) {

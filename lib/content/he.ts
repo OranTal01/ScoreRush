@@ -116,6 +116,8 @@ export const leaderboard = {
   movementDown: "ירידה",
   movementSame: "ללא שינוי",
   emptyState: "הטבלה תתעדכן עם תחילת הטורניר",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בטבלה",
+  errorNotAMember: "אינך חבר בטורניר הזה",
 } as const;
 
 export const bonuses = {

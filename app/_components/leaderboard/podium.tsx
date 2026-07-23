@@ -3,8 +3,8 @@
 import { motion } from "motion/react";
 import { colors, motion as motionTokens } from "@/lib/design-tokens";
 import { bounceIn, useReducedMotionSafe } from "@/lib/motion/variants";
-import type { Participant } from "@/lib/mock/types";
 import { Avatar } from "../ui";
+import type { LeaderboardParticipant } from "./types";
 
 const MEDAL: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 const BLOCK_HEIGHT_CLASS: Record<number, string> = {
@@ -20,7 +20,7 @@ function PodiumColumn({
   participant,
   selfId,
 }: {
-  participant: Participant;
+  participant: LeaderboardParticipant;
   selfId: string;
 }) {
   const reducedMotion = useReducedMotionSafe();
@@ -84,12 +84,12 @@ export function Podium({
   topThree,
   selfId,
 }: {
-  topThree: Participant[];
+  topThree: LeaderboardParticipant[];
   selfId: string;
 }) {
   const byRank = (rank: number) => topThree.find((p) => p.rank === rank);
   const ordered = [byRank(2), byRank(1), byRank(3)].filter(
-    (p): p is Participant => Boolean(p),
+    (p): p is LeaderboardParticipant => Boolean(p),
   );
 
   if (ordered.length === 0) return null;
