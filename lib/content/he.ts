@@ -118,6 +118,12 @@ export const leaderboard = {
   emptyState: "הטבלה תתעדכן עם תחילת הטורניר",
   errorUnauthenticated: "יש להתחבר כדי לצפות בטבלה",
   errorNotAMember: "אינך חבר בטורניר הזה",
+  breakdownTitle: "השוואת נקודות",
+  breakdownParticipantHeader: "משתתף/ת",
+  matchPointsLabel: "משחקים",
+  groupRankingPointsLabel: "בתים",
+  bonusPointsLabel: "בונוס",
+  totalPointsLabel: 'סה"כ',
 } as const;
 
 export const bonuses = {

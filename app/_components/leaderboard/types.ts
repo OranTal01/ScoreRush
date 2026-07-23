@@ -11,6 +11,12 @@ export interface LeaderboardParticipant {
   displayName: string;
   avatarInitials: string;
   totalPoints: number;
+  /** Kept alongside totalPoints (not just the sum) so the breakdown/comparison
+   * view (points-breakdown.tsx) can display them without a second fetch —
+   * and so totalPoints visibly equals their sum, per SCORING-RULES.md §9. */
+  matchPoints: number;
+  groupRankingPoints: number;
+  bonusPoints: number;
   rank: number;
   previousRank: number;
 }

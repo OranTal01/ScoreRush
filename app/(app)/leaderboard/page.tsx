@@ -3,6 +3,7 @@ import { computeStandings, type StandingsInput } from "@/lib/scoring/leaderboard
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { Podium } from "../../_components/leaderboard/podium";
+import { PointsBreakdown } from "../../_components/leaderboard/points-breakdown";
 import { RankRow } from "../../_components/leaderboard/rank-row";
 import type { LeaderboardParticipant } from "../../_components/leaderboard/types";
 import { Card, EmptyState, SectionHeader } from "../../_components/ui";
@@ -117,6 +118,9 @@ export default async function LeaderboardPage() {
       displayName: participant?.display_name ?? entry.participantId,
       avatarInitials: participant?.avatar_initials ?? "?",
       totalPoints: entry.totalPoints,
+      matchPoints: entry.matchPoints,
+      groupRankingPoints: entry.groupRankingPoints,
+      bonusPoints: entry.bonusPoints,
       rank: entry.rank,
       // No prior batch to compare against yet -> no movement ("–").
       previousRank: previousRankByParticipant.get(entry.participantId) ?? entry.rank,
@@ -148,6 +152,11 @@ export default async function LeaderboardPage() {
             />
           ))}
         </ol>
+      </Card>
+
+      <Card className="flex flex-col gap-3">
+        <SectionHeader title={content.breakdownTitle} />
+        <PointsBreakdown participants={sorted} selfId={selfId} />
       </Card>
     </div>
   );
