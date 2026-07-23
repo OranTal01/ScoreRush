@@ -1,22 +1,137 @@
-import { colors } from "@/lib/design-tokens";
+import type { ReactNode } from "react";
 import { groups as content } from "@/lib/content/he";
-import { groupPredictions, groupStandings, teamById } from "@/lib/mock";
+import { colors } from "@/lib/design-tokens";
+import {
+  calculateGroupStandings,
+  type StandingsMatch,
+} from "@/lib/scoring/group-standings";
+import { createClient } from "@/lib/supabase/server";
+import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { SubTabs } from "../../_components/nav/sub-tabs";
-import { Card, SectionHeader } from "../../_components/ui";
+import { Card, EmptyState, SectionHeader } from "../../_components/ui";
+import { GroupPredictionForm } from "./_components/group-prediction-form";
 
-const GROUPS = ["A", "B"] as const;
+type MatchStatus = "scheduled" | "live" | "finished" | "postponed" | "cancelled";
+type Score = { home: number; away: number };
 
-/** Screen 11 (UX-BLUEPRINT.md): group-stage tables and group ranking
- * predictions. Standings are partial — matchday 3 is still in progress, so
- * SCORING-RULES.md §5 group-ranking points aren't credited yet. */
-export default function GroupsPage() {
+type TeamRow = { id: string; short_name: string; group: string | null };
+type MatchRow = {
+  status: MatchStatus;
+  group: string | null;
+  home_team_id: string;
+  away_team_id: string;
+  regular_result: Score | null;
+};
+type GroupPredictionRow = {
+  group: string;
+  predicted_order: string[];
+  points_earned: number | null;
+  finalized: boolean;
+};
+
+function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
       <SubTabs />
+      {children}
+    </div>
+  );
+}
 
-      {GROUPS.map((group) => {
-        const standings = groupStandings[group];
-        const prediction = groupPredictions.find((gp) => gp.group === group);
+export const dynamic = "force-dynamic";
+
+/** Screen 11 (UX-BLUEPRINT.md): group-stage tables + group ranking
+ * predictions, wired to real data via RLS-scoped queries.
+ * `getCurrentParticipant` (lib/tournaments/current.ts) picks the caller's
+ * most-recently-joined tournament — a documented MVP stand-in until the real
+ * tournament switcher exists (UX-BLUEPRINT.md §2, still Phase 2 mock UI). */
+export default async function GroupsPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return (
+      <Shell>
+        <EmptyState message={content.errorUnauthenticated} />
+      </Shell>
+    );
+  }
+
+  const current = await getCurrentParticipant(supabase, user.id);
+  if (!current) {
+    return (
+      <Shell>
+        <EmptyState message={content.errorNotAMember} />
+      </Shell>
+    );
+  }
+  const { participantId, tournamentId } = current;
+
+  const [{ data: teams }, { data: matches }, { data: predictions }] =
+    await Promise.all([
+      supabase
+        .from("teams")
+        .select("id, short_name, group")
+        .eq("tournament_id", tournamentId)
+        .returns<TeamRow[]>(),
+      supabase
+        .from("matches")
+        .select("status, group, home_team_id, away_team_id, regular_result")
+        .eq("tournament_id", tournamentId)
+        .not("group", "is", null)
+        .returns<MatchRow[]>(),
+      supabase
+        .from("group_predictions")
+        .select("group, predicted_order, points_earned, finalized")
+        .eq("tournament_id", tournamentId)
+        .eq("participant_id", participantId)
+        .returns<GroupPredictionRow[]>(),
+    ]);
+
+  const teamById = new Map((teams ?? []).map((t) => [t.id, t]));
+  const groupLabels = [
+    ...new Set(
+      (teams ?? [])
+        .map((t) => t.group)
+        .filter((g): g is string => g !== null),
+    ),
+  ].sort();
+
+  if (groupLabels.length === 0) {
+    return (
+      <Shell>
+        <EmptyState message={content.emptyState} />
+      </Shell>
+    );
+  }
+
+  const standingsMatches: StandingsMatch[] = (matches ?? []).map((m) => ({
+    status: m.status,
+    group: m.group,
+    homeTeamId: m.home_team_id,
+    awayTeamId: m.away_team_id,
+    regularResult: m.regular_result,
+  }));
+  const standings = calculateGroupStandings(standingsMatches);
+  const predictionByGroup = new Map(
+    (predictions ?? []).map((p) => [p.group, p]),
+  );
+
+  return (
+    <Shell>
+      {groupLabels.map((group) => {
+        const rows = standings
+          .filter((r) => r.group === group)
+          .sort((a, b) => a.position - b.position);
+        const groupTeams = (teams ?? []).filter((t) => t.group === group);
+        const prediction = predictionByGroup.get(group) ?? null;
+
+        const orderedForForm =
+          prediction?.predicted_order
+            .map((id) => teamById.get(id))
+            .filter((t): t is TeamRow => t !== undefined) ?? groupTeams;
 
         return (
           <Card key={group} className="flex flex-col gap-3">
@@ -50,8 +165,8 @@ export default function GroupsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {standings.map((row, index) => {
-                    const team = teamById(row.teamId);
+                  {rows.map((row, index) => {
+                    const team = teamById.get(row.teamId);
                     return (
                       <tr
                         key={row.teamId}
@@ -76,8 +191,7 @@ export default function GroupsPage() {
                             >
                               {index + 1}
                             </span>
-                            <span aria-hidden>{team.flagEmoji}</span>
-                            {team.shortName}
+                            {team?.short_name ?? row.teamId}
                           </span>
                         </td>
                         <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
@@ -93,7 +207,9 @@ export default function GroupsPage() {
                           {row.lost}
                         </td>
                         <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
-                          {row.goalDiff > 0 ? `+${row.goalDiff}` : row.goalDiff}
+                          {row.goalDifference > 0
+                            ? `+${row.goalDifference}`
+                            : row.goalDifference}
                         </td>
                         <td className="ltr py-2 text-center font-extrabold text-[var(--text-primary)] tabular-nums">
                           {row.points}
@@ -105,22 +221,22 @@ export default function GroupsPage() {
               </table>
             </div>
 
-            {prediction && (
+            {prediction?.finalized ? (
               <div
                 className="border-t pt-3"
                 style={{ borderColor: colors.border }}
               >
                 <p className="mb-1.5 text-[10.5px] font-semibold text-[var(--text-muted)]">
-                  {content.predictionLabel}
+                  {content.finalizedLabel}
                 </p>
                 <ol className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-[var(--text-primary)]">
-                  {prediction.predictedOrder.map((teamId, index) => (
+                  {prediction.predicted_order.map((teamId, index) => (
                     <li key={teamId} className="flex items-center gap-1">
                       <span className="ltr text-[var(--text-muted)] tabular-nums">
                         {index + 1}.
                       </span>
-                      <span>{teamById(teamId).shortName}</span>
-                      {index < prediction.predictedOrder.length - 1 && (
+                      <span>{teamById.get(teamId)?.short_name ?? teamId}</span>
+                      {index < prediction.predicted_order.length - 1 && (
                         <span aria-hidden className="text-[var(--text-muted)]">
                           ·
                         </span>
@@ -129,10 +245,23 @@ export default function GroupsPage() {
                   ))}
                 </ol>
               </div>
-            )}
+            ) : groupTeams.length >= 2 ? (
+              <div>
+                <p className="text-[10.5px] font-semibold text-[var(--text-muted)]">
+                  {content.predictionLabel}
+                </p>
+                <GroupPredictionForm
+                  group={group}
+                  teams={orderedForForm.map((t) => ({
+                    id: t.id,
+                    label: t.short_name,
+                  }))}
+                />
+              </div>
+            ) : null}
           </Card>
         );
       })}
-    </div>
+    </Shell>
   );
 }

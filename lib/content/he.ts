@@ -129,7 +129,7 @@ export const bonuses = {
 
 export const groups = {
   title: "קבוצות",
-  groupLabel: (group: "A" | "B") => `בית ${group}`,
+  groupLabel: (group: string) => `בית ${group}`,
   tableHeaders: {
     team: "קבוצה",
     played: "מש'",
@@ -141,6 +141,18 @@ export const groups = {
   },
   predictionLabel: "הניחוש שלך לטבלה הסופית",
   finalizedLabel: "השלב הסתיים",
+  emptyState: "אין שלב בתים בטורניר זה",
+  moveUp: "הזזה למעלה",
+  moveDown: "הזזה למטה",
+  saveIdle: "שמירת ניחוש",
+  saveLoading: "שומר…",
+  saveSuccess: "נשמר",
+  saveError: "השמירה נכשלה, נסה שוב",
+  editableUntilFinalized: "ניתן לערוך עד סיום שלב הבתים",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  errorFinalized: "שלב הבתים כבר הסתיים — לא ניתן לערוך יותר",
+  errorInvalidInput: "הסדר שנשלח אינו תקין",
+  errorUnauthenticated: "יש להתחבר כדי לשמור תחזית",
 } as const;
 
 export const bracket = {
