@@ -88,6 +88,7 @@ export const predictions = {
 } as const;
 
 export const matchDetail = {
+  backToPredictions: "משחקים",
   saveIdle: "שמירת ניחוש",
   savePressed: "שומר…",
   saveLoading: "שומר…",
@@ -96,6 +97,15 @@ export const matchDetail = {
   editableUntilLock: "ניתן לערוך עד הנעילה",
   lockedStatic: "התחזית ננעלה",
   scoreExplanationTitle: "איך צברת נקודות",
+  noPredictionSubmitted: "לא הגשת תחזית למשחק זה",
+  homeLabel: "בית",
+  awayLabel: "חוץ",
+  yourPredictionLabel: "התחזית שלך",
+  errorLocked: "התחזית ננעלה — לא ניתן לשמור יותר",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  errorNotFound: "המשחק לא נמצא",
+  errorUnauthenticated: "יש להתחבר כדי לשמור תחזית",
+  errorInvalidInput: "התוצאה שהוזנה אינה תקינה",
 } as const;
 
 export const leaderboard = {
