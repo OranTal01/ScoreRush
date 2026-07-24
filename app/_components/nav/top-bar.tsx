@@ -8,7 +8,7 @@ import { TournamentSwitcher } from "./tournament-switcher";
 import { HeaderActions } from "./header-actions";
 
 /** Desktop top bar — UX-BLUEPRINT.md §2: horizontal tabs + inline switcher, hidden on mobile. */
-export function TopBar() {
+export function TopBar({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -49,7 +49,7 @@ export function TopBar() {
         })}
       </nav>
 
-      <HeaderActions />
+      <HeaderActions isAdmin={isAdmin} />
     </header>
   );
 }

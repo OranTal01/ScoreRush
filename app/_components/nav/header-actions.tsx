@@ -4,9 +4,17 @@ import { currentParticipant } from "@/lib/mock";
 import { Avatar } from "../ui";
 import { IconAdmin } from "../icons";
 
-/** Profile avatar + admin entry point (admins only) — shared by mobile header and desktop top bar. */
-export function HeaderActions() {
-  const isAdmin = currentParticipant.role === "tournament_admin";
+/**
+ * Profile avatar + admin entry point (admins only) — shared by mobile header
+ * and desktop top bar. `isAdmin` is now the real value, computed server-side
+ * in app/(app)/layout.tsx via lib/auth/admin.ts (Phase 7 task #57) and
+ * threaded down as a prop; hiding this link was never real access control
+ * (the admin page itself now enforces its own guard) but it should still
+ * reflect reality rather than mock data. `avatarInitials` is still Phase-2
+ * mock — wiring the header to the caller's real profile is a separate,
+ * unrelated gap (no admin-tooling scope here).
+ */
+export function HeaderActions({ isAdmin }: { isAdmin: boolean }) {
   return (
     <div className="flex items-center gap-3">
       {isAdmin && (

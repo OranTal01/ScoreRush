@@ -3,7 +3,7 @@ import { TournamentSwitcher } from "./tournament-switcher";
 import { HeaderActions } from "./header-actions";
 
 /** Mobile header — tournament switcher lives here, not the bottom nav (UX-BLUEPRINT.md §2). */
-export function MobileHeader() {
+export function MobileHeader({ isAdmin }: { isAdmin: boolean }) {
   return (
     <header
       className="sticky top-0 z-30 flex items-center justify-between border-b px-4 md:hidden"
@@ -15,7 +15,7 @@ export function MobileHeader() {
       }}
     >
       <TournamentSwitcher />
-      <HeaderActions />
+      <HeaderActions isAdmin={isAdmin} />
     </header>
   );
 }

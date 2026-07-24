@@ -246,6 +246,9 @@ export const join = {
 
 export const admin = {
   overviewTitle: "סקירת ניהול",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד הניהול",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  errorNotAdmin: "עמוד זה מיועד למנהלי הטורניר בלבד",
   syncStatusLabel: "סטטוס סנכרון",
   pendingLocksLabel: "תחזיות הממתינות לנעילה",
   recentOverridesLabel: "התערבויות אחרונות",

@@ -1,11 +1,14 @@
 import { colors } from "@/lib/design-tokens";
 import { admin as content, common } from "@/lib/content/he";
+import { getAdminContext } from "@/lib/auth/admin";
 import {
   adminOverrides,
   formatMatchTime,
   pendingLockMatches,
 } from "@/lib/mock";
+import { createClient } from "@/lib/supabase/server";
 import { getFlaggedMatches, getRecentSyncLogs } from "@/lib/sync/diagnostics";
+import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { MatchCard } from "../../_components/match-card";
 import {
   Card,
@@ -44,14 +47,34 @@ export const dynamic = "force-dynamic";
  * don't exist yet, so there's nothing real to show there yet.
  *
  * The admin entry point in the header is only shown to admins
- * (header-actions.tsx), but this page doesn't yet enforce a server-side
- * role guard for non-admins — richer admin access control is Phase 7
- * ("Admin tooling"), out of scope for this Phase 4 diagnostics pass.
+ * (header-actions.tsx), and this page now also enforces the guard
+ * server-side (ROADMAP.md Phase 7 task #57, lib/auth/admin.ts) — the header
+ * link hiding it was UX only, never actual access control, since a
+ * non-admin could always type the URL directly.
  */
 export default async function AdminOverviewPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return <EmptyState message={content.errorUnauthenticated} />;
+  }
+
+  const current = await getCurrentParticipant(supabase, user.id);
+  if (!current) {
+    return <EmptyState message={content.errorNotAMember} />;
+  }
+  const { tournamentId } = current;
+
+  const { isAdmin } = await getAdminContext(supabase, user.id, tournamentId);
+  if (!isAdmin) {
+    return <EmptyState message={content.errorNotAdmin} />;
+  }
+
   const [syncLogEntries, flaggedMatches] = await Promise.all([
-    getRecentSyncLogs(),
-    getFlaggedMatches(),
+    getRecentSyncLogs(tournamentId),
+    getFlaggedMatches(tournamentId),
   ]);
   const latestLog = syncLogEntries[0] ?? null;
   const syncHealth: SyncHealth | null = latestLog

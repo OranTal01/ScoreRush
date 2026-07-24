@@ -49,7 +49,7 @@ describe("getRecentSyncLogs", () => {
       },
     ]);
 
-    const result = await getRecentSyncLogs();
+    const result = await getRecentSyncLogs("tournament-1");
 
     expect(result).toEqual([
       {
@@ -66,7 +66,7 @@ describe("getRecentSyncLogs", () => {
 
   it("returns an empty array when no sync has ever run", async () => {
     queue.push([]);
-    expect(await getRecentSyncLogs()).toEqual([]);
+    expect(await getRecentSyncLogs("tournament-1")).toEqual([]);
   });
 });
 
@@ -84,7 +84,7 @@ describe("getFlaggedMatches", () => {
       },
     ]);
 
-    const result = await getFlaggedMatches();
+    const result = await getFlaggedMatches("tournament-1");
 
     expect(result).toEqual([
       {
@@ -101,6 +101,6 @@ describe("getFlaggedMatches", () => {
 
   it("returns an empty array when nothing is currently flagged", async () => {
     queue.push([]);
-    expect(await getFlaggedMatches()).toEqual([]);
+    expect(await getFlaggedMatches("tournament-1")).toEqual([]);
   });
 });

@@ -5,6 +5,15 @@
  * `sync_logs`/`matches`) — this module only ever selects, never mutates, so
  * rendering the admin page can never have a side effect on sync state.
  *
+ * Both queries are scoped to a single `tournamentId` (Phase 7 task #57):
+ * `sync_logs` is admin-of-that-tournament-only per DATABASE.md §5's RLS
+ * table ("Read: Admin of the tournament (+ platform admin)"), and this
+ * module uses the service-role Drizzle client (bypasses RLS) precisely
+ * because it's meant to serve one already-authorized admin's own tournament
+ * page — without the explicit filter here, a tournament_admin of tournament
+ * A would see tournament B's sync/diagnostic history too, which the RLS
+ * policy would never allow the equivalent RLS-scoped Supabase query to leak.
+ *
  * Scope note: this surfaces what Phase 4 already writes (sync_logs rows,
  * matches.normalization_status/warning_flag). Richer provider-health
  * monitoring, recalculation previews, and an audit-log viewer are Phase 7
@@ -39,8 +48,9 @@ export interface FlaggedMatchDiagnostic {
   warningFlag: string;
 }
 
-/** Most recent sync attempts across all tournaments, newest first — the raw material for the admin overview's sync-status card. */
+/** Most recent sync attempts for one tournament, newest first — the raw material for the admin overview's sync-status card. */
 export async function getRecentSyncLogs(
+  tournamentId: string,
   limit = 10,
 ): Promise<SyncLogDiagnostic[]> {
   const rows = await db
@@ -55,6 +65,7 @@ export async function getRecentSyncLogs(
     })
     .from(syncLogs)
     .innerJoin(tournaments, eq(syncLogs.tournamentId, tournaments.id))
+    .where(eq(syncLogs.tournamentId, tournamentId))
     .orderBy(desc(syncLogs.timestamp))
     .limit(limit);
 
@@ -70,6 +81,7 @@ export async function getRecentSyncLogs(
  * dropped, just surfaced for a human to look at (ARCHITECTURE.md §5).
  */
 export async function getFlaggedMatches(
+  tournamentId: string,
   limit = 20,
 ): Promise<FlaggedMatchDiagnostic[]> {
   const homeTeams = alias(teams, "home_teams");
@@ -90,6 +102,7 @@ export async function getFlaggedMatches(
     .innerJoin(awayTeams, eq(matches.awayTeamId, awayTeams.id))
     .where(
       and(
+        eq(matches.tournamentId, tournamentId),
         eq(matches.normalizationStatus, "flagged"),
         isNotNull(matches.warningFlag),
       ),
