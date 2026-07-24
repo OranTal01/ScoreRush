@@ -29,6 +29,13 @@
       "when": 1784790173823,
       "tag": "0003_teams_provider_id",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1784902207132,
+      "tag": "0004_amend_notifications_recipients",
+      "breakpoints": true
     }
   ]
 }

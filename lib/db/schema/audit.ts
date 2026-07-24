@@ -87,19 +87,42 @@ export const systemEvents = pgTable("system_events", {
     .defaultNow(),
 });
 
-/** Outbound notification records (future, Phase 8), delivery status (DATABASE.md §2). */
+/**
+ * Outbound notification records, delivery status (DATABASE.md §2, ROADMAP.md
+ * Phase 8). Scaffolded in Phase 3 (task #25) speculatively ahead of any real
+ * sender — `userId` was NOT NULL then, which doesn't fit Phase 8's first real
+ * trigger (an invitation email): the recipient is someone who typed an email
+ * into an invite form and doesn't have a `users` row yet (`invitations` has
+ * no FK to `users` for that same reason — see `boundEmail` there). `userId`
+ * is now nullable and `recipientEmail` is the one field every notification
+ * always has, matching who it actually went to regardless of whether that
+ * resolves to an account. `type` is free text (mirrors `systemEvents.type`)
+ * so future trigger types (match-lock reminder, etc.) don't need an enum
+ * migration each time. `providerMessageId`/`errorDetail` mirror `syncLogs`'
+ * outcome/error-detail shape — this table is read by the admin notification
+ * center (UX-BLUEPRINT.md admin screen #10) the same way `syncLogs` feeds
+ * the diagnostics screen. Table has never been written to (Phase 8 is its
+ * first real consumer), so widening it here is a safe, non-breaking ALTER.
+ */
 export const notifications = pgTable("notifications", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+  /** Set only when the recipient is already a known user (not true for invitation emails). */
+  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
   tournamentId: uuid("tournament_id").references(() => tournaments.id, {
     onDelete: "cascade",
   }),
+  /** Who this notification actually went to, independent of `userId`. */
+  recipientEmail: text("recipient_email").notNull(),
+  /** e.g. "invitation" — what triggered this notification. */
+  type: text("type").notNull(),
   channel: notificationChannelEnum("channel").notNull().default("email"),
   status: notificationStatusEnum("status").notNull().default("pending"),
   subject: text("subject"),
   body: text("body"),
+  /** The sending provider's own message id (e.g. Resend's), for support/debugging. */
+  providerMessageId: text("provider_message_id"),
+  /** Populated when status is "failed" — mirrors syncLogs.errorDetail. */
+  errorDetail: text("error_detail"),
   sentAt: timestamp("sent_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
