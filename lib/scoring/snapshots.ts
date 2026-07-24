@@ -105,7 +105,12 @@ function sumByParticipant(rows: ScoredRow[]): Map<string, number> {
   return totals;
 }
 
-async function sumMatchPoints(tournamentId: string): Promise<Map<string, number>> {
+/** Exported for reuse by the recalculation-preview orchestration (Phase 7
+ * task #61), which needs each participant's *current* match points as the
+ * baseline the proposed correction's delta is applied on top of — the same
+ * totals this module sums for a snapshot, so "current standings" always
+ * agrees with what the leaderboard/snapshot pipeline would compute. */
+export async function sumMatchPoints(tournamentId: string): Promise<Map<string, number>> {
   const tournamentMatches = await db
     .select({ id: matches.id })
     .from(matches)
@@ -127,7 +132,8 @@ async function sumMatchPoints(tournamentId: string): Promise<Map<string, number>
   return sumByParticipant(rows);
 }
 
-async function sumGroupPoints(tournamentId: string): Promise<Map<string, number>> {
+/** Exported for reuse by the recalculation-preview orchestration — see `sumMatchPoints` above. */
+export async function sumGroupPoints(tournamentId: string): Promise<Map<string, number>> {
   const rows = await db
     .select({
       participantId: groupPredictions.participantId,
@@ -138,7 +144,8 @@ async function sumGroupPoints(tournamentId: string): Promise<Map<string, number>
   return sumByParticipant(rows);
 }
 
-async function sumBonusPoints(tournamentId: string): Promise<Map<string, number>> {
+/** Exported for reuse by the recalculation-preview orchestration — see `sumMatchPoints` above. */
+export async function sumBonusPoints(tournamentId: string): Promise<Map<string, number>> {
   const categories = await db
     .select({ id: bonusCategories.id })
     .from(bonusCategories)

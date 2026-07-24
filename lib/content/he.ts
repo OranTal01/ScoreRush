@@ -447,4 +447,50 @@ export const diagnostics = {
   lastSyncedLabel: "סונכרן לאחרונה",
   warningLabel: "אזהרת נרמול",
   noWarning: "לא סומנה אזהרה",
+  correctResultCta: "תיקון תוצאת המשחק",
+} as const;
+
+/**
+ * Manual match-result correction + recalculation preview (Phase 7 task #61,
+ * UX-BLUEPRINT.md §4 screens #8-9). SCORING-RULES.md §9: the one remaining
+ * legitimate MVP use of "recalculation preview" is correcting a match
+ * result, never a rules change — rules are locked at tournament creation.
+ */
+export const overrides = {
+  title: "תיקון תוצאת משחק",
+  backToMatch: "חזרה לפרטי המשחק",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד זה",
+  errorNotAdmin: "עמוד זה מיועד למנהלי הטורניר בלבד",
+  errorNotFound: "המשחק לא נמצא",
+
+  scopeNote:
+    "התצוגה המקדימה מציגה את ההשפעה על נקודות המשחק בלבד. השפעה אפשרית על דירוג הבתים תחושב בפועל רק לאחר האישור, ואינה מוצגת כאן מראש. נקודות בונוס אינן מושפעות מתוצאת משחק בודד.",
+
+  currentResultLabel: "התוצאה הנוכחית",
+  proposedResultSection: "התוצאה המתוקנת",
+  homeScoreLabel: "שערי הבית",
+  awayScoreLabel: "שערי החוץ",
+  previewCta: "הצג תצוגה מקדימה",
+  previewPending: "מחשב…",
+
+  previewSection: "תצוגה מקדימה של השפעת התיקון",
+  predictionChangesEmpty: "אף אחד עדיין לא ניחש את המשחק הזה",
+  rankChangesSection: "שינויים בדירוג הכללי",
+  rankChangesEmpty: "התיקון הזה לא ישנה את הדירוג של אף משתתף",
+
+  reasonSection: "פרטי התיקון",
+  reasonInputLabel: "סיבת התיקון",
+  reasonPlaceholder: "לדוגמה: הספק החזיר תוצאה שגויה, אומתה מול השידור הרשמי",
+  evidenceInputLabel: "קישור/הפניה לאסמכתא (אופציונלי)",
+  evidencePlaceholder: "https://",
+  reversibleInputLabel: "ניתן לביטול התיקון",
+  applyCta: "אשר ובצע תיקון",
+  applyPending: "מבצע…",
+  applyConfirm: "לאשר את תיקון התוצאה? הפעולה תחשב מחדש את כל הניקוד בטורניר.",
+
+  successTitle: "התיקון בוצע בהצלחה",
+  successHint: "התוצאה עודכנה, הניקוד חושב מחדש ותמונת מצב חדשה של הדירוג נשמרה.",
+
+  errorInvalidInput: "יש למלא את כל השדות הנדרשים",
+  errorGeneric: "משהו השתבש, נסו שוב",
 } as const;

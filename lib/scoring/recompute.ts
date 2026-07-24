@@ -50,11 +50,16 @@ type ScoringRulesValues = MatchScoringRules & {
 /**
  * Mirrors the `scoring_rules` table's own column defaults — SCORING-RULES.md
  * §1 documents these as "the out-of-the-box default... for a new
- * tournament." Used whenever a tournament has no `scoring_rules` row yet:
- * there's currently no tournament-creation UI (Phase 7) that would insert
- * one, so a pilot tournament seeded directly in the DB may not have one.
+ * tournament." Used whenever a tournament has no `scoring_rules` row yet —
+ * the tournament-creation flow (Phase 7 task #58) always inserts one, but a
+ * pilot tournament seeded directly in the DB before that flow existed may
+ * not have one.
+ *
+ * Exported for reuse by the recalculation-preview orchestration (Phase 7
+ * task #61), so both the real recompute and the preview agree on the same
+ * fallback.
  */
-const DEFAULT_SCORING_RULES: ScoringRulesValues = {
+export const DEFAULT_SCORING_RULES: ScoringRulesValues = {
   exactScorePoints: 9,
   winnerAndDiffPoints: 6,
   winnerOnlyPoints: 3,

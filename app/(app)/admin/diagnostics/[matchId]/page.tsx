@@ -172,6 +172,12 @@ export default async function MatchDiagnosticPage({
             {match.warningFlag ?? content.noWarning}
           </span>
         </p>
+        <Link
+          href={`/admin/overrides/${match.id}`}
+          className="w-fit text-xs font-bold text-[var(--interactive)]"
+        >
+          {content.correctResultCta}
+        </Link>
       </Card>
 
       <Card className="flex flex-col gap-3">
