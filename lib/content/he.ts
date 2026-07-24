@@ -268,6 +268,7 @@ export const admin = {
   firstTournamentPromptBody:
     "בתור בעל הפלטפורמה תוכל ליצור כאן טורניר חדש, כולל כללי הניקוד, קטגוריות הבונוס והפרסים שלו.",
   manageParticipantsCta: "ניהול משתתפים",
+  diagnosticsCta: "אבחון וסנכרון",
 } as const;
 
 /**
@@ -391,4 +392,59 @@ export const participantsAdmin = {
   errorCannotChangeOwnRole: "לא ניתן לשנות את התפקיד של עצמך",
   errorNotFound: "הרשומה לא נמצאה, ייתכן שכבר טופלה",
   errorGeneric: "משהו השתבש. ננסה שוב בקרוב.",
+} as const;
+
+/**
+ * Match diagnostics + provider health + full sync log (UX-BLUEPRINT.md §4
+ * screens #3-5, Phase 7 task #60). Read-only — no server actions here, this
+ * screen only surfaces what the sync pipeline (Phase 4) already writes.
+ * Admin-only, same guard shape as the other admin/* screens.
+ */
+export const diagnostics = {
+  title: "אבחון וסנכרון",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד זה",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  errorNotAdmin: "עמוד זה מיועד למנהלי הטורניר בלבד",
+  backToDiagnostics: "אבחון וסנכרון",
+
+  providerHealthSection: "בריאות ספק הנתונים",
+  matchDataProviderLabel: "ספק תוצאות משחקים",
+  bonusStatsProviderLabel: "ספק נתוני בונוס",
+  lastSuccessfulSyncLabel: "סנכרון מוצלח אחרון",
+  lastAttemptLabel: "ניסיון סנכרון אחרון",
+  recentErrorsLabel: (errorCount: number, attemptCount: number) =>
+    `${errorCount} שגיאות מתוך ${attemptCount} הניסיונות האחרונים`,
+  noProviderConfig: "לא נמצאה הגדרת ספק נתונים לטורניר זה",
+  neverSyncedLabel: "טרם בוצע סנכרון",
+
+  syncLogSection: "יומן סנכרון מלא",
+
+  matchListSection: "כל המשחקים",
+  matchListEmpty: "אין עדיין משחקים בטורניר זה",
+  statusScheduled: "טרם החל",
+  statusLive: "בשידור חי",
+  statusFinished: "הסתיים",
+  statusPostponed: "נדחה",
+  statusCancelled: "בוטל",
+  normalizationPending: "ממתין לנרמול",
+  normalizationNormalized: "מנורמל",
+  normalizationFlagged: "סומן באזהרה",
+  viewDetailCta: "פרטים",
+
+  detailNotFound: "המשחק לא נמצא",
+  rawPayloadSection: "המידע הגולמי מהספק",
+  rawPayloadEmpty: "אין מידע גולמי — משחק שהוזן ידנית",
+  normalizedResultSection: "התוצאה המנורמלת",
+  regularResultLabel: "תוצאה רגילה (90 דקות)",
+  extraTimeResultLabel: "אחרי הארכה",
+  penaltyResultLabel: "פנדלים",
+  liveScoreLabel: "תוצאה חיה",
+  winnerLabel: "מנצח/ת",
+  winnerDrawLabel: "תיקו",
+  noResultYet: "טרם נקבעה תוצאה",
+  providerMatchIdLabel: "מזהה המשחק אצל הספק",
+  manualEntryLabel: "משחק שהוזן ידנית (אין מזהה ספק)",
+  lastSyncedLabel: "סונכרן לאחרונה",
+  warningLabel: "אזהרת נרמול",
+  noWarning: "לא סומנה אזהרה",
 } as const;

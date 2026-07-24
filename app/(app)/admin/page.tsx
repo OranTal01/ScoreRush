@@ -7,6 +7,7 @@ import {
   formatMatchTime,
   pendingLockMatches,
 } from "@/lib/mock";
+import { PROVIDER_LABELS } from "@/lib/providers/labels";
 import { createClient } from "@/lib/supabase/server";
 import { getFlaggedMatches, getRecentSyncLogs } from "@/lib/sync/diagnostics";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
@@ -24,12 +25,6 @@ type SyncHealth = "healthy" | "failed";
 const HEALTH_TONE: Record<SyncHealth, StatusTone> = {
   healthy: "success",
   failed: "danger",
-};
-
-/** Friendly label for a `tournament_providers` provider name (ARCHITECTURE.md §6) — falls back to the raw value for any future provider added without a UI update. */
-const PROVIDER_LABELS: Record<string, string> = {
-  football_data_org: "football-data.org",
-  manual: "ידני",
 };
 
 // Sync/normalization diagnostics are read live from the database on every
@@ -131,6 +126,12 @@ export default async function AdminOverviewPage() {
             className="text-xs font-bold text-[var(--interactive)]"
           >
             {content.manageParticipantsCta}
+          </Link>
+          <Link
+            href="/admin/diagnostics"
+            className="text-xs font-bold text-[var(--interactive)]"
+          >
+            {content.diagnosticsCta}
           </Link>
           {isPlatformOwner && (
             <Link
