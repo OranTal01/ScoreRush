@@ -133,6 +133,12 @@ export default async function AdminOverviewPage() {
           >
             {content.diagnosticsCta}
           </Link>
+          <Link
+            href="/admin/audit"
+            className="text-xs font-bold text-[var(--interactive)]"
+          >
+            {content.auditLogCta}
+          </Link>
           {isPlatformOwner && (
             <Link
               href="/admin/tournaments/new"

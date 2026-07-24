@@ -269,6 +269,7 @@ export const admin = {
     "בתור בעל הפלטפורמה תוכל ליצור כאן טורניר חדש, כולל כללי הניקוד, קטגוריות הבונוס והפרסים שלו.",
   manageParticipantsCta: "ניהול משתתפים",
   diagnosticsCta: "אבחון וסנכרון",
+  auditLogCta: "יומן ביקורת",
 } as const;
 
 /**
@@ -493,4 +494,46 @@ export const overrides = {
 
   errorInvalidInput: "יש למלא את כל השדות הנדרשים",
   errorGeneric: "משהו השתבש, נסו שוב",
+} as const;
+
+/**
+ * Audit log viewer (UX-BLUEPRINT.md §4 screen #11: "Full chronological log
+ * of all admin actions in the tournament", Phase 7 task #62). Read-only,
+ * admin-only, same guard shape as the other admin/* list screens. Merges
+ * `admin_overrides` (human action record) and `score_audit_logs`
+ * (field-level before/after record) into one feed — see lib/audit/log.ts's
+ * doc comment for why the two are FK-uncorrelated by design.
+ */
+export const auditLog = {
+  title: "יומן ביקורת",
+  backToAdmin: "סקירת ניהול",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד זה",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  errorNotAdmin: "עמוד זה מיועד למנהלי הטורניר בלבד",
+
+  empty: "עדיין לא בוצעו פעולות ניהול הדורשות תיעוד בטורניר זה",
+
+  overrideTypeLabel: "תיקון ידני",
+  scoreChangeTypeLabel: "שינוי ניקוד",
+
+  actingAdminLabel: "בוצע על ידי",
+  reasonLabel: "סיבה",
+  evidenceLabel: "אסמכתא",
+  reversibleLabel: "ניתן לביטול",
+  notReversibleLabel: "לא ניתן לביטול",
+  reversedAtLabel: "בוטל בתאריך",
+
+  entityLabels: { match: "משחק" } as Record<string, string>,
+  fieldLabels: {
+    regular_result: "תוצאה רגילה",
+    winner: "מנצח/ת",
+  } as Record<string, string>,
+
+  winnerValueLabels: {
+    home: "קבוצת הבית",
+    away: "קבוצת החוץ",
+    draw: "תיקו",
+  } as Record<string, string>,
+  winnerValueNone: "טרם נקבע",
+  noValue: "—",
 } as const;
