@@ -267,6 +267,7 @@ export const admin = {
   firstTournamentPromptTitle: "עדיין אין לך טורניר",
   firstTournamentPromptBody:
     "בתור בעל הפלטפורמה תוכל ליצור כאן טורניר חדש, כולל כללי הניקוד, קטגוריות הבונוס והפרסים שלו.",
+  manageParticipantsCta: "ניהול משתתפים",
 } as const;
 
 /**
@@ -336,5 +337,58 @@ export const createTournament = {
   backToAdmin: "מעבר לניהול הטורניר",
 
   errorInvalidInput: "יש לתקן את השדות המסומנים",
+  errorGeneric: "משהו השתבש. ננסה שוב בקרוב.",
+} as const;
+
+/**
+ * Participant management screen (UX-BLUEPRINT.md §4 screen #2: "Member
+ * list, roles, invitation status, remove/re-invite"). Admin-only (platform
+ * admin or the tournament's own tournament_admin, lib/auth/admin.ts).
+ * Invitation links have no delivery channel yet (Phase 8 notifications
+ * don't exist) — the admin copies the link and shares it manually.
+ */
+export const participantsAdmin = {
+  title: "ניהול משתתפים",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד זה",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  errorNotAdmin: "עמוד זה מיועד למנהלי הטורניר בלבד",
+
+  membersSection: "משתתפים",
+  youLabel: "(אתה)",
+  roleAdmin: "מנהל/ת טורניר",
+  roleParticipant: "משתתף/ת",
+  makeAdminCta: "הפיכה למנהל/ת",
+  makeParticipantCta: "הסרת הרשאות ניהול",
+  removeCta: "הסרה מהטורניר",
+  removeConfirm: "להסיר את המשתתף/ת מהטורניר? לא ניתן לבטל פעולה זו.",
+
+  invitationsSection: "הזמנות",
+  invitationsEmptyHint: "אין עדיין הזמנות פעילות",
+  statusPending: "ממתינה",
+  statusConsumed: "נוצלה",
+  statusExpired: "פגה",
+  statusRevoked: "בוטלה",
+  boundEmailLabel: "משויכת לאימייל:",
+  openInvitationLabel: "פתוחה לכל מי שמחזיק בקישור",
+  expiresLabel: "בתוקף עד",
+  noExpiryLabel: "ללא תפוגה",
+  revokeCta: "ביטול ההזמנה",
+  revokeConfirm: "לבטל את ההזמנה? לא ניתן לבטל פעולה זו.",
+
+  createInvitationSection: "יצירת הזמנה חדשה",
+  boundEmailInputLabel: "הגבלה לכתובת אימייל (אופציונלי)",
+  boundEmailPlaceholder: "name@example.com",
+  createInvitationCta: "יצירת קישור הזמנה",
+  createInvitationPending: "יוצר הזמנה…",
+  invitationCreatedTitle: "ההזמנה נוצרה",
+  invitationCreatedHint:
+    "שתפו את הקישור הזה עם המוזמן/ת (בוואטסאפ, אימייל וכו') — הוא לא יוצג שוב.",
+  copyLinkCta: "העתקת הקישור",
+  copiedCta: "הועתק!",
+
+  errorInvalidInput: "יש לתקן את השדות המסומנים",
+  errorCannotRemoveSelf: "לא ניתן להסיר את עצמך מהטורניר",
+  errorCannotChangeOwnRole: "לא ניתן לשנות את התפקיד של עצמך",
+  errorNotFound: "הרשומה לא נמצאה, ייתכן שכבר טופלה",
   errorGeneric: "משהו השתבש. ננסה שוב בקרוב.",
 } as const;

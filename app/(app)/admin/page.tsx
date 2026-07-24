@@ -125,14 +125,22 @@ export default async function AdminOverviewPage() {
         <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
           {content.overviewTitle}
         </h1>
-        {isPlatformOwner && (
+        <div className="flex items-center gap-3">
           <Link
-            href="/admin/tournaments/new"
+            href="/admin/participants"
             className="text-xs font-bold text-[var(--interactive)]"
           >
-            {content.createTournamentCta}
+            {content.manageParticipantsCta}
           </Link>
-        )}
+          {isPlatformOwner && (
+            <Link
+              href="/admin/tournaments/new"
+              className="text-xs font-bold text-[var(--interactive)]"
+            >
+              {content.createTournamentCta}
+            </Link>
+          )}
+        </div>
       </div>
 
       <Card className="flex flex-col gap-3">
