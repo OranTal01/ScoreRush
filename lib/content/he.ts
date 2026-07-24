@@ -263,4 +263,78 @@ export const admin = {
   flaggedMatchesLabel: "משחקים שסומנו באזהרת נרמול",
   flaggedMatchesEmpty: "אין כרגע משחקים המסומנים באזהרה",
   noSyncLogsYet: "עדיין לא היו ניסיונות סנכרון",
+  createTournamentCta: "יצירת טורניר חדש",
+  firstTournamentPromptTitle: "עדיין אין לך טורניר",
+  firstTournamentPromptBody:
+    "בתור בעל הפלטפורמה תוכל ליצור כאן טורניר חדש, כולל כללי הניקוד, קטגוריות הבונוס והפרסים שלו.",
+} as const;
+
+/**
+ * Tournament creation flow — the one point where scoring/bonus/prize
+ * configuration is set (DECISIONS.md "Rule editability mid-tournament":
+ * locked at creation, never edited afterward, so screens #6/#7 from
+ * UX-BLUEPRINT.md §4 collapse into this single creation-time flow rather
+ * than separate post-creation editing screens). Platform-owner-only
+ * (DECISIONS.md "Tournament creation").
+ */
+export const createTournament = {
+  title: "יצירת טורניר חדש",
+  errorNotPlatformAdmin: "רק בעל הפלטפורמה יכול ליצור טורניר חדש",
+  errorUnauthenticated: "יש להתחבר כדי ליצור טורניר",
+
+  basicsSection: "פרטי הטורניר",
+  nameLabel: "שם הטורניר",
+  namePlaceholder: 'לדוגמה: "ליגת האלופות 2027 — משפחת פישר"',
+  competitionLabel: "מזהה התחרות",
+  competitionPlaceholder: "לדוגמה: champions_league",
+  competitionHint:
+    "שדה חופשי, לא רשימה סגורה — כדי לתמוך בכל תחרות עתידית בלי שינוי קוד",
+
+  providerSection: "מקור נתונים",
+  providerHint:
+    "אותה בחירה חלה גם על תוצאות המשחקים וגם על נתוני הבונוס (קלעים/בישולים) — football-data.org מספק את שניהם דרך אותה תחרות",
+  providerFootballData: "football-data.org (אוטומטי)",
+  providerManual: "ידני",
+  competitionCodeLabel: "קוד התחרות ב-football-data.org",
+  competitionCodePlaceholder: "לדוגמה: CL",
+  seasonLabel: "עונה (אופציונלי)",
+
+  scoringSection: "כללי ניקוד",
+  exactScoreLabel: "תוצאה מדויקת",
+  winnerAndDiffLabel: "מנצחת + הפרש שערים",
+  winnerOnlyLabel: "מנצחת בלבד",
+  wrongLabel: "תחזית שגויה",
+  groupRankingLabel: "נקודות לכל מיקום נכון בטבלת הבתים",
+
+  bonusSection: "קטגוריות בונוס",
+  bonusEmptyHint: "אין עדיין קטגוריות בונוס — אפשר להוסיף למטה",
+  addBonusCategory: "הוספת קטגוריית בונוס",
+  bonusNameLabel: "שם הקטגוריה",
+  bonusNamePlaceholder: 'לדוגמה: "מלך השערים"',
+  bonusTypeLabel: "סוג",
+  bonusTypePlaceholder: "לדוגמה: player",
+  bonusResolvesAtLabel: "מתי מוכרעת",
+  bonusResolvesOngoing: "לאורך הטורניר",
+  bonusResolvesEnd: "רק בסיום הטורניר",
+  bonusDuplicateStackingLabel: "אפשר לבחור אותו שם במספר משבצות",
+  bonusSlotsLabel: "משבצות וניקוד",
+  addBonusSlot: "הוספת משבצת",
+  slotLabel: (index: number) => `משבצת ${index}`,
+  removeCategory: "הסרת הקטגוריה",
+  removeSlot: "הסרה",
+
+  prizesSection: "פרסים",
+  prizesEmptyHint: "אין עדיין פרסים מוגדרים — אפשר להוסיף למטה",
+  addPrize: "הוספת פרס",
+  prizeRankLabel: (rank: number) => `מקום ${rank}`,
+  prizeDescriptionPlaceholder: 'לדוגמה: "מנוי VIP לעונה הבאה"',
+  removePrize: "הסרה",
+
+  submitCta: "יצירת הטורניר",
+  submitPending: "יוצר טורניר…",
+  successMessage: "הטורניר נוצר בהצלחה",
+  backToAdmin: "מעבר לניהול הטורניר",
+
+  errorInvalidInput: "יש לתקן את השדות המסומנים",
+  errorGeneric: "משהו השתבש. ננסה שוב בקרוב.",
 } as const;

@@ -1,4 +1,4 @@
-import { getAdminContext } from "@/lib/auth/admin";
+import { getAdminContext, isPlatformAdmin } from "@/lib/auth/admin";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { MobileHeader } from "../_components/nav/mobile-header";
@@ -45,9 +45,15 @@ export default async function AppShellLayout({
 }
 
 /** Resolves the caller's admin status for their current tournament, or
- * `false` for a signed-out visitor or a user with no tournament yet — never
- * throws, since this runs on every page in the app shell including public
- * ones. */
+ * `false` for a signed-out visitor — never throws, since this runs on every
+ * page in the app shell including public ones.
+ *
+ * A user with no tournament yet still counts as admin if they're the
+ * platform owner: tournament creation (Phase 7 task #58,
+ * app/(app)/admin/tournaments/new) is a global capability that doesn't
+ * require existing membership, and is exactly what a platform owner with
+ * zero tournaments needs to reach — hiding the header admin entry point in
+ * that bootstrap case would make it undiscoverable. */
 async function resolveIsAdmin(): Promise<boolean> {
   const supabase = await createClient();
   const {
@@ -56,7 +62,7 @@ async function resolveIsAdmin(): Promise<boolean> {
   if (!user) return false;
 
   const current = await getCurrentParticipant(supabase, user.id);
-  if (!current) return false;
+  if (!current) return isPlatformAdmin(supabase, user.id);
 
   const { isAdmin } = await getAdminContext(
     supabase,

@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { colors } from "@/lib/design-tokens";
 import { admin as content, common } from "@/lib/content/he";
-import { getAdminContext } from "@/lib/auth/admin";
+import { getAdminContext, isPlatformAdmin } from "@/lib/auth/admin";
 import {
   adminOverrides,
   formatMatchTime,
@@ -63,11 +64,46 @@ export default async function AdminOverviewPage() {
 
   const current = await getCurrentParticipant(supabase, user.id);
   if (!current) {
+    // No tournament membership yet — still a legitimate state for the
+    // platform owner, whose very first action is creating one (Phase 7 task
+    // #58). Anyone else with no membership genuinely has nothing to see
+    // here.
+    if (await isPlatformAdmin(supabase, user.id)) {
+      return (
+        <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
+          <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
+            {content.overviewTitle}
+          </h1>
+          <Card className="flex flex-col items-center gap-3 py-8 text-center">
+            <span className="text-sm font-extrabold text-[var(--text-primary)]">
+              {content.firstTournamentPromptTitle}
+            </span>
+            <span className="text-xs text-[var(--text-secondary)]">
+              {content.firstTournamentPromptBody}
+            </span>
+            <Link
+              href="/admin/tournaments/new"
+              className="mt-1 px-4 py-2.5 text-sm font-bold text-[#080B14]"
+              style={{
+                background: colors.interactive,
+                borderRadius: "var(--radius-button)",
+              }}
+            >
+              {content.createTournamentCta}
+            </Link>
+          </Card>
+        </div>
+      );
+    }
     return <EmptyState message={content.errorNotAMember} />;
   }
   const { tournamentId } = current;
 
-  const { isAdmin } = await getAdminContext(supabase, user.id, tournamentId);
+  const { isAdmin, isPlatformAdmin: isPlatformOwner } = await getAdminContext(
+    supabase,
+    user.id,
+    tournamentId,
+  );
   if (!isAdmin) {
     return <EmptyState message={content.errorNotAdmin} />;
   }
@@ -85,9 +121,19 @@ export default async function AdminOverviewPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
-      <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
-        {content.overviewTitle}
-      </h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
+          {content.overviewTitle}
+        </h1>
+        {isPlatformOwner && (
+          <Link
+            href="/admin/tournaments/new"
+            className="text-xs font-bold text-[var(--interactive)]"
+          >
+            {content.createTournamentCta}
+          </Link>
+        )}
+      </div>
 
       <Card className="flex flex-col gap-3">
         <SectionHeader
