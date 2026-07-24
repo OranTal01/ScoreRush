@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getFlaggedMatches, getRecentSyncLogs } from "@/lib/sync/diagnostics";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { MatchCard } from "../../_components/match-card";
+import { AdminSubTabs } from "../../_components/nav/admin-sub-tabs";
 import {
   Card,
   EmptyState,
@@ -116,38 +117,19 @@ export default async function AdminOverviewPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
+      <AdminSubTabs />
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
           {content.overviewTitle}
         </h1>
-        <div className="flex items-center gap-3">
+        {isPlatformOwner && (
           <Link
-            href="/admin/participants"
+            href="/admin/tournaments/new"
             className="text-xs font-bold text-[var(--interactive)]"
           >
-            {content.manageParticipantsCta}
+            {content.createTournamentCta}
           </Link>
-          <Link
-            href="/admin/diagnostics"
-            className="text-xs font-bold text-[var(--interactive)]"
-          >
-            {content.diagnosticsCta}
-          </Link>
-          <Link
-            href="/admin/audit"
-            className="text-xs font-bold text-[var(--interactive)]"
-          >
-            {content.auditLogCta}
-          </Link>
-          {isPlatformOwner && (
-            <Link
-              href="/admin/tournaments/new"
-              className="text-xs font-bold text-[var(--interactive)]"
-            >
-              {content.createTournamentCta}
-            </Link>
-          )}
-        </div>
+        )}
       </div>
 
       <Card className="flex flex-col gap-3">

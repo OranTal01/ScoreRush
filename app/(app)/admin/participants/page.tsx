@@ -3,6 +3,7 @@ import { getAdminContext } from "@/lib/auth/admin";
 import { getOrigin } from "@/lib/auth/get-origin";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
+import { AdminSubTabs } from "@/app/_components/nav/admin-sub-tabs";
 import { EmptyState } from "@/app/_components/ui";
 import { ParticipantsAdminScreen } from "./_components/participants-admin-screen";
 
@@ -104,6 +105,7 @@ export default async function ParticipantsAdminPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
+      <AdminSubTabs />
       <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
         {content.title}
       </h1>

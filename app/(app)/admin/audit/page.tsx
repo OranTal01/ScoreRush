@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { auditLog as content, common } from "@/lib/content/he";
 import { colors } from "@/lib/design-tokens";
 import { getAdminContext } from "@/lib/auth/admin";
@@ -6,6 +5,7 @@ import { getAuditLog, type AuditLogEntry } from "@/lib/audit/log";
 import { formatMatchTime } from "@/lib/mock";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
+import { AdminSubTabs } from "@/app/_components/nav/admin-sub-tabs";
 import { Card, EmptyState, Pill } from "@/app/_components/ui";
 
 /** Renders one previous/new audit value with the right formatting for its field — a
@@ -149,13 +149,7 @@ export default async function AuditLogPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
-      <Link
-        href="/admin"
-        className="text-xs font-semibold text-[var(--text-muted)]"
-      >
-        {`< ${content.backToAdmin}`}
-      </Link>
-
+      <AdminSubTabs />
       <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
         {content.title}
       </h1>

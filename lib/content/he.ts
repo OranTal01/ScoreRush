@@ -267,9 +267,6 @@ export const admin = {
   firstTournamentPromptTitle: "עדיין אין לך טורניר",
   firstTournamentPromptBody:
     "בתור בעל הפלטפורמה תוכל ליצור כאן טורניר חדש, כולל כללי הניקוד, קטגוריות הבונוס והפרסים שלו.",
-  manageParticipantsCta: "ניהול משתתפים",
-  diagnosticsCta: "אבחון וסנכרון",
-  auditLogCta: "יומן ביקורת",
 } as const;
 
 /**
@@ -506,7 +503,6 @@ export const overrides = {
  */
 export const auditLog = {
   title: "יומן ביקורת",
-  backToAdmin: "סקירת ניהול",
   errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד זה",
   errorNotAMember: "אינך חבר בטורניר הזה",
   errorNotAdmin: "עמוד זה מיועד למנהלי הטורניר בלבד",

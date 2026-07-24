@@ -16,6 +16,7 @@ import {
   type MatchDiagnosticSummary,
 } from "@/lib/sync/diagnostics";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
+import { AdminSubTabs } from "@/app/_components/nav/admin-sub-tabs";
 import { Card, EmptyState, Pill, SectionHeader, type StatusTone } from "@/app/_components/ui";
 
 const STATUS_LABEL: Record<MatchDiagnosticSummary["status"], string> = {
@@ -92,6 +93,7 @@ export default async function DiagnosticsPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
+      <AdminSubTabs />
       <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
         {content.title}
       </h1>
