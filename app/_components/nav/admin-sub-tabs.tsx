@@ -7,6 +7,7 @@ import {
   admin,
   auditLog,
   diagnostics,
+  notificationCenter,
   participantsAdmin,
 } from "@/lib/content/he";
 
@@ -14,6 +15,7 @@ const items = [
   { href: "/admin", label: admin.overviewTitle },
   { href: "/admin/participants", label: participantsAdmin.title },
   { href: "/admin/diagnostics", label: diagnostics.title },
+  { href: "/admin/notifications", label: notificationCenter.title },
   { href: "/admin/audit", label: auditLog.title },
 ] as const;
 

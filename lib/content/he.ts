@@ -557,3 +557,38 @@ export const auditLog = {
   winnerValueNone: "טרם נקבע",
   noValue: "—",
 } as const;
+
+/**
+ * Admin notification center (UX-BLUEPRINT.md §4 screen #10: "Delivery
+ * status for sent notifications", Phase 8 task #68). Read-only, same
+ * guard/list-page shape as `auditLog` above — this screen only ever
+ * displays what lib/notifications/list.ts's getNotificationLog already
+ * reads from `notifications` (the table Phase 8 task #67's invitation
+ * email flow writes to).
+ */
+export const notificationCenter = {
+  title: "מרכז התראות",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד זה",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  errorNotAdmin: "עמוד זה מיועד למנהלי הטורניר בלבד",
+
+  empty: "עדיין לא נשלחו התראות בטורניר זה",
+
+  recipientLabel: "נמען",
+  sentAtLabel: "נשלח בתאריך",
+  errorDetailLabel: "פרטי שגיאה",
+
+  channelLabels: {
+    email: "אימייל",
+    push: "פוש",
+    whatsapp: "וואטסאפ",
+  } as Record<string, string>,
+  typeLabels: {
+    invitation: "הזמנה",
+  } as Record<string, string>,
+  statusLabels: {
+    pending: "ממתין",
+    sent: "נשלח",
+    failed: "נכשל",
+  } as Record<string, string>,
+} as const;

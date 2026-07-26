@@ -36,6 +36,13 @@
       "when": 1784902207132,
       "tag": "0004_amend_notifications_recipients",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1784990600000,
+      "tag": "0005_notifications_admin_select",
+      "breakpoints": true
     }
   ]
 }
