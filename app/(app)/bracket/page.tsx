@@ -4,6 +4,7 @@ import { listTournamentMatches } from "@/lib/matches/list";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { MatchCard } from "../../_components/match-card";
+import { MotionIn } from "../../_components/motion/motion-in";
 import { SubTabs } from "../../_components/nav/sub-tabs";
 import { EmptyState, SectionHeader } from "../../_components/ui";
 
@@ -57,8 +58,10 @@ export default async function BracketPage() {
           <div className="flex flex-1 flex-col gap-2">
             <SectionHeader title={content.semiFinal} />
             <div className="flex flex-col gap-4 md:h-full md:justify-between">
-              {semifinals.map((match) => (
-                <MatchCard key={match.id} match={match} />
+              {semifinals.map((match, index) => (
+                <MotionIn key={match.id} index={index}>
+                  <MatchCard match={match} />
+                </MotionIn>
               ))}
             </div>
           </div>
@@ -72,7 +75,9 @@ export default async function BracketPage() {
           {final && (
             <div className="flex flex-1 flex-col gap-2 md:max-w-[300px]">
               <SectionHeader title={content.final} />
-              <MatchCard match={final} />
+              <MotionIn index={semifinals.length}>
+                <MatchCard match={final} />
+              </MotionIn>
             </div>
           )}
         </div>

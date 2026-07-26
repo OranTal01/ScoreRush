@@ -7,11 +7,21 @@ import {
   tournamentSwitcher,
 } from "@/lib/content/he";
 import { listTournamentMatches } from "@/lib/matches/list";
-import { computeStandings, type StandingsInput } from "@/lib/scoring/leaderboard";
+import {
+  computeStandings,
+  type StandingsInput,
+} from "@/lib/scoring/leaderboard";
 import { computePredictionStreaks } from "@/lib/scoring/streaks";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
-import { Avatar, Card, EmptyState, Pill, SectionHeader } from "../../_components/ui";
+import { MotionIn } from "../../_components/motion/motion-in";
+import {
+  Avatar,
+  Card,
+  EmptyState,
+  Pill,
+  SectionHeader,
+} from "../../_components/ui";
 import { signOut } from "../../auth/actions";
 
 type ParticipantRow = {
@@ -132,136 +142,156 @@ export default async function ProfilePage() {
   const batches = groupIntoBatches(snapshotRows ?? []);
   const latestBatch = batches[0] ?? [];
   const previousBatch = batches[1] ?? [];
-  const latestByParticipant = new Map(latestBatch.map((r) => [r.participant_id, r]));
+  const latestByParticipant = new Map(
+    latestBatch.map((r) => [r.participant_id, r]),
+  );
   const previousRankByParticipant = new Map(
     previousBatch.map((r) => [r.participant_id, r.rank]),
   );
-  const standingsInput: StandingsInput[] = (tournamentParticipants ?? []).map((p) => {
-    const latest = latestByParticipant.get(p.id);
-    return {
-      participantId: p.id,
-      matchPoints: latest?.match_points ?? 0,
-      groupRankingPoints: latest?.group_ranking_points ?? 0,
-      bonusPoints: latest?.bonus_points ?? 0,
-    };
-  });
+  const standingsInput: StandingsInput[] = (tournamentParticipants ?? []).map(
+    (p) => {
+      const latest = latestByParticipant.get(p.id);
+      return {
+        participantId: p.id,
+        matchPoints: latest?.match_points ?? 0,
+        groupRankingPoints: latest?.group_ranking_points ?? 0,
+        bonusPoints: latest?.bonus_points ?? 0,
+      };
+    },
+  );
   const standings = computeStandings(standingsInput);
   const selfStanding = standings.find((s) => s.participantId === selfId);
   const selfRank = selfStanding?.rank ?? 0;
   const selfPreviousRank = previousRankByParticipant.get(selfId) ?? selfRank;
   const rankMoved = selfPreviousRank - selfRank;
 
-  const { exactStreak, correctStreak, accuracyPercent } = computePredictionStreaks(
-    matches
-      .filter((m) => m.ownPrediction !== null)
-      .map((m) => ({ kickoff: m.kickoff, outcome: m.ownPrediction!.outcome })),
-  );
+  const { exactStreak, correctStreak, accuracyPercent } =
+    computePredictionStreaks(
+      matches
+        .filter((m) => m.ownPrediction !== null)
+        .map((m) => ({
+          kickoff: m.kickoff,
+          outcome: m.ownPrediction!.outcome,
+        })),
+    );
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[480px]">
-      <Card padding="hero" className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{ background: gradients.hero }}
-        />
-        <div className="relative flex flex-col items-center gap-3 text-center">
-          <Avatar initials={self.avatar_initials ?? "?"} self size={72} />
-          <div className="flex flex-col gap-0.5">
-            <span className="text-lg font-extrabold text-[var(--text-primary)]">
-              {self.display_name}
-            </span>
-            <span className="text-xs font-semibold text-[var(--text-muted)]">
-              {self.role === "tournament_admin"
-                ? content.roleAdmin
-                : content.roleParticipant}
-            </span>
-          </div>
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col items-center gap-0.5">
-              <span className="ltr text-2xl font-black text-[var(--gold)] tabular-nums">
-                {selfStanding?.totalPoints ?? 0}
+      <MotionIn index={0}>
+        <Card padding="hero" className="relative overflow-hidden">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: gradients.hero }}
+          />
+          <div className="relative flex flex-col items-center gap-3 text-center">
+            <Avatar initials={self.avatar_initials ?? "?"} self size={72} />
+            <div className="flex flex-col gap-0.5">
+              <span className="text-lg font-extrabold text-[var(--text-primary)]">
+                {self.display_name}
               </span>
-              <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                {common.points}
+              <span className="text-xs font-semibold text-[var(--text-muted)]">
+                {self.role === "tournament_admin"
+                  ? content.roleAdmin
+                  : content.roleParticipant}
               </span>
             </div>
-            <div className="flex flex-col items-center gap-0.5">
-              <span className="ltr text-2xl font-black text-[var(--text-primary)] tabular-nums">
-                {selfRank}
-              </span>
-              <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                {common.rank}
-              </span>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="px-4 py-2 text-xs font-bold text-[var(--text-primary)]"
-            style={{
-              background: colors.surfaceCard2,
-              borderRadius: "var(--radius-button)",
-            }}
-          >
-            {content.editProfile}
-          </button>
-        </div>
-      </Card>
-
-      <Card className="flex flex-col gap-3">
-        <SectionHeader title={content.rankHistoryLabel} />
-        {rankMoved !== 0 ? (
-          <Pill tone={rankMoved > 0 ? "success" : "danger"}>
-            {rankMoved > 0 ? scoring.rankUp : scoring.rankDown} ·{" "}
-            {Math.abs(rankMoved)} מקומות
-          </Pill>
-        ) : (
-          <Pill tone="muted">
-            {content.rankUnchanged} · {common.rank} {selfRank}
-          </Pill>
-        )}
-      </Card>
-
-      <Card className="flex flex-col gap-3">
-        <SectionHeader title={content.achievementsLabel} />
-        {accuracyPercent === null ? (
-          <EmptyState message={content.noAchievementsYet} />
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            <Pill tone="gold">
-              🎯 {content.exactStreaksLabel} · {exactStreak}
-            </Pill>
-            <Pill tone="interactive">
-              🔥 {content.streaksLabel} · {correctStreak}
-            </Pill>
-            <Pill tone="muted">
-              📈 {content.accuracyLabel} · {accuracyPercent}%
-            </Pill>
-          </div>
-        )}
-      </Card>
-
-      <Card className="flex flex-col gap-3">
-        <SectionHeader title={content.linkedTournaments} />
-        <ul className="flex flex-col gap-2">
-          {linkedTournaments.map((t) => (
-            <li
-              key={t.id}
-              className="flex items-center justify-between gap-2 text-xs"
-            >
-              <div className="flex flex-col">
-                <span className="font-bold text-[var(--text-primary)]">
-                  {t.name}
+            <div className="flex items-center gap-6">
+              <div className="flex flex-col items-center gap-0.5">
+                <span className="ltr text-2xl font-black text-[var(--gold)] tabular-nums">
+                  {selfStanding?.totalPoints ?? 0}
                 </span>
-                <span className="text-[var(--text-muted)]">{t.competition}</span>
+                <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
+                  {common.points}
+                </span>
               </div>
-              {t.id === tournamentId && (
-                <Pill tone="interactive">{tournamentSwitcher.activeLabel}</Pill>
-              )}
-            </li>
-          ))}
-        </ul>
-      </Card>
+              <div className="flex flex-col items-center gap-0.5">
+                <span className="ltr text-2xl font-black text-[var(--text-primary)] tabular-nums">
+                  {selfRank}
+                </span>
+                <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
+                  {common.rank}
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="px-4 py-2 text-xs font-bold text-[var(--text-primary)]"
+              style={{
+                background: colors.surfaceCard2,
+                borderRadius: "var(--radius-button)",
+              }}
+            >
+              {content.editProfile}
+            </button>
+          </div>
+        </Card>
+      </MotionIn>
+
+      <MotionIn index={1}>
+        <Card className="flex flex-col gap-3">
+          <SectionHeader title={content.rankHistoryLabel} />
+          {rankMoved !== 0 ? (
+            <Pill tone={rankMoved > 0 ? "success" : "danger"}>
+              {rankMoved > 0 ? scoring.rankUp : scoring.rankDown} ·{" "}
+              {Math.abs(rankMoved)} מקומות
+            </Pill>
+          ) : (
+            <Pill tone="muted">
+              {content.rankUnchanged} · {common.rank} {selfRank}
+            </Pill>
+          )}
+        </Card>
+      </MotionIn>
+
+      <MotionIn index={2}>
+        <Card className="flex flex-col gap-3">
+          <SectionHeader title={content.achievementsLabel} />
+          {accuracyPercent === null ? (
+            <EmptyState message={content.noAchievementsYet} />
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              <Pill tone="gold">
+                🎯 {content.exactStreaksLabel} · {exactStreak}
+              </Pill>
+              <Pill tone="interactive">
+                🔥 {content.streaksLabel} · {correctStreak}
+              </Pill>
+              <Pill tone="muted">
+                📈 {content.accuracyLabel} · {accuracyPercent}%
+              </Pill>
+            </div>
+          )}
+        </Card>
+      </MotionIn>
+
+      <MotionIn index={3}>
+        <Card className="flex flex-col gap-3">
+          <SectionHeader title={content.linkedTournaments} />
+          <ul className="flex flex-col gap-2">
+            {linkedTournaments.map((t) => (
+              <li
+                key={t.id}
+                className="flex items-center justify-between gap-2 text-xs"
+              >
+                <div className="flex flex-col">
+                  <span className="font-bold text-[var(--text-primary)]">
+                    {t.name}
+                  </span>
+                  <span className="text-[var(--text-muted)]">
+                    {t.competition}
+                  </span>
+                </div>
+                {t.id === tournamentId && (
+                  <Pill tone="interactive">
+                    {tournamentSwitcher.activeLabel}
+                  </Pill>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </MotionIn>
 
       <form action={signOut}>
         <button

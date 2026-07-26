@@ -3,6 +3,7 @@ import { colors } from "@/lib/design-tokens";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { isPast } from "@/lib/time";
+import { MotionIn } from "../../_components/motion/motion-in";
 import {
   Card,
   DataFreshnessNote,
@@ -102,7 +103,7 @@ export default async function BonusesPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
-      {categories.map((category) => {
+      {categories.map((category, index) => {
         const categorySlots = (slots ?? [])
           .filter((s) => s.category_id === category.id)
           .sort((a, b) => a.slot_index - b.slot_index);
@@ -127,105 +128,107 @@ export default async function BonusesPage() {
           : null;
 
         return (
-          <Card key={category.id} className="flex flex-col gap-3">
-            <SectionHeader
-              title={category.name}
-              action={
-                totalPoints !== null ? (
-                  <Pill tone="gold">
-                    +{totalPoints} {common.points}
-                  </Pill>
-                ) : undefined
-              }
-            />
+          <MotionIn key={category.id} index={index}>
+            <Card className="flex flex-col gap-3">
+              <SectionHeader
+                title={category.name}
+                action={
+                  totalPoints !== null ? (
+                    <Pill tone="gold">
+                      +{totalPoints} {common.points}
+                    </Pill>
+                  ) : undefined
+                }
+              />
 
-            {isTerminal && (
-              <DataFreshnessNote message={content.terminalPendingHint} />
-            )}
+              {isTerminal && (
+                <DataFreshnessNote message={content.terminalPendingHint} />
+              )}
 
-            {isLocked ? (
-              <div className="flex flex-col gap-2">
-                <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                  {content.slotsLabel}
-                </span>
-                <ul className="flex flex-col gap-1.5">
-                  {categorySlots.map((slot) => {
-                    const pick = predictionBySlot.get(slot.id);
-                    return (
-                      <li
-                        key={slot.id}
-                        className="flex items-center justify-between gap-2 text-xs"
-                      >
-                        <span className="flex items-center gap-2 text-[var(--text-secondary)]">
-                          <span
-                            className="flex h-5 w-5 shrink-0 items-center justify-center text-[10.5px] font-bold text-[var(--text-primary)]"
-                            style={{
-                              borderRadius: "50%",
-                              background: colors.surfaceCard2,
-                            }}
-                          >
-                            {slot.slot_index}
+              {isLocked ? (
+                <div className="flex flex-col gap-2">
+                  <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
+                    {content.slotsLabel}
+                  </span>
+                  <ul className="flex flex-col gap-1.5">
+                    {categorySlots.map((slot) => {
+                      const pick = predictionBySlot.get(slot.id);
+                      return (
+                        <li
+                          key={slot.id}
+                          className="flex items-center justify-between gap-2 text-xs"
+                        >
+                          <span className="flex items-center gap-2 text-[var(--text-secondary)]">
+                            <span
+                              className="flex h-5 w-5 shrink-0 items-center justify-center text-[10.5px] font-bold text-[var(--text-primary)]"
+                              style={{
+                                borderRadius: "50%",
+                                background: colors.surfaceCard2,
+                              }}
+                            >
+                              {slot.slot_index}
+                            </span>
+                            {pick?.pick_label ?? "—"}
                           </span>
-                          {pick?.pick_label ?? "—"}
+                          <span className="ltr shrink-0 font-bold text-[var(--gold)] tabular-nums">
+                            {slot.points} {common.points}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {category.duplicate_stacking_allowed && (
+                    <p className="text-[11px] text-[var(--text-muted)]">
+                      {content.duplicateAllowedHint}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <>
+                  {category.duplicate_stacking_allowed && (
+                    <p className="text-[11px] text-[var(--text-muted)]">
+                      {content.duplicateAllowedHint}
+                    </p>
+                  )}
+                  <BonusPredictionForm
+                    categoryId={category.id}
+                    slots={categorySlots.map((s) => ({
+                      id: s.id,
+                      index: s.slot_index,
+                      points: s.points,
+                      pickLabel: predictionBySlot.get(s.id)?.pick_label ?? "",
+                    }))}
+                  />
+                </>
+              )}
+
+              {leaders.length > 0 && (
+                <div
+                  className="flex flex-col gap-1.5 border-t pt-3"
+                  style={{ borderColor: colors.border }}
+                >
+                  <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
+                    {content.currentLeadersLabel}
+                  </span>
+                  <ul className="flex flex-col gap-1">
+                    {leaders.map((leader, i) => (
+                      <li
+                        key={`${leader.label}-${i}`}
+                        className="flex items-center justify-between text-xs"
+                      >
+                        <span className="text-[var(--text-secondary)]">
+                          {leader.rank}. {leader.label}
                         </span>
-                        <span className="ltr shrink-0 font-bold text-[var(--gold)] tabular-nums">
-                          {slot.points} {common.points}
+                        <span className="ltr font-bold text-[var(--text-primary)] tabular-nums">
+                          {leader.value}
                         </span>
                       </li>
-                    );
-                  })}
-                </ul>
-                {category.duplicate_stacking_allowed && (
-                  <p className="text-[11px] text-[var(--text-muted)]">
-                    {content.duplicateAllowedHint}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <>
-                {category.duplicate_stacking_allowed && (
-                  <p className="text-[11px] text-[var(--text-muted)]">
-                    {content.duplicateAllowedHint}
-                  </p>
-                )}
-                <BonusPredictionForm
-                  categoryId={category.id}
-                  slots={categorySlots.map((s) => ({
-                    id: s.id,
-                    index: s.slot_index,
-                    points: s.points,
-                    pickLabel: predictionBySlot.get(s.id)?.pick_label ?? "",
-                  }))}
-                />
-              </>
-            )}
-
-            {leaders.length > 0 && (
-              <div
-                className="flex flex-col gap-1.5 border-t pt-3"
-                style={{ borderColor: colors.border }}
-              >
-                <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                  {content.currentLeadersLabel}
-                </span>
-                <ul className="flex flex-col gap-1">
-                  {leaders.map((leader, i) => (
-                    <li
-                      key={`${leader.label}-${i}`}
-                      className="flex items-center justify-between text-xs"
-                    >
-                      <span className="text-[var(--text-secondary)]">
-                        {leader.rank}. {leader.label}
-                      </span>
-                      <span className="ltr font-bold text-[var(--text-primary)] tabular-nums">
-                        {leader.value}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </Card>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </Card>
+          </MotionIn>
         );
       })}
     </div>

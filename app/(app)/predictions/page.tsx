@@ -3,6 +3,7 @@ import { listTournamentMatches, type MatchWithTeams } from "@/lib/matches/list";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { MatchCard } from "../../_components/match-card";
+import { MotionIn } from "../../_components/motion/motion-in";
 import { SubTabs } from "../../_components/nav/sub-tabs";
 import { EmptyState, SectionHeader } from "../../_components/ui";
 
@@ -20,7 +21,9 @@ const STAGE_LABELS: Record<string, string> = {
 function stageLabel(match: MatchWithTeams): string {
   return (
     STAGE_LABELS[match.stage] ??
-    (match.matchday !== null ? content.matchdayLabel(match.matchday) : match.stage)
+    (match.matchday !== null
+      ? content.matchdayLabel(match.matchday)
+      : match.stage)
   );
 }
 
@@ -79,6 +82,9 @@ export default async function PredictionsPage() {
     current.participantId,
   );
   const sections = groupByStage(matches);
+  // Stagger runs across the whole flattened list (not reset per stage
+  // section) so the cascade reads as one continuous top-to-bottom reveal.
+  let staggerIndex = 0;
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
@@ -91,7 +97,9 @@ export default async function PredictionsPage() {
             <SectionHeader title={section.label} />
             <div className="flex flex-col gap-2.5">
               {section.matches.map((match) => (
-                <MatchCard key={match.id} match={match} />
+                <MotionIn key={match.id} index={staggerIndex++}>
+                  <MatchCard match={match} />
+                </MotionIn>
               ))}
             </div>
           </div>

@@ -7,11 +7,13 @@ import {
 } from "@/lib/scoring/group-standings";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
+import { MotionIn } from "../../_components/motion/motion-in";
 import { SubTabs } from "../../_components/nav/sub-tabs";
 import { Card, EmptyState, SectionHeader } from "../../_components/ui";
 import { GroupPredictionForm } from "./_components/group-prediction-form";
 
-type MatchStatus = "scheduled" | "live" | "finished" | "postponed" | "cancelled";
+type MatchStatus =
+  "scheduled" | "live" | "finished" | "postponed" | "cancelled";
 type Score = { home: number; away: number };
 
 type TeamRow = { id: string; short_name: string; group: string | null };
@@ -93,9 +95,7 @@ export default async function GroupsPage() {
   const teamById = new Map((teams ?? []).map((t) => [t.id, t]));
   const groupLabels = [
     ...new Set(
-      (teams ?? [])
-        .map((t) => t.group)
-        .filter((g): g is string => g !== null),
+      (teams ?? []).map((t) => t.group).filter((g): g is string => g !== null),
     ),
   ].sort();
 
@@ -121,7 +121,7 @@ export default async function GroupsPage() {
 
   return (
     <Shell>
-      {groupLabels.map((group) => {
+      {groupLabels.map((group, index) => {
         const rows = standings
           .filter((r) => r.group === group)
           .sort((a, b) => a.position - b.position);
@@ -134,132 +134,139 @@ export default async function GroupsPage() {
             .filter((t): t is TeamRow => t !== undefined) ?? groupTeams;
 
         return (
-          <Card key={group} className="flex flex-col gap-3">
-            <SectionHeader title={content.groupLabel(group)} />
+          <MotionIn key={group} index={index}>
+            <Card className="flex flex-col gap-3">
+              <SectionHeader title={content.groupLabel(group)} />
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                    <th className="py-1 text-start font-semibold">
-                      {content.tableHeaders.team}
-                    </th>
-                    <th className="py-1 text-center font-semibold">
-                      {content.tableHeaders.played}
-                    </th>
-                    <th className="py-1 text-center font-semibold">
-                      {content.tableHeaders.won}
-                    </th>
-                    <th className="py-1 text-center font-semibold">
-                      {content.tableHeaders.drawn}
-                    </th>
-                    <th className="py-1 text-center font-semibold">
-                      {content.tableHeaders.lost}
-                    </th>
-                    <th className="py-1 text-center font-semibold">
-                      {content.tableHeaders.goalDiff}
-                    </th>
-                    <th className="py-1 text-center font-semibold">
-                      {content.tableHeaders.points}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row, index) => {
-                    const team = teamById.get(row.teamId);
-                    return (
-                      <tr
-                        key={row.teamId}
-                        className="border-t"
-                        style={{ borderColor: colors.border }}
-                      >
-                        <td className="py-2">
-                          <span className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
-                            <span
-                              className="ltr flex h-5 w-5 shrink-0 items-center justify-center text-[10.5px] font-extrabold tabular-nums"
-                              style={{
-                                borderRadius: "50%",
-                                background:
-                                  index < 2
-                                    ? "rgba(79,175,131,0.16)"
-                                    : colors.surfaceCard2,
-                                color:
-                                  index < 2
-                                    ? colors.success
-                                    : colors.textSecondary,
-                              }}
-                            >
-                              {index + 1}
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="text-[10.5px] font-semibold text-[var(--text-muted)]">
+                      <th className="py-1 text-start font-semibold">
+                        {content.tableHeaders.team}
+                      </th>
+                      <th className="py-1 text-center font-semibold">
+                        {content.tableHeaders.played}
+                      </th>
+                      <th className="py-1 text-center font-semibold">
+                        {content.tableHeaders.won}
+                      </th>
+                      <th className="py-1 text-center font-semibold">
+                        {content.tableHeaders.drawn}
+                      </th>
+                      <th className="py-1 text-center font-semibold">
+                        {content.tableHeaders.lost}
+                      </th>
+                      <th className="py-1 text-center font-semibold">
+                        {content.tableHeaders.goalDiff}
+                      </th>
+                      <th className="py-1 text-center font-semibold">
+                        {content.tableHeaders.points}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row, index) => {
+                      const team = teamById.get(row.teamId);
+                      return (
+                        <tr
+                          key={row.teamId}
+                          className="border-t"
+                          style={{ borderColor: colors.border }}
+                        >
+                          <td className="py-2">
+                            <span className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
+                              <span
+                                className="ltr flex h-5 w-5 shrink-0 items-center justify-center text-[10.5px] font-extrabold tabular-nums"
+                                style={{
+                                  borderRadius: "50%",
+                                  background:
+                                    index < 2
+                                      ? "rgba(79,175,131,0.16)"
+                                      : colors.surfaceCard2,
+                                  color:
+                                    index < 2
+                                      ? colors.success
+                                      : colors.textSecondary,
+                                }}
+                              >
+                                {index + 1}
+                              </span>
+                              {team?.short_name ?? row.teamId}
                             </span>
-                            {team?.short_name ?? row.teamId}
-                          </span>
-                        </td>
-                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
-                          {row.played}
-                        </td>
-                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
-                          {row.won}
-                        </td>
-                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
-                          {row.drawn}
-                        </td>
-                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
-                          {row.lost}
-                        </td>
-                        <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
-                          {row.goalDifference > 0
-                            ? `+${row.goalDifference}`
-                            : row.goalDifference}
-                        </td>
-                        <td className="ltr py-2 text-center font-extrabold text-[var(--text-primary)] tabular-nums">
-                          {row.points}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+                          <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
+                            {row.played}
+                          </td>
+                          <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
+                            {row.won}
+                          </td>
+                          <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
+                            {row.drawn}
+                          </td>
+                          <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
+                            {row.lost}
+                          </td>
+                          <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">
+                            {row.goalDifference > 0
+                              ? `+${row.goalDifference}`
+                              : row.goalDifference}
+                          </td>
+                          <td className="ltr py-2 text-center font-extrabold text-[var(--text-primary)] tabular-nums">
+                            {row.points}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
 
-            {prediction?.finalized ? (
-              <div
-                className="border-t pt-3"
-                style={{ borderColor: colors.border }}
-              >
-                <p className="mb-1.5 text-[10.5px] font-semibold text-[var(--text-muted)]">
-                  {content.finalizedLabel}
-                </p>
-                <ol className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-[var(--text-primary)]">
-                  {prediction.predicted_order.map((teamId, index) => (
-                    <li key={teamId} className="flex items-center gap-1">
-                      <span className="ltr text-[var(--text-muted)] tabular-nums">
-                        {index + 1}.
-                      </span>
-                      <span>{teamById.get(teamId)?.short_name ?? teamId}</span>
-                      {index < prediction.predicted_order.length - 1 && (
-                        <span aria-hidden className="text-[var(--text-muted)]">
-                          ·
+              {prediction?.finalized ? (
+                <div
+                  className="border-t pt-3"
+                  style={{ borderColor: colors.border }}
+                >
+                  <p className="mb-1.5 text-[10.5px] font-semibold text-[var(--text-muted)]">
+                    {content.finalizedLabel}
+                  </p>
+                  <ol className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-[var(--text-primary)]">
+                    {prediction.predicted_order.map((teamId, index) => (
+                      <li key={teamId} className="flex items-center gap-1">
+                        <span className="ltr text-[var(--text-muted)] tabular-nums">
+                          {index + 1}.
                         </span>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            ) : groupTeams.length >= 2 ? (
-              <div>
-                <p className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                  {content.predictionLabel}
-                </p>
-                <GroupPredictionForm
-                  group={group}
-                  teams={orderedForForm.map((t) => ({
-                    id: t.id,
-                    label: t.short_name,
-                  }))}
-                />
-              </div>
-            ) : null}
-          </Card>
+                        <span>
+                          {teamById.get(teamId)?.short_name ?? teamId}
+                        </span>
+                        {index < prediction.predicted_order.length - 1 && (
+                          <span
+                            aria-hidden
+                            className="text-[var(--text-muted)]"
+                          >
+                            ·
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : groupTeams.length >= 2 ? (
+                <div>
+                  <p className="text-[10.5px] font-semibold text-[var(--text-muted)]">
+                    {content.predictionLabel}
+                  </p>
+                  <GroupPredictionForm
+                    group={group}
+                    teams={orderedForForm.map((t) => ({
+                      id: t.id,
+                      label: t.short_name,
+                    }))}
+                  />
+                </div>
+              ) : null}
+            </Card>
+          </MotionIn>
         );
       })}
     </Shell>
