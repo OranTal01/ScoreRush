@@ -212,6 +212,8 @@ export const profile = {
   rankUnchanged: "ללא שינוי מהמחזור הקודם",
   errorUnauthenticated: "יש להתחבר כדי לצפות בפרופיל",
   errorNotAMember: "אינך חבר בטורניר הזה",
+  exactStreaksLabel: "ניחושים מדויקים ברצף",
+  noAchievementsYet: "עדיין אין תחזיות שנוקדו",
 } as const;
 
 /**
