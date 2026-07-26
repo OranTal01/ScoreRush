@@ -59,7 +59,10 @@ export function BonusPredictionForm({
     Object.fromEntries(slots.map((s) => [s.id, s.pickLabel])),
   );
 
-  const picks = slots.map((s) => ({ slotId: s.id, pickLabel: labels[s.id] ?? "" }));
+  const picks = slots.map((s) => ({
+    slotId: s.id,
+    pickLabel: labels[s.id] ?? "",
+  }));
 
   return (
     <form action={formAction} className="flex flex-col gap-2">
@@ -76,12 +79,14 @@ export function BonusPredictionForm({
               {slot.index}
             </span>
             <input
+              id={`bonus-pick-${slot.id}`}
               type="text"
               value={labels[slot.id] ?? ""}
               onChange={(e) =>
                 setLabels((prev) => ({ ...prev, [slot.id]: e.target.value }))
               }
               placeholder={content.pickPlaceholder}
+              aria-label={content.pickInputLabel(slot.index)}
               maxLength={200}
               className="min-w-0 flex-1 px-2.5 py-1.5 text-xs font-semibold text-[var(--text-primary)]"
               style={{
@@ -105,7 +110,10 @@ export function BonusPredictionForm({
         </span>
       )}
       {state.status === "success" && (
-        <span className="text-center text-xs font-semibold text-[var(--success)]">
+        <span
+          role="status"
+          className="text-center text-xs font-semibold text-[var(--success)]"
+        >
           {content.saveSuccess}
         </span>
       )}

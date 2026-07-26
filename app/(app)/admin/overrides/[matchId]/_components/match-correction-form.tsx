@@ -42,7 +42,10 @@ function PreviewSubmitButton() {
       type="submit"
       disabled={pending}
       className="w-fit px-4 py-2.5 text-xs font-bold text-[#080B14] transition-opacity disabled:opacity-60"
-      style={{ background: colors.interactive, borderRadius: "var(--radius-button)" }}
+      style={{
+        background: colors.interactive,
+        borderRadius: "var(--radius-button)",
+      }}
     >
       {pending ? content.previewPending : content.previewCta}
     </button>
@@ -56,7 +59,10 @@ function ApplySubmitButton() {
       type="submit"
       disabled={pending}
       className="w-fit px-4 py-2.5 text-xs font-bold text-[#080B14] transition-opacity disabled:opacity-60"
-      style={{ background: colors.danger, borderRadius: "var(--radius-button)" }}
+      style={{
+        background: colors.danger,
+        borderRadius: "var(--radius-button)",
+      }}
     >
       {pending ? content.applyPending : content.applyCta}
     </button>
@@ -97,12 +103,16 @@ export function MatchCorrectionForm({
 
   if (applyState.status === "success") {
     return (
-      <Card className="flex flex-col gap-2">
-        <span className="text-sm font-extrabold text-[var(--success)]">
-          {content.successTitle}
-        </span>
-        <p className="text-xs text-[var(--text-muted)]">{content.successHint}</p>
-      </Card>
+      <div role="status">
+        <Card className="flex flex-col gap-2">
+          <span className="text-sm font-extrabold text-[var(--success)]">
+            {content.successTitle}
+          </span>
+          <p className="text-xs text-[var(--text-muted)]">
+            {content.successHint}
+          </p>
+        </Card>
+      </div>
     );
   }
 
@@ -128,11 +138,13 @@ export function MatchCorrectionForm({
                 dir="ltr"
                 value={homeScore}
                 onChange={(e) => setHomeScore(e.target.value)}
-                className="px-4 py-3 text-center text-sm font-bold text-[var(--text-primary)] outline-none tabular-nums"
+                className="px-4 py-3 text-center text-sm font-bold text-[var(--text-primary)] tabular-nums outline-none"
                 style={inputStyle}
               />
             </div>
-            <span className="pb-3 text-xs text-[var(--text-muted)]">{common.vs}</span>
+            <span className="pb-3 text-xs text-[var(--text-muted)]">
+              {common.vs}
+            </span>
             <div className="flex flex-1 flex-col gap-1.5">
               <label htmlFor="proposedAway" className={labelClass}>
                 {awayTeamName}
@@ -147,13 +159,16 @@ export function MatchCorrectionForm({
                 dir="ltr"
                 value={awayScore}
                 onChange={(e) => setAwayScore(e.target.value)}
-                className="px-4 py-3 text-center text-sm font-bold text-[var(--text-primary)] outline-none tabular-nums"
+                className="px-4 py-3 text-center text-sm font-bold text-[var(--text-primary)] tabular-nums outline-none"
                 style={inputStyle}
               />
             </div>
           </div>
           {previewState.status === "error" && (
-            <span role="alert" className="text-xs font-semibold text-[var(--danger)]">
+            <span
+              role="alert"
+              className="text-xs font-semibold text-[var(--danger)]"
+            >
               {ERROR_MESSAGES[previewState.code]}
             </span>
           )}
@@ -165,7 +180,9 @@ export function MatchCorrectionForm({
         <>
           <Card className="flex flex-col gap-3">
             <SectionHeader title={content.previewSection} />
-            <p className="text-[11px] text-[var(--text-muted)]">{content.scopeNote}</p>
+            <p className="text-[11px] text-[var(--text-muted)]">
+              {content.scopeNote}
+            </p>
 
             {previewState.preview.predictionChanges.length === 0 ? (
               <EmptyState message={content.predictionChangesEmpty} />
@@ -185,7 +202,9 @@ export function MatchCorrectionForm({
                         <span className="text-[var(--text-muted)]">
                           {change.previousPoints} → {change.points}
                         </span>
-                        <Pill tone={change.pointsDelta > 0 ? "success" : "danger"}>
+                        <Pill
+                          tone={change.pointsDelta > 0 ? "success" : "danger"}
+                        >
                           {formatDelta(change.pointsDelta)}
                         </Pill>
                       </span>
@@ -194,7 +213,10 @@ export function MatchCorrectionForm({
               </ul>
             )}
 
-            <div className="flex flex-col gap-2 border-t pt-2.5" style={{ borderColor: colors.border }}>
+            <div
+              className="flex flex-col gap-2 border-t pt-2.5"
+              style={{ borderColor: colors.border }}
+            >
               <span className={labelClass}>{content.rankChangesSection}</span>
               {previewState.preview.rankChanges.length === 0 ? (
                 <p className="text-xs text-[var(--text-muted)]">
@@ -215,7 +237,8 @@ export function MatchCorrectionForm({
                           #{change.previousRank} → #{change.proposedRank}
                         </span>{" "}
                         <span className="text-[var(--text-primary)]">
-                          ({change.previousTotalPoints} → {change.proposedTotalPoints})
+                          ({change.previousTotalPoints} →{" "}
+                          {change.proposedTotalPoints})
                         </span>
                       </span>
                     </li>
@@ -236,8 +259,16 @@ export function MatchCorrectionForm({
             >
               <input type="hidden" name="matchId" value={matchId} />
               <input type="hidden" name="tournamentId" value={tournamentId} />
-              <input type="hidden" name="proposedHome" value={previewState.proposedHome} />
-              <input type="hidden" name="proposedAway" value={previewState.proposedAway} />
+              <input
+                type="hidden"
+                name="proposedHome"
+                value={previewState.proposedHome}
+              />
+              <input
+                type="hidden"
+                name="proposedAway"
+                value={previewState.proposedAway}
+              />
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="reason" className={labelClass}>
@@ -280,7 +311,10 @@ export function MatchCorrectionForm({
               </label>
 
               {applyState.status === "error" && (
-                <span role="alert" className="text-xs font-semibold text-[var(--danger)]">
+                <span
+                  role="alert"
+                  className="text-xs font-semibold text-[var(--danger)]"
+                >
                   {ERROR_MESSAGES[applyState.code]}
                 </span>
               )}

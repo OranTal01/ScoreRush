@@ -1,4 +1,4 @@
-import { bracket, predictions as content } from "@/lib/content/he";
+import { bracket, nav, predictions as content } from "@/lib/content/he";
 import { listTournamentMatches, type MatchWithTeams } from "@/lib/matches/list";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
@@ -88,6 +88,7 @@ export default async function PredictionsPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
+      <h1 className="sr-only">{nav.predictions}</h1>
       <SubTabs />
       {sections.length === 0 ? (
         <EmptyState message={content.emptyState} />

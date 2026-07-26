@@ -101,6 +101,7 @@ export const predictions = {
 } as const;
 
 export const matchDetail = {
+  title: "פרטי משחק",
   backToPredictions: "משחקים",
   saveIdle: "שמירת ניחוש",
   savePressed: "שומר…",
@@ -148,6 +149,7 @@ export const bonuses = {
   terminalPendingHint: "הקטגוריה תיפתר רק בסיום הטורניר",
   emptyState: "אין קטגוריות בונוס בטורניר זה",
   pickPlaceholder: "הקלידו את הבחירה שלכם",
+  pickInputLabel: (index: number) => `הבחירה שלך למשבצת ${index}`,
   saveIdle: "שמירת בחירות",
   saveLoading: "שומר…",
   saveSuccess: "נשמר",
@@ -174,6 +176,7 @@ export const groups = {
   },
   predictionLabel: "הניחוש שלך לטבלה הסופית",
   finalizedLabel: "השלב הסתיים",
+  advancesLabel: "עולה לשלב הבא",
   emptyState: "אין שלב בתים בטורניר זה",
   moveUp: "הזזה למעלה",
   moveDown: "הזזה למטה",
@@ -443,6 +446,7 @@ export const invitationEmail = {
  */
 export const diagnostics = {
   title: "אבחון וסנכרון",
+  matchTitle: "אבחון משחק",
   errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד זה",
   errorNotAMember: "אינך חבר בטורניר הזה",
   errorNotAdmin: "עמוד זה מיועד למנהלי הטורניר בלבד",
@@ -530,7 +534,8 @@ export const overrides = {
   applyConfirm: "לאשר את תיקון התוצאה? הפעולה תחשב מחדש את כל הניקוד בטורניר.",
 
   successTitle: "התיקון בוצע בהצלחה",
-  successHint: "התוצאה עודכנה, הניקוד חושב מחדש ותמונת מצב חדשה של הדירוג נשמרה.",
+  successHint:
+    "התוצאה עודכנה, הניקוד חושב מחדש ותמונת מצב חדשה של הדירוג נשמרה.",
 
   errorInvalidInput: "יש למלא את כל השדות הנדרשים",
   errorGeneric: "משהו השתבש, נסו שוב",

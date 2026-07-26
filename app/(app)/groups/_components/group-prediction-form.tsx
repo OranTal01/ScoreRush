@@ -90,7 +90,7 @@ export function GroupPredictionForm({
             }}
           >
             <span className="flex items-center gap-2 text-xs font-bold text-[var(--text-primary)]">
-              <span className="ltr tabular-nums text-[var(--text-muted)]">
+              <span className="ltr text-[var(--text-muted)] tabular-nums">
                 {index + 1}.
               </span>
               {team.label}
@@ -101,7 +101,7 @@ export function GroupPredictionForm({
                 aria-label={content.moveUp}
                 onClick={() => move(index, -1)}
                 disabled={index === 0}
-                className="flex h-7 w-7 items-center justify-center text-sm font-bold text-[var(--text-primary)] disabled:opacity-30"
+                className="flex h-11 w-11 items-center justify-center text-sm font-bold text-[var(--text-primary)] disabled:opacity-30"
                 style={{ borderRadius: "var(--radius-button)" }}
               >
                 ↑
@@ -111,7 +111,7 @@ export function GroupPredictionForm({
                 aria-label={content.moveDown}
                 onClick={() => move(index, 1)}
                 disabled={index === order.length - 1}
-                className="flex h-7 w-7 items-center justify-center text-sm font-bold text-[var(--text-primary)] disabled:opacity-30"
+                className="flex h-11 w-11 items-center justify-center text-sm font-bold text-[var(--text-primary)] disabled:opacity-30"
                 style={{ borderRadius: "var(--radius-button)" }}
               >
                 ↓
@@ -130,7 +130,10 @@ export function GroupPredictionForm({
         </span>
       )}
       {state.status === "success" && (
-        <span className="text-center text-xs font-semibold text-[var(--success)]">
+        <span
+          role="status"
+          className="text-center text-xs font-semibold text-[var(--success)]"
+        >
           {content.saveSuccess}
         </span>
       )}

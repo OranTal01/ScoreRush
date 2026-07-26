@@ -190,17 +190,19 @@ export function CreateTournamentForm() {
 
   if (state.status === "success") {
     return (
-      <Card className="flex flex-col items-center gap-3 text-center">
-        <span className="text-sm font-extrabold text-[var(--success)]">
-          {content.successMessage}
-        </span>
-        <Link
-          href="/admin"
-          className="text-sm font-bold text-[var(--interactive)]"
-        >
-          {content.backToAdmin}
-        </Link>
-      </Card>
+      <div role="status">
+        <Card className="flex flex-col items-center gap-3 text-center">
+          <span className="text-sm font-extrabold text-[var(--success)]">
+            {content.successMessage}
+          </span>
+          <Link
+            href="/admin"
+            className="text-sm font-bold text-[var(--interactive)]"
+          >
+            {content.backToAdmin}
+          </Link>
+        </Card>
+      </div>
     );
   }
 
@@ -275,9 +277,7 @@ export function CreateTournamentForm() {
                     ? colors.textPrimary
                     : colors.textSecondary,
                 background:
-                  dataSource === option
-                    ? colors.surfaceCard2
-                    : "transparent",
+                  dataSource === option ? colors.surfaceCard2 : "transparent",
               }}
             >
               <input
@@ -338,10 +338,7 @@ export function CreateTournamentForm() {
             ["winnerAndDiffPoints", content.winnerAndDiffLabel],
             ["winnerOnlyPoints", content.winnerOnlyLabel],
             ["wrongPoints", content.wrongLabel],
-            [
-              "groupRankingPointsPerPosition",
-              content.groupRankingLabel,
-            ],
+            ["groupRankingPointsPerPosition", content.groupRankingLabel],
           ] as const
         ).map(([field, label]) => (
           <div key={field} className="flex items-center justify-between gap-3">
@@ -389,8 +386,14 @@ export function CreateTournamentForm() {
             </div>
             <div className="flex gap-2">
               <div className="flex flex-1 flex-col gap-1.5">
-                <label className={labelClass}>{content.bonusNameLabel}</label>
+                <label
+                  htmlFor={`bonus-name-${category.key}`}
+                  className={labelClass}
+                >
+                  {content.bonusNameLabel}
+                </label>
                 <input
+                  id={`bonus-name-${category.key}`}
                   required
                   placeholder={content.bonusNamePlaceholder}
                   value={category.name}
@@ -402,8 +405,14 @@ export function CreateTournamentForm() {
                 />
               </div>
               <div className="flex flex-1 flex-col gap-1.5">
-                <label className={labelClass}>{content.bonusTypeLabel}</label>
+                <label
+                  htmlFor={`bonus-type-${category.key}`}
+                  className={labelClass}
+                >
+                  {content.bonusTypeLabel}
+                </label>
                 <input
+                  id={`bonus-type-${category.key}`}
                   required
                   dir="ltr"
                   placeholder={content.bonusTypePlaceholder}
@@ -417,10 +426,14 @@ export function CreateTournamentForm() {
               </div>
             </div>
             <div className="flex items-center justify-between gap-3">
-              <label className={labelClass}>
+              <label
+                htmlFor={`bonus-resolves-at-${category.key}`}
+                className={labelClass}
+              >
                 {content.bonusResolvesAtLabel}
               </label>
               <select
+                id={`bonus-resolves-at-${category.key}`}
                 value={category.resolvesAt}
                 onChange={(e) =>
                   updateCategory(category.key, {
@@ -453,10 +466,14 @@ export function CreateTournamentForm() {
               <span className={labelClass}>{content.bonusSlotsLabel}</span>
               {category.slots.map((slot, index) => (
                 <div key={slot.key} className="flex items-center gap-2">
-                  <span className="w-20 text-[11px] text-[var(--text-muted)]">
+                  <label
+                    htmlFor={`bonus-slot-points-${slot.key}`}
+                    className="w-20 text-[11px] text-[var(--text-muted)]"
+                  >
                     {content.slotLabel(index + 1)}
-                  </span>
+                  </label>
                   <input
+                    id={`bonus-slot-points-${slot.key}`}
                     type="number"
                     min={0}
                     dir="ltr"
@@ -503,10 +520,14 @@ export function CreateTournamentForm() {
         )}
         {prizeList.map((prize, index) => (
           <div key={prize.key} className="flex items-center gap-2">
-            <span className="w-16 shrink-0 text-xs font-bold text-[var(--text-secondary)]">
+            <label
+              htmlFor={`prize-description-${prize.key}`}
+              className="w-16 shrink-0 text-xs font-bold text-[var(--text-secondary)]"
+            >
               {content.prizeRankLabel(index + 1)}
-            </span>
+            </label>
             <input
+              id={`prize-description-${prize.key}`}
               required
               placeholder={content.prizeDescriptionPlaceholder}
               value={prize.description}

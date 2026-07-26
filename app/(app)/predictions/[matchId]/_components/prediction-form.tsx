@@ -40,7 +40,7 @@ function ScoreStepper({
           type="button"
           aria-label="הפחתת שער"
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="flex h-9 w-9 items-center justify-center text-lg font-bold text-[var(--text-primary)]"
+          className="flex h-11 w-11 items-center justify-center text-lg font-bold text-[var(--text-primary)]"
           style={{
             background: colors.surfaceCard2,
             borderRadius: "var(--radius-button)",
@@ -48,14 +48,14 @@ function ScoreStepper({
         >
           −
         </button>
-        <span className="w-7 text-center text-xl font-black tabular-nums text-[var(--text-primary)]">
+        <span className="w-7 text-center text-xl font-black text-[var(--text-primary)] tabular-nums">
           {value}
         </span>
         <button
           type="button"
           aria-label="הוספת שער"
           onClick={() => onChange(Math.min(99, value + 1))}
-          className="flex h-9 w-9 items-center justify-center text-lg font-bold text-[var(--text-primary)]"
+          className="flex h-11 w-11 items-center justify-center text-lg font-bold text-[var(--text-primary)]"
           style={{
             background: colors.surfaceCard2,
             borderRadius: "var(--radius-button)",
@@ -135,7 +135,10 @@ export function PredictionForm({
         </span>
       )}
       {state.status === "success" && (
-        <span className="text-center text-xs font-semibold text-[var(--success)]">
+        <span
+          role="status"
+          className="text-center text-xs font-semibold text-[var(--success)]"
+        >
           {content.saveSuccess}
         </span>
       )}

@@ -24,7 +24,7 @@ export function TournamentSwitcher() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="dialog"
-        className="flex items-center gap-1.5 rounded-full px-1 py-1 text-start"
+        className="flex min-h-11 items-center gap-1.5 rounded-full px-2 py-2 text-start"
       >
         <span className="max-w-[180px] truncate text-sm font-extrabold text-[var(--text-primary)] md:text-[15px]">
           {tournament.name}
@@ -79,6 +79,7 @@ export function TournamentSwitcher() {
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label="סגירה"
+                  className="flex h-11 w-11 items-center justify-center"
                 >
                   <IconClose
                     width={18}

@@ -35,7 +35,7 @@ export function SubTabs() {
             href={href}
             role="tab"
             aria-selected={active}
-            className="flex-1 px-3 py-2 text-center text-[13px] font-bold transition-colors"
+            className="flex min-h-11 flex-1 items-center justify-center px-3 py-2 text-center text-[13px] font-bold transition-colors"
             style={{
               color: active ? colors.textPrimary : colors.textMuted,
               background: active ? colors.surfaceCard2 : "transparent",

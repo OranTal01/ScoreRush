@@ -1,4 +1,4 @@
-import { bonuses as content, common } from "@/lib/content/he";
+import { bonuses as content, common, nav } from "@/lib/content/he";
 import { colors } from "@/lib/design-tokens";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
@@ -103,6 +103,7 @@ export default async function BonusesPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
+      <h1 className="sr-only">{nav.bonuses}</h1>
       {categories.map((category, index) => {
         const categorySlots = (slots ?? [])
           .filter((s) => s.category_id === category.id)

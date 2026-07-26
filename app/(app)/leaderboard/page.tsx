@@ -1,5 +1,8 @@
-import { leaderboard as content } from "@/lib/content/he";
-import { computeStandings, type StandingsInput } from "@/lib/scoring/leaderboard";
+import { leaderboard as content, nav } from "@/lib/content/he";
+import {
+  computeStandings,
+  type StandingsInput,
+} from "@/lib/scoring/leaderboard";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { Podium } from "../../_components/leaderboard/podium";
@@ -94,7 +97,9 @@ export default async function LeaderboardPage() {
   const latestBatch = batches[0] ?? [];
   const previousBatch = batches[1] ?? [];
 
-  const latestByParticipant = new Map(latestBatch.map((r) => [r.participant_id, r]));
+  const latestByParticipant = new Map(
+    latestBatch.map((r) => [r.participant_id, r]),
+  );
   const previousRankByParticipant = new Map(
     previousBatch.map((r) => [r.participant_id, r.rank]),
   );
@@ -123,7 +128,8 @@ export default async function LeaderboardPage() {
       bonusPoints: entry.bonusPoints,
       rank: entry.rank,
       // No prior batch to compare against yet -> no movement ("–").
-      previousRank: previousRankByParticipant.get(entry.participantId) ?? entry.rank,
+      previousRank:
+        previousRankByParticipant.get(entry.participantId) ?? entry.rank,
     };
   });
 
@@ -135,6 +141,7 @@ export default async function LeaderboardPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
+      <h1 className="sr-only">{nav.leaderboard}</h1>
       <Card className="flex flex-col gap-4">
         <SectionHeader title={content.podiumTitle} />
         <Podium topThree={topThree} selfId={selfId} />

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { groups as content } from "@/lib/content/he";
+import { groups as content, nav } from "@/lib/content/he";
 import { colors } from "@/lib/design-tokens";
 import {
   calculateGroupStandings,
@@ -34,6 +34,7 @@ type GroupPredictionRow = {
 function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
+      <h1 className="sr-only">{nav.groups}</h1>
       <SubTabs />
       {children}
     </div>
@@ -177,7 +178,7 @@ export default async function GroupsPage() {
                           <td className="py-2">
                             <span className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
                               <span
-                                className="ltr flex h-5 w-5 shrink-0 items-center justify-center text-[10.5px] font-extrabold tabular-nums"
+                                className="ltr box-border flex h-5 w-5 shrink-0 items-center justify-center text-[10.5px] font-extrabold tabular-nums"
                                 style={{
                                   borderRadius: "50%",
                                   background:
@@ -188,11 +189,20 @@ export default async function GroupsPage() {
                                     index < 2
                                       ? colors.success
                                       : colors.textSecondary,
+                                  border:
+                                    index < 2
+                                      ? `1.5px solid ${colors.success}`
+                                      : "1.5px solid transparent",
                                 }}
                               >
                                 {index + 1}
                               </span>
                               {team?.short_name ?? row.teamId}
+                              {index < 2 && (
+                                <span className="sr-only">
+                                  {content.advancesLabel}
+                                </span>
+                              )}
                             </span>
                           </td>
                           <td className="ltr py-2 text-center text-[var(--text-secondary)] tabular-nums">

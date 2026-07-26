@@ -21,7 +21,7 @@ export function HeaderActions({ isAdmin }: { isAdmin: boolean }) {
         <Link
           href="/admin"
           aria-label="ניהול טורניר"
-          className="flex h-8 w-8 items-center justify-center rounded-full"
+          className="flex h-11 w-11 items-center justify-center rounded-full"
           style={{
             background: colors.surfaceCard2,
             color: colors.textSecondary,
@@ -30,7 +30,11 @@ export function HeaderActions({ isAdmin }: { isAdmin: boolean }) {
           <IconAdmin width={17} height={17} aria-hidden />
         </Link>
       )}
-      <Link href="/profile" aria-label="פרופיל">
+      <Link
+        href="/profile"
+        aria-label="פרופיל"
+        className="flex h-11 w-11 items-center justify-center"
+      >
         <Avatar initials={currentParticipant.avatarInitials} self size={32} />
       </Link>
     </div>

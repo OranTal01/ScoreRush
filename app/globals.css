@@ -20,10 +20,14 @@
   --bronze: #c9a876;
   --success: #4faf83;
   --coral: #c87878;
-  --danger: #d85c6a;
+  /* WCAG AA fix (Phase 9 #71) — see lib/design-tokens.ts's `danger` comment
+     for the full contrast rationale; mirror that value here. */
+  --danger: #dd6472;
   --text-primary: #f2f4f8;
   --text-secondary: #98a2b3;
-  --text-muted: #6b7688;
+  /* WCAG AA fix (Phase 9 #71) — see lib/design-tokens.ts's `textMuted`
+     comment for the full contrast rationale; mirror that value here. */
+  --text-muted: #808ea3;
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.1);
   --overlay: rgba(8, 11, 20, 0.72);
@@ -116,4 +120,24 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/*
+ * Global focus-visible ring (spec §14 / row 402): `--focus-ring` 2px solid +
+ * `--focus-ring-halo` 3px halo, keyboard focus only (`:focus-visible` — mouse
+ * clicks never trigger it), applied uniformly to every interactive element
+ * (button/link/input/[tabindex] etc.) via the pseudo-class selector rather
+ * than a per-component class, so nothing can be added later without it.
+ * Two stacked non-inset box-shadows (not `outline`) so the ring/halo follow
+ * each element's own border-radius (pills, cards, buttons all differ) —
+ * `outline` only started respecting `border-radius` in the newest browsers.
+ * The first (smaller, opaque) shadow paints over the inner edge of the
+ * second (larger, translucent) one, producing a solid ring + soft halo band
+ * rather than one flat color.
+ */
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--focus-ring),
+    0 0 0 5px var(--focus-ring-halo);
 }

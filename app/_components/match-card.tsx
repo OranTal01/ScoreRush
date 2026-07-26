@@ -83,7 +83,10 @@ export function MatchCard({ match }: { match: MatchWithTeams }) {
       <div className="flex items-center gap-2">
         <TeamLabel team={match.homeTeam} align="start" />
         {score ? (
-          <span className="ltr shrink-0 px-2 text-base font-black text-[var(--text-primary)] tabular-nums">
+          <span
+            aria-live={match.status === "live" ? "polite" : undefined}
+            className="ltr shrink-0 px-2 text-base font-black text-[var(--text-primary)] tabular-nums"
+          >
             {score.home} – {score.away}
           </span>
         ) : (

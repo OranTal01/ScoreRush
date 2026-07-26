@@ -17,7 +17,7 @@
  */
 import { motion } from "motion/react";
 import { motion as motionTokens, typography } from "@/lib/design-tokens";
-import { scoring } from "@/lib/content/he";
+import { common, scoring } from "@/lib/content/he";
 import { useCountUp } from "@/lib/motion/use-count-up";
 import { useReducedMotionSafe } from "@/lib/motion/variants";
 import { Pill } from "../ui";
@@ -55,16 +55,22 @@ export function HeroPointsCounter({ points }: { points: number }) {
   const reducedMotion = useReducedMotionSafe();
   const display = useCountUp(points, reducedMotion);
   return (
-    <span
-      className="ltr text-[var(--text-primary)] tabular-nums"
-      style={{
-        fontSize: typography.scale.heroTotalPoints.mobile,
-        fontWeight: typography.scale.heroTotalPoints.weight,
-        lineHeight: typography.scale.heroTotalPoints.lineHeight,
-      }}
-    >
-      {display}
-    </span>
+    <>
+      <span
+        aria-hidden="true"
+        className="ltr text-[var(--text-primary)] tabular-nums"
+        style={{
+          fontSize: typography.scale.heroTotalPoints.mobile,
+          fontWeight: typography.scale.heroTotalPoints.weight,
+          lineHeight: typography.scale.heroTotalPoints.lineHeight,
+        }}
+      >
+        {display}
+      </span>
+      <span className="sr-only" aria-live="polite">
+        {points} {common.points}
+      </span>
+    </>
   );
 }
 

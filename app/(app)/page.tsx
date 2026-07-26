@@ -1,5 +1,5 @@
 import { colors, gradients, spacing } from "@/lib/design-tokens";
-import { home as content } from "@/lib/content/he";
+import { home as content, nav } from "@/lib/content/he";
 import { formatMatchTime } from "@/lib/mock/clock";
 import {
   computeStandings,
@@ -208,6 +208,7 @@ export default async function HomePage() {
       className="flex flex-col gap-4 md:grid md:grid-cols-[340px_1fr_360px] md:items-start"
       style={{ gap: spacing.desktopGutter }}
     >
+      <h1 className="sr-only">{nav.home}</h1>
       {/* Left column (desktop) — rank hero */}
       <div className="flex flex-col gap-4">
         <MotionIn index={0}>

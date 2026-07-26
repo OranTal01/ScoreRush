@@ -11,14 +11,11 @@ import { isPast } from "@/lib/time";
 import { Card, Pill } from "@/app/_components/ui";
 import { PredictionForm } from "./_components/prediction-form";
 
-type MatchStatus = "scheduled" | "live" | "finished" | "postponed" | "cancelled";
+type MatchStatus =
+  "scheduled" | "live" | "finished" | "postponed" | "cancelled";
 type Score = { home: number; away: number };
 type PredictionOutcome =
-  | "exact"
-  | "winner_diff"
-  | "winner"
-  | "draw_correct"
-  | "wrong";
+  "exact" | "winner_diff" | "winner" | "draw_correct" | "wrong";
 
 type MatchRow = {
   id: string;
@@ -166,6 +163,7 @@ export default async function MatchDetailPage({
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[480px]">
+      <h1 className="sr-only">{content.title}</h1>
       <Link
         href="/predictions"
         className="text-xs font-semibold text-[var(--text-muted)]"
@@ -220,7 +218,7 @@ export default async function MatchDetailPage({
                 <span className="text-xs text-[var(--text-secondary)]">
                   {content.yourPredictionLabel}
                 </span>
-                <span className="ltr text-lg font-black tabular-nums text-[var(--text-primary)]">
+                <span className="ltr text-lg font-black text-[var(--text-primary)] tabular-nums">
                   {prediction.predicted_home} – {prediction.predicted_away}
                 </span>
                 {prediction.points_earned !== null && (

@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { common, diagnostics as diagnosticsContent, overrides as content } from "@/lib/content/he";
+import {
+  common,
+  diagnostics as diagnosticsContent,
+  overrides as content,
+} from "@/lib/content/he";
 import { getAdminContext } from "@/lib/auth/admin";
 import { formatMatchTime } from "@/lib/mock";
 import { createClient } from "@/lib/supabase/server";
@@ -50,6 +54,7 @@ export default async function MatchCorrectionPage({
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
+      <h1 className="sr-only">{content.title}</h1>
       <Link
         href={`/admin/diagnostics/${matchId}`}
         className="text-xs font-semibold text-[var(--text-muted)]"

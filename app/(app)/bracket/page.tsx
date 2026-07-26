@@ -1,5 +1,5 @@
 import { colors } from "@/lib/design-tokens";
-import { bracket as content } from "@/lib/content/he";
+import { bracket as content, nav } from "@/lib/content/he";
 import { listTournamentMatches } from "@/lib/matches/list";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
@@ -49,6 +49,7 @@ export default async function BracketPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[720px]">
+      <h1 className="sr-only">{nav.bracket}</h1>
       <SubTabs />
 
       {semifinals.length === 0 && !final ? (

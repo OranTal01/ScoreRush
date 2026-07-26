@@ -26,7 +26,7 @@ export default async function LoginPage({
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-10">
+    <main className="flex flex-1 items-center justify-center px-4 py-10">
       <div className="flex w-full flex-col gap-6 md:max-w-[400px]">
         <div className="flex flex-col items-center gap-1 text-center">
           <span className="text-xl font-black text-[var(--text-primary)]">
@@ -61,6 +61,6 @@ export default async function LoginPage({
           </div>
         </Card>
       </div>
-    </div>
+    </main>
   );
 }

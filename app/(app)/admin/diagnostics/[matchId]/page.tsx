@@ -88,6 +88,7 @@ export default async function MatchDiagnosticPage({
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
+      <h1 className="sr-only">{content.matchTitle}</h1>
       <Link
         href="/admin/diagnostics"
         className="text-xs font-semibold text-[var(--text-muted)]"
@@ -149,12 +150,18 @@ export default async function MatchDiagnosticPage({
           }
         />
         <div className="flex flex-col gap-2">
-          <ScoreRow label={content.regularResultLabel} score={match.regularResult} />
+          <ScoreRow
+            label={content.regularResultLabel}
+            score={match.regularResult}
+          />
           <ScoreRow
             label={content.extraTimeResultLabel}
             score={match.extraTimeResult}
           />
-          <ScoreRow label={content.penaltyResultLabel} score={match.penaltyResult} />
+          <ScoreRow
+            label={content.penaltyResultLabel}
+            score={match.penaltyResult}
+          />
           <ScoreRow label={content.liveScoreLabel} score={match.liveScore} />
         </div>
         <p
@@ -185,7 +192,7 @@ export default async function MatchDiagnosticPage({
         {rawPayloadJson ? (
           <pre
             dir="ltr"
-            className="max-h-[400px] overflow-auto whitespace-pre-wrap break-all p-3 text-start text-[10.5px] text-[var(--text-secondary)]"
+            className="max-h-[400px] overflow-auto p-3 text-start text-[10.5px] break-all whitespace-pre-wrap text-[var(--text-secondary)]"
             style={{
               background: colors.surfaceCard2,
               borderRadius: "var(--radius-button)",

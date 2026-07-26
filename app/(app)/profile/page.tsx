@@ -2,6 +2,7 @@ import { colors, gradients } from "@/lib/design-tokens";
 import {
   auth as authContent,
   common,
+  nav,
   profile as content,
   scoring,
   tournamentSwitcher,
@@ -177,6 +178,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[480px]">
+      <h1 className="sr-only">{nav.profile}</h1>
       <MotionIn index={0}>
         <Card padding="hero" className="relative overflow-hidden">
           <div
@@ -216,7 +218,7 @@ export default async function ProfilePage() {
             </div>
             <button
               type="button"
-              className="px-4 py-2 text-xs font-bold text-[var(--text-primary)]"
+              className="px-4 py-3.5 text-xs font-bold text-[var(--text-primary)]"
               style={{
                 background: colors.surfaceCard2,
                 borderRadius: "var(--radius-button)",

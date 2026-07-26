@@ -5,7 +5,14 @@ import { useFormStatus } from "react-dom";
 import { common, participantsAdmin as content } from "@/lib/content/he";
 import { colors } from "@/lib/design-tokens";
 import { formatMatchTime } from "@/lib/mock";
-import { Avatar, Card, EmptyState, Pill, SectionHeader, type StatusTone } from "@/app/_components/ui";
+import {
+  Avatar,
+  Card,
+  EmptyState,
+  Pill,
+  SectionHeader,
+  type StatusTone,
+} from "@/app/_components/ui";
 import {
   changeParticipantRole,
   createInvitation,
@@ -109,6 +116,7 @@ function CopyField({ value }: { value: string }) {
       <button
         type="button"
         onClick={handleCopy}
+        aria-live="polite"
         className="shrink-0 px-3 py-2 text-[11px] font-bold text-[var(--interactive)]"
         style={inputStyle}
       >
@@ -146,12 +154,16 @@ function RoleToggleButton({ label }: { label: string }) {
 
 function RemoveParticipantButton() {
   const { pending } = useFormStatus();
-  return <SmallActionButton label={content.removeCta} pending={pending} danger />;
+  return (
+    <SmallActionButton label={content.removeCta} pending={pending} danger />
+  );
 }
 
 function RevokeInvitationButton() {
   const { pending } = useFormStatus();
-  return <SmallActionButton label={content.revokeCta} pending={pending} danger />;
+  return (
+    <SmallActionButton label={content.revokeCta} pending={pending} danger />
+  );
 }
 
 function CreateInvitationSubmitButton() {
@@ -161,7 +173,10 @@ function CreateInvitationSubmitButton() {
       type="submit"
       disabled={pending}
       className="w-fit px-4 py-2.5 text-xs font-bold text-[#080B14] transition-opacity disabled:opacity-60"
-      style={{ background: colors.interactive, borderRadius: "var(--radius-button)" }}
+      style={{
+        background: colors.interactive,
+        borderRadius: "var(--radius-button)",
+      }}
     >
       {pending ? content.createInvitationPending : content.createInvitationCta}
     </button>
@@ -186,7 +201,9 @@ function ParticipantRow({
     idleParticipantState,
   );
   const nextRole =
-    participant.role === "tournament_admin" ? "participant" : "tournament_admin";
+    participant.role === "tournament_admin"
+      ? "participant"
+      : "tournament_admin";
 
   return (
     <li
@@ -209,7 +226,13 @@ function ParticipantRow({
                 </span>
               )}
             </span>
-            <Pill tone={participant.role === "tournament_admin" ? "interactive" : "muted"}>
+            <Pill
+              tone={
+                participant.role === "tournament_admin"
+                  ? "interactive"
+                  : "muted"
+              }
+            >
               {participant.role === "tournament_admin"
                 ? content.roleAdmin
                 : content.roleParticipant}
@@ -220,7 +243,11 @@ function ParticipantRow({
         {!isSelf && (
           <div className="flex shrink-0 items-center gap-3">
             <form action={roleAction}>
-              <input type="hidden" name="participantId" value={participant.id} />
+              <input
+                type="hidden"
+                name="participantId"
+                value={participant.id}
+              />
               <input type="hidden" name="tournamentId" value={tournamentId} />
               <input type="hidden" name="role" value={nextRole} />
               <RoleToggleButton
@@ -237,7 +264,11 @@ function ParticipantRow({
                 if (!window.confirm(content.removeConfirm)) e.preventDefault();
               }}
             >
-              <input type="hidden" name="participantId" value={participant.id} />
+              <input
+                type="hidden"
+                name="participantId"
+                value={participant.id}
+              />
               <input type="hidden" name="tournamentId" value={tournamentId} />
               <RemoveParticipantButton />
             </form>
@@ -245,12 +276,18 @@ function ParticipantRow({
         )}
       </div>
       {roleState.status === "error" && (
-        <span role="alert" className="text-[10.5px] font-semibold text-[var(--danger)]">
+        <span
+          role="alert"
+          className="text-[10.5px] font-semibold text-[var(--danger)]"
+        >
           {ERROR_MESSAGES[roleState.code]}
         </span>
       )}
       {removeState.status === "error" && (
-        <span role="alert" className="text-[10.5px] font-semibold text-[var(--danger)]">
+        <span
+          role="alert"
+          className="text-[10.5px] font-semibold text-[var(--danger)]"
+        >
           {ERROR_MESSAGES[removeState.code]}
         </span>
       )}
@@ -265,7 +302,10 @@ function InvitationRow({
   invitation: InvitationData;
   tournamentId: string;
 }) {
-  const [state, formAction] = useActionState(revokeInvitation, idleParticipantState);
+  const [state, formAction] = useActionState(
+    revokeInvitation,
+    idleParticipantState,
+  );
   const expired = isEffectivelyExpired(invitation);
   const statusKey = expired ? "expired" : invitation.status;
 
@@ -305,7 +345,10 @@ function InvitationRow({
         </div>
       )}
       {state.status === "error" && (
-        <span role="alert" className="text-[10.5px] font-semibold text-[var(--danger)]">
+        <span
+          role="alert"
+          className="text-[10.5px] font-semibold text-[var(--danger)]"
+        >
           {ERROR_MESSAGES[state.code]}
         </span>
       )}
@@ -338,7 +381,10 @@ function CreateInvitationForm({ tournamentId }: { tournamentId: string }) {
       </div>
 
       {state.status === "error" && (
-        <span role="alert" className="text-xs font-semibold text-[var(--danger)]">
+        <span
+          role="alert"
+          className="text-xs font-semibold text-[var(--danger)]"
+        >
           {ERROR_MESSAGES[state.code]}
         </span>
       )}
@@ -358,12 +404,18 @@ function CreateInvitationForm({ tournamentId }: { tournamentId: string }) {
           </span>
           <CopyField value={state.joinUrl} />
           {state.emailStatus === "sent" && (
-            <span className="text-[11px] font-semibold text-[var(--success)]">
+            <span
+              role="status"
+              className="text-[11px] font-semibold text-[var(--success)]"
+            >
               {content.invitationEmailSent(state.boundEmail)}
             </span>
           )}
           {state.emailStatus === "failed" && (
-            <span role="alert" className="text-[11px] font-semibold text-[var(--danger)]">
+            <span
+              role="alert"
+              className="text-[11px] font-semibold text-[var(--danger)]"
+            >
               {content.invitationEmailFailed}
             </span>
           )}

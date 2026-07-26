@@ -5,7 +5,7 @@ describe("design tokens", () => {
   it("exposes the full Premium Fantasy Refined color set", () => {
     expect(colors.bgPage).toBe("#080B14");
     expect(colors.gold).toBe("#D6B56E");
-    expect(colors.danger).toBe("#D85C6A");
+    expect(colors.danger).toBe("#DD6472");
   });
 
   it("exposes motion duration tokens in milliseconds", () => {

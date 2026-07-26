@@ -24,10 +24,24 @@ export const colors = {
   bronze: "#C9A876",
   success: "#4FAF83",
   coral: "#C87878",
-  danger: "#D85C6A",
+  // WCAG AA fix (Phase 9 #71): original #D85C6A cleared 4.5:1 against
+  // bgPage/bgElevated/surfaceCard but fell to 4.28:1 / 4.36:1 against
+  // surfaceCard2 / surfacePlum (danger text appears on both — e.g. error
+  // rows in admin cards, form validation messages). Same hue/saturation,
+  // lightness nudged up until the worst-case pairing (surfaceCard2) clears
+  // 4.5:1 with margin (4.64:1), verified via relative-luminance contrast
+  // calc against all 5 surface tokens.
+  danger: "#DD6472",
   textPrimary: "#F2F4F8",
   textSecondary: "#98A2B3",
-  textMuted: "#6B7688",
+  // WCAG AA fix (Phase 9 #71): original #6B7688 only reached 3.46-4.28:1
+  // against the 5 surface tokens (fails the 4.5:1 normal-text threshold
+  // everywhere — text-muted is used at 10.5-13px, never "large text", so
+  // the stricter threshold applies). Same hue/saturation, lightness raised
+  // until the worst-case pairing (surfaceCard2) clears 4.5:1 with margin
+  // (4.77:1), verified via relative-luminance contrast calc against all 5
+  // surface tokens.
+  textMuted: "#808EA3",
   border: "rgba(255,255,255,0.08)",
   borderStrong: "rgba(255,255,255,0.10)",
   overlay: "rgba(8,11,20,0.72)",
