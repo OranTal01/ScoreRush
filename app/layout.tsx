@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
+import { OfflineBanner } from "@/app/_components/offline-banner";
 import "./globals.css";
 
 const rubik = Rubik({
@@ -26,7 +27,10 @@ export default function RootLayout({
       dir="rtl"
       className={`${rubik.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <OfflineBanner />
+        {children}
+      </body>
     </html>
   );
 }

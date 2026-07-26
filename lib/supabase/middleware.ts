@@ -35,9 +35,25 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: do not add logic between createServerClient and getUser().
   // A stray early return here can make session refresh silently stop
   // working, which manifests as users randomly getting logged out.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  //
+  // getUser() itself is wrapped in try/catch (Phase 9 #73 — offline/error
+  // state pass): this runs on essentially every request site-wide
+  // (proxy.ts's matcher), and previously an unhandled rejection here (a
+  // Supabase outage or DNS/network failure, not just "no session") would
+  // propagate uncaught and 500 the entire site for every visitor until
+  // Supabase recovered. Failing closed to "no user" on a thrown error is
+  // the same outcome proxy.ts already produces for a genuinely missing
+  // session — redirect to /login — which is the safe default when we can't
+  // verify the session either way.
+  let user = null;
+  try {
+    const {
+      data: { user: fetchedUser },
+    } = await supabase.auth.getUser();
+    user = fetchedUser;
+  } catch {
+    user = null;
+  }
 
   return { supabaseResponse, user };
 }

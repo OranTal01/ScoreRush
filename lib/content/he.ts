@@ -35,11 +35,15 @@ export const common = {
   errorGeneric: "משהו השתבש. ננסה שוב בקרוב.",
   dataDelayed: "הנתונים עשויים להיות מעודכנים בעיכוב",
   offline: "אתה במצב לא מקוון — מוצגים הנתונים האחרונים שנשמרו",
+  backOnline: "החיבור לרשת חזר",
   retry: "ניסיון נוסף",
   viewAll: "לצפייה בהכול",
   points: "נק'",
   rank: "מקום",
   vs: "נגד",
+  pageNotFoundTitle: "העמוד לא נמצא",
+  pageNotFoundBody: "הקישור שגוי או שהעמוד הוסר.",
+  backToHome: "חזרה לדף הבית",
 } as const;
 
 /**
