@@ -27,6 +27,7 @@ export const tournamentSwitcher = {
   createTournament: "יצירת טורניר",
   switchAction: "מעבר",
   activeLabel: "פעיל",
+  noTournament: "בחר טורניר",
 } as const;
 
 export const common = {

@@ -1,9 +1,18 @@
 import { colors } from "@/lib/design-tokens";
+import type { UserTournament } from "@/lib/tournaments/list";
 import { TournamentSwitcher } from "./tournament-switcher";
 import { HeaderActions } from "./header-actions";
 
 /** Mobile header — tournament switcher lives here, not the bottom nav (UX-BLUEPRINT.md §2). */
-export function MobileHeader({ isAdmin }: { isAdmin: boolean }) {
+export function MobileHeader({
+  isAdmin,
+  tournaments,
+  canCreateTournament,
+}: {
+  isAdmin: boolean;
+  tournaments: UserTournament[];
+  canCreateTournament: boolean;
+}) {
   return (
     <header
       className="sticky top-0 z-30 flex items-center justify-between border-b px-4 md:hidden"
@@ -14,7 +23,10 @@ export function MobileHeader({ isAdmin }: { isAdmin: boolean }) {
         paddingBottom: "10px",
       }}
     >
-      <TournamentSwitcher />
+      <TournamentSwitcher
+        tournaments={tournaments}
+        canCreateTournament={canCreateTournament}
+      />
       <HeaderActions isAdmin={isAdmin} />
     </header>
   );

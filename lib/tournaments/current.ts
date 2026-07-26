@@ -1,4 +1,5 @@
 import "server-only";
+import { cookies } from "next/headers";
 import type { createClient } from "@/lib/supabase/server";
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
@@ -8,23 +9,41 @@ export type CurrentParticipant = {
   tournamentId: string;
 };
 
+/** Cookie the switcher's `switchTournament` action (app/_components/nav/actions.ts) writes — the one persisted record of the caller's explicit selection. */
+export const ACTIVE_TOURNAMENT_COOKIE = "active_tournament_id";
+
 /**
- * MVP stand-in for a real "active tournament" selection. The tournament
- * switcher (UX-BLUEPRINT.md §2) is still Phase 2 mock UI with no persisted
- * selection state (no cookie, no client-side store) — there is currently no
- * way for a real-data page to know which of a user's tournaments is
- * "active" other than picking one.
+ * Real "active tournament" resolution (task #80): prefers the switcher's
+ * persisted cookie selection, falling back to the participant's
+ * most-recently-joined tournament when there's no cookie, or the cookie
+ * names a tournament the caller isn't (or is no longer) a participant of —
+ * e.g. a stale cookie from before being removed, or one left over from a
+ * different account on a shared browser.
  *
- * Picks the participant's most-recently-joined tournament. Reasonable while
- * a user realistically belongs to one tournament at a time (ROADMAP.md
- * Phase 10: launch targets a single pilot Champions League pool) — replace
- * every call site with the real switcher's persisted selection once that's
- * built; this function is the one place that decision needs to change.
+ * Every existing call site already goes through this one function
+ * (ROADMAP.md Phase 9 gap-fill tasks #76-79 and the rest of the app shell),
+ * so making it cookie-aware here is enough to make the switcher's choice
+ * stick everywhere, with no call site needing to change.
  */
 export async function getCurrentParticipant(
   supabase: SupabaseServerClient,
   userId: string,
 ): Promise<CurrentParticipant | null> {
+  const preferredTournamentId = (await cookies()).get(
+    ACTIVE_TOURNAMENT_COOKIE,
+  )?.value;
+
+  if (preferredTournamentId) {
+    const { data } = await supabase
+      .from("participants")
+      .select("id, tournament_id")
+      .eq("user_id", userId)
+      .eq("tournament_id", preferredTournamentId)
+      .maybeSingle<{ id: string; tournament_id: string }>();
+    if (data)
+      return { participantId: data.id, tournamentId: data.tournament_id };
+  }
+
   const { data } = await supabase
     .from("participants")
     .select("id, tournament_id")

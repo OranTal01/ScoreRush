@@ -3,12 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { colors, spacing } from "@/lib/design-tokens";
+import type { UserTournament } from "@/lib/tournaments/list";
 import { primaryNavItems } from "./nav-links";
 import { TournamentSwitcher } from "./tournament-switcher";
 import { HeaderActions } from "./header-actions";
 
 /** Desktop top bar — UX-BLUEPRINT.md §2: horizontal tabs + inline switcher, hidden on mobile. */
-export function TopBar({ isAdmin }: { isAdmin: boolean }) {
+export function TopBar({
+  isAdmin,
+  tournaments,
+  canCreateTournament,
+}: {
+  isAdmin: boolean;
+  tournaments: UserTournament[];
+  canCreateTournament: boolean;
+}) {
   const pathname = usePathname();
 
   return (
@@ -24,7 +33,10 @@ export function TopBar({ isAdmin }: { isAdmin: boolean }) {
         <span className="text-lg font-black text-[var(--text-primary)]">
           ScoreRush
         </span>
-        <TournamentSwitcher />
+        <TournamentSwitcher
+          tournaments={tournaments}
+          canCreateTournament={canCreateTournament}
+        />
       </div>
 
       <nav aria-label="ניווט ראשי" className="flex items-center gap-1">

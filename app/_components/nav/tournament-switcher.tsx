@@ -1,21 +1,42 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { colors } from "@/lib/design-tokens";
 import { tournamentSwitcher } from "@/lib/content/he";
-import { otherTournaments, tournament } from "@/lib/mock";
+import type { UserTournament } from "@/lib/tournaments/list";
 import { useReducedMotionSafe } from "@/lib/motion/variants";
 import { IconChevronDown, IconClose } from "../icons";
+import { switchTournament } from "./actions";
 
 /**
  * Header-level tournament switcher — UX-BLUEPRINT.md §2: a sheet on mobile
  * (tapping the header), an inline dropdown on desktop. One component, one
  * state machine; only the panel's positioning classes differ per breakpoint.
+ *
+ * `tournaments` is real data computed once in app/(app)/layout.tsx and
+ * threaded down through MobileHeader/TopBar (task #80 — this was the one
+ * nav component the Phase 9 gap-fill pass, tasks #76-79, missed).
+ *
+ * `canCreateTournament` is the platform-admin check specifically
+ * (lib/auth/admin.ts's `isPlatformAdmin`), not the broader tournament-scoped
+ * `isAdmin` HeaderActions uses for the admin nav entry — DECISIONS.md: "Only
+ * the platform owner can create a new tournament in MVP". Reusing the
+ * broader `isAdmin` here would show a tournament_admin who isn't the
+ * platform owner a "create tournament" entry that fails with
+ * `not_platform_admin` after they fill out the whole form.
  */
-export function TournamentSwitcher() {
+export function TournamentSwitcher({
+  tournaments,
+  canCreateTournament,
+}: {
+  tournaments: UserTournament[];
+  canCreateTournament: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const reducedMotion = useReducedMotionSafe();
+  const current = tournaments.find((t) => t.isCurrent) ?? tournaments[0];
 
   return (
     <div className="relative">
@@ -27,7 +48,7 @@ export function TournamentSwitcher() {
         className="flex min-h-11 items-center gap-1.5 rounded-full px-2 py-2 text-start"
       >
         <span className="max-w-[180px] truncate text-sm font-extrabold text-[var(--text-primary)] md:text-[15px]">
-          {tournament.name}
+          {current ? current.name : tournamentSwitcher.noTournament}
         </span>
         <IconChevronDown
           width={16}
@@ -96,17 +117,16 @@ export function TournamentSwitcher() {
               </div>
 
               <ul className="flex flex-col gap-2">
-                {[tournament, ...otherTournaments].map((t) => (
+                {tournaments.map((t) => (
                   <li
                     key={t.id}
                     className="flex items-center justify-between border p-3"
                     style={{
                       borderRadius: "var(--radius-row)",
                       borderColor: colors.border,
-                      background:
-                        t.id === tournament.id
-                          ? colors.surfaceCard2
-                          : "transparent",
+                      background: t.isCurrent
+                        ? colors.surfaceCard2
+                        : "transparent",
                     }}
                   >
                     <div className="flex flex-col">
@@ -117,17 +137,22 @@ export function TournamentSwitcher() {
                         {t.competition}
                       </span>
                     </div>
-                    {t.id === tournament.id ? (
+                    {t.isCurrent ? (
                       <span className="text-[10.5px] font-semibold text-[var(--interactive)]">
                         {tournamentSwitcher.activeLabel}
                       </span>
                     ) : (
-                      <button
-                        type="button"
-                        className="text-[11px] font-bold text-[var(--interactive)]"
+                      <form
+                        action={switchTournament.bind(null, t.id)}
+                        onSubmit={() => setOpen(false)}
                       >
-                        {tournamentSwitcher.switchAction}
-                      </button>
+                        <button
+                          type="submit"
+                          className="text-[11px] font-bold text-[var(--interactive)]"
+                        >
+                          {tournamentSwitcher.switchAction}
+                        </button>
+                      </form>
                     )}
                   </li>
                 ))}
@@ -137,18 +162,26 @@ export function TournamentSwitcher() {
                 className="flex flex-col gap-2 border-t pt-3"
                 style={{ borderColor: colors.border }}
               >
+                {/* No self-serve join destination exists yet — every
+                    invitation is a `/join/[token]` link a tournament admin
+                    generates and shares externally (email/WhatsApp); there's
+                    no in-app "browse tournaments" or "enter a code" screen to
+                    send this to. Left unwired until that flow exists. */}
                 <button
                   type="button"
                   className="text-start text-sm font-bold text-[var(--interactive)]"
                 >
                   {tournamentSwitcher.joinAnother}
                 </button>
-                <button
-                  type="button"
-                  className="text-start text-sm font-bold text-[var(--gold)]"
-                >
-                  {tournamentSwitcher.createTournament}
-                </button>
+                {canCreateTournament && (
+                  <Link
+                    href="/admin/tournaments/new"
+                    onClick={() => setOpen(false)}
+                    className="text-start text-sm font-bold text-[var(--gold)]"
+                  >
+                    {tournamentSwitcher.createTournament}
+                  </Link>
+                )}
               </div>
             </motion.div>
           </>

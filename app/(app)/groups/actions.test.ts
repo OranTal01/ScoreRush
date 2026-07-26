@@ -19,6 +19,14 @@ const { fromQueue, calls, authUser } = vi.hoisted(() => ({
 
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
+// getCurrentParticipant (lib/tournaments/current.ts) now reads the
+// switcher's persisted cookie (task #80) before falling back to
+// most-recently-joined — an empty cookie store here preserves this file's
+// original fromQueue ordering/assertions (no cookie => straight to fallback).
+vi.mock("next/headers", () => ({
+  cookies: async () => ({ get: () => undefined }),
+}));
+
 vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({
     auth: {
@@ -137,7 +145,11 @@ describe("submitGroupPrediction", () => {
       }),
     );
 
-    expect(result).toEqual({ status: "success", group: "A", predictedOrder: [H1, H2] });
+    expect(result).toEqual({
+      status: "success",
+      group: "A",
+      predictedOrder: [H1, H2],
+    });
     expect(calls).toEqual([
       {
         table: "group_predictions",
