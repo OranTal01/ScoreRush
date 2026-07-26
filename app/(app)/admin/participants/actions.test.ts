@@ -6,20 +6,30 @@
  * app/(app)/groups/actions.test.ts and lib/auth/admin.test.ts — `.from()`
  * shifts the next queued response immediately, so the two `Promise.all`'d
  * queries inside `getAdminContext` resolve deterministically in source
- * order) and `@/lib/auth/get-origin` (these actions run outside a real
- * request context in tests, so `headers()` isn't available).
+ * order), `@/lib/auth/get-origin` (these actions run outside a real request
+ * context in tests, so `headers()` isn't available), and
+ * `@/lib/notifications/send-invitation-email` (its own module has full
+ * mocked-DB/mocked-Resend coverage in lib/notifications/send-invitation-email.test.ts
+ * — here we only need to assert `createInvitation` calls it with the right
+ * args and passes its result through as `emailStatus`, not re-verify its
+ * internals, and mocking it avoids pulling in the real `lib/db/client.ts`
+ * env-var validation this file has no `.env.local` for).
  */
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-const { fromQueue, calls, authUser } = vi.hoisted(() => ({
+const { fromQueue, calls, authUser, sendInvitationEmailMock } = vi.hoisted(() => ({
   fromQueue: [] as { data: unknown; error: unknown }[],
   calls: [] as { table: string; op: string; payload?: unknown }[],
   authUser: { current: null as { id: string } | null },
+  sendInvitationEmailMock: vi.fn(),
 }));
 
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("@/lib/auth/get-origin", () => ({
   getOrigin: async () => "https://example.com",
+}));
+vi.mock("@/lib/notifications/send-invitation-email", () => ({
+  sendInvitationEmail: sendInvitationEmailMock,
 }));
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -93,6 +103,7 @@ beforeEach(() => {
   fromQueue.length = 0;
   calls.length = 0;
   authUser.current = null;
+  sendInvitationEmailMock.mockReset().mockResolvedValue("sent");
 });
 
 describe("removeParticipant", () => {
@@ -294,7 +305,9 @@ describe("createInvitation", () => {
     expect(result).toEqual({
       status: "success",
       joinUrl: "https://example.com/join/returned-token",
+      emailStatus: "not_attempted",
     });
+    expect(sendInvitationEmailMock).not.toHaveBeenCalled();
     expect(calls).toHaveLength(1);
     expect(calls[0].table).toBe("invitations");
     expect(calls[0].op).toBe("insert");
@@ -306,7 +319,7 @@ describe("createInvitation", () => {
     expect(typeof payload.expires_at).toBe("string");
   });
 
-  it("creates an invitation bound to a specific email", async () => {
+  it("creates an invitation bound to a specific email and sends a real email via sendInvitationEmail", async () => {
     authUser.current = { id: "u1" };
     queueAdmin({ isAdmin: true });
     fromQueue.push({ data: { token: "returned-token" }, error: null });
@@ -319,8 +332,34 @@ describe("createInvitation", () => {
     expect(result).toEqual({
       status: "success",
       joinUrl: "https://example.com/join/returned-token",
+      emailStatus: "sent",
+      boundEmail: "friend@example.com",
+    });
+    expect(sendInvitationEmailMock).toHaveBeenCalledWith({
+      tournamentId: T1,
+      boundEmail: "friend@example.com",
+      joinUrl: "https://example.com/join/returned-token",
     });
     const payload = calls[0].payload as Record<string, unknown>;
     expect(payload.bound_email).toBe("friend@example.com");
+  });
+
+  it("still returns success with the join link when the email send fails", async () => {
+    authUser.current = { id: "u1" };
+    queueAdmin({ isAdmin: true });
+    fromQueue.push({ data: { token: "returned-token" }, error: null });
+    sendInvitationEmailMock.mockResolvedValue("failed");
+
+    const result = await createInvitation(
+      { status: "idle" },
+      formData({ tournamentId: T1, boundEmail: "friend@example.com" }),
+    );
+
+    expect(result).toEqual({
+      status: "success",
+      joinUrl: "https://example.com/join/returned-token",
+      emailStatus: "failed",
+      boundEmail: "friend@example.com",
+    });
   });
 });

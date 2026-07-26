@@ -343,8 +343,10 @@ export const createTournament = {
  * Participant management screen (UX-BLUEPRINT.md §4 screen #2: "Member
  * list, roles, invitation status, remove/re-invite"). Admin-only (platform
  * admin or the tournament's own tournament_admin, lib/auth/admin.ts).
- * Invitation links have no delivery channel yet (Phase 8 notifications
- * don't exist) — the admin copies the link and shares it manually.
+ * When an invitation is bound to an email, Phase 8 (task #67) also sends a
+ * real invitation email via Resend (lib/notifications/send-invitation-email.ts)
+ * — the copyable link stays the primary/fallback delivery path either way,
+ * since email delivery is best-effort and never blocks invitation creation.
  */
 export const participantsAdmin = {
   title: "ניהול משתתפים",
@@ -382,6 +384,9 @@ export const participantsAdmin = {
   invitationCreatedTitle: "ההזמנה נוצרה",
   invitationCreatedHint:
     "שתפו את הקישור הזה עם המוזמן/ת (בוואטסאפ, אימייל וכו') — הוא לא יוצג שוב.",
+  invitationEmailSent: (email: string) => `נשלח גם אימייל אל ${email}`,
+  invitationEmailFailed:
+    "שליחת האימייל נכשלה — יש לשתף את הקישור למעלה באופן ידני.",
   copyLinkCta: "העתקת הקישור",
   copiedCta: "הועתק!",
 
@@ -390,6 +395,25 @@ export const participantsAdmin = {
   errorCannotChangeOwnRole: "לא ניתן לשנות את התפקיד של עצמך",
   errorNotFound: "הרשומה לא נמצאה, ייתכן שכבר טופלה",
   errorGeneric: "משהו השתבש. ננסה שוב בקרוב.",
+} as const;
+
+/**
+ * The real invitation email itself (ROADMAP.md Phase 8 task #67, sent via
+ * Resend — lib/notifications/send-invitation-email.ts). Separate from
+ * `participantsAdmin` above, which is the *admin's own screen* copy, not
+ * what the invitee receives. `tournamentName`/`joinUrl` are interpolated by
+ * lib/notifications/invitation-email.ts, which also HTML-escapes them
+ * before they reach `bodyHtml` — this module just supplies the templates.
+ */
+export const invitationEmail = {
+  subject: (tournamentName: string) =>
+    `הוזמנת לטורניר "${tournamentName}" ב-ScoreRush`,
+  bodyHtml: (tournamentName: string, joinUrl: string) =>
+    `<p>הוזמנת להצטרף לטורניר "<strong>${tournamentName}</strong>" ב-ScoreRush.</p>` +
+    `<p><a href="${joinUrl}">לחצו כאן כדי להצטרף</a></p>` +
+    `<p style="color:#888888;font-size:12px">אם הכפתור לא עובד, העתיקו את הקישור הבא: ${joinUrl}</p>`,
+  bodyText: (tournamentName: string, joinUrl: string) =>
+    `הוזמנת להצטרף לטורניר "${tournamentName}" ב-ScoreRush.\n\nלחצו על הקישור כדי להצטרף:\n${joinUrl}`,
 } as const;
 
 /**

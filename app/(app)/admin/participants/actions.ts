@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getAdminContext } from "@/lib/auth/admin";
 import { getOrigin } from "@/lib/auth/get-origin";
+import { sendInvitationEmail } from "@/lib/notifications/send-invitation-email";
 
 /**
  * Participant management actions (UX-BLUEPRINT.md §4 screen #2: "Member
@@ -207,9 +208,16 @@ const createInvitationInputSchema = z.object({
   ),
 });
 
+export type InvitationEmailStatus = "sent" | "failed" | "not_attempted";
+
 export type CreateInvitationState =
   | { status: "idle" }
-  | { status: "success"; joinUrl: string }
+  | { status: "success"; joinUrl: string; emailStatus: "not_attempted" }
+  /** `boundEmail` echoes the address the email attempt targeted, for the
+   * UI's "sent to X" message — only present alongside "sent"/"failed",
+   * discriminated on `emailStatus` so the UI never needs a null-check. */
+  | { status: "success"; joinUrl: string; emailStatus: "sent"; boundEmail: string }
+  | { status: "success"; joinUrl: string; emailStatus: "failed"; boundEmail: string }
   | { status: "error"; code: ParticipantsErrorCode };
 
 // No documented expiry-duration convention exists anywhere (DECISIONS.md /
@@ -220,9 +228,15 @@ export type CreateInvitationState =
 const INVITATION_TTL_MS = 14 * 24 * 60 * 60 * 1000;
 
 /** Creates a new invitation (RLS: `invitations_insert_admin`, which also
- * requires `created_by = auth.uid()`). Returns the full `/join/{token}`
- * link for the admin to copy — there's no notification channel yet
- * (Phase 8) to deliver it automatically. */
+ * requires `created_by = auth.uid()`). Always returns the full
+ * `/join/{token}` link for the admin to copy — that stays the primary/
+ * fallback delivery path regardless of email outcome. When `boundEmail` is
+ * set, also sends a real invitation email via Resend
+ * (lib/notifications/send-invitation-email.ts, Phase 8 task #67);
+ * `emailStatus` reports what happened so the UI can tell the admin, but a
+ * "failed" (or misconfigured-Resend) outcome never turns this whole action
+ * into an error — the invitation row already exists and its link already
+ * works either way. */
 export async function createInvitation(
   _prevState: CreateInvitationState,
   formData: FormData,
@@ -256,6 +270,13 @@ export async function createInvitation(
   if (error || !data) return { status: "error", code: "generic" };
 
   const origin = await getOrigin();
+  const joinUrl = `${origin}/join/${data.token}`;
+
   revalidatePath("/admin/participants");
-  return { status: "success", joinUrl: `${origin}/join/${data.token}` };
+
+  if (!boundEmail) {
+    return { status: "success", joinUrl, emailStatus: "not_attempted" };
+  }
+  const emailStatus = await sendInvitationEmail({ tournamentId, boundEmail, joinUrl });
+  return { status: "success", joinUrl, emailStatus, boundEmail };
 }

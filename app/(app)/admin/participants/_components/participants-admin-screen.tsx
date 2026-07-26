@@ -357,6 +357,16 @@ function CreateInvitationForm({ tournamentId }: { tournamentId: string }) {
             {content.invitationCreatedHint}
           </span>
           <CopyField value={state.joinUrl} />
+          {state.emailStatus === "sent" && (
+            <span className="text-[11px] font-semibold text-[var(--success)]">
+              {content.invitationEmailSent(state.boundEmail)}
+            </span>
+          )}
+          {state.emailStatus === "failed" && (
+            <span role="alert" className="text-[11px] font-semibold text-[var(--danger)]">
+              {content.invitationEmailFailed}
+            </span>
+          )}
         </div>
       )}
     </form>
