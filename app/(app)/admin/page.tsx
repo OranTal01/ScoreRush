@@ -6,7 +6,11 @@ import {
   adminOverrides,
   formatMatchTime,
   pendingLockMatches,
+  predictionForMatch,
+  teamById,
 } from "@/lib/mock";
+import type { Match as MockMatch } from "@/lib/mock/types";
+import type { MatchWithTeams } from "@/lib/matches/list";
 import { PROVIDER_LABELS } from "@/lib/providers/labels";
 import { createClient } from "@/lib/supabase/server";
 import { getFlaggedMatches, getRecentSyncLogs } from "@/lib/sync/diagnostics";
@@ -20,6 +24,42 @@ import {
   SectionHeader,
   type StatusTone,
 } from "../../_components/ui";
+
+// Pending-locks below is still mock data (see doc comment) while MatchCard's
+// prop contract is now the real `MatchWithTeams` shape (lib/matches/list.ts,
+// ROADMAP.md Phase 9 gap-fill) — this adapts the mock fixture on the fly
+// rather than fabricating a `flagAssetUrl` the mock `Team` type doesn't have.
+function toMatchWithTeams(match: MockMatch): MatchWithTeams {
+  const home = match.homeTeamId ? teamById(match.homeTeamId) : null;
+  const away = match.awayTeamId ? teamById(match.awayTeamId) : null;
+  const prediction = predictionForMatch(match.id);
+  return {
+    id: match.id,
+    tournamentId: match.tournamentId,
+    stage: match.stage,
+    group: match.group,
+    matchday: match.matchday,
+    kickoff: match.kickoff,
+    lockTime: match.lockTime,
+    status: match.status,
+    regularResult: match.regularResult,
+    liveScore: match.liveScore,
+    homeTeam: home
+      ? { id: home.id, name: home.name, shortName: home.shortName, flagAssetUrl: null }
+      : null,
+    awayTeam: away
+      ? { id: away.id, name: away.name, shortName: away.shortName, flagAssetUrl: null }
+      : null,
+    ownPrediction: prediction
+      ? {
+          predictedHome: prediction.predictedHome,
+          predictedAway: prediction.predictedAway,
+          pointsEarned: prediction.pointsEarned,
+          outcome: prediction.outcome,
+        }
+      : null,
+  };
+}
 
 type SyncHealth = "healthy" | "failed";
 
@@ -219,7 +259,7 @@ export default async function AdminOverviewPage() {
         ) : (
           <div className="flex flex-col gap-2.5">
             {pendingLockMatches.map((match) => (
-              <MatchCard key={match.id} match={match} />
+              <MatchCard key={match.id} match={toMatchWithTeams(match)} />
             ))}
           </div>
         )}

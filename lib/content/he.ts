@@ -74,6 +74,17 @@ export const home = {
   activityFeedLabel: "פעילות אחרונה",
   tournamentLeadersLabel: "מובילי הטורניר",
   lockCountdownPrefix: "ננעל בעוד",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בעמוד הבית",
+  errorNotAMember: "אינך חבר בטורניר הזה",
+  noNextMatch: "אין משחק קרוב כרגע",
+  noLatestResult: "אין עדיין תוצאה אחרונה",
+  noLeaderboardYet: "הטבלה תתעדכן עם תחילת הטורניר",
+  noLeadersYet: "אין עדיין מובילים",
+  noRecentResults: "אין עדיין תוצאות להצגה",
+  exactStreakLabel: (n: number) => `${n} ניחושים מדויקים ברצף`,
+  correctStreakLabel: (n: number) => `רצף של ${n}`,
+  accuracyLabel: (n: number) => `${n}% דיוק`,
+  noAchievementsYet: "עדיין אין תחזיות שנוקדו",
 } as const;
 
 export const predictions = {
@@ -85,6 +96,8 @@ export const predictions = {
   liveLabel: "בשידור חי",
   finishedLabel: "הסתיים",
   emptyState: "אין משחקים להצגה בשלב זה",
+  errorUnauthenticated: "יש להתחבר כדי לצפות במשחקים",
+  errorNotAMember: "אינך חבר בטורניר הזה",
 } as const;
 
 export const matchDetail = {
@@ -182,6 +195,8 @@ export const bracket = {
   semiFinal: "חצי גמר",
   final: "גמר",
   tbd: "טרם נקבע",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בשלבי המפל",
+  errorNotAMember: "אינך חבר בטורניר הזה",
 } as const;
 
 export const profile = {
@@ -195,6 +210,8 @@ export const profile = {
   roleAdmin: "מנהל/ת טורניר",
   roleParticipant: "משתתף/ת",
   rankUnchanged: "ללא שינוי מהמחזור הקודם",
+  errorUnauthenticated: "יש להתחבר כדי לצפות בפרופיל",
+  errorNotAMember: "אינך חבר בטורניר הזה",
 } as const;
 
 /**

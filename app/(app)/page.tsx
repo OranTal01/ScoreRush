@@ -1,47 +1,183 @@
 import { colors, gradients, spacing, typography } from "@/lib/design-tokens";
 import { home as content, scoring } from "@/lib/content/he";
-import {
-  bonusLeaders,
-  currentParticipant,
-  matches,
-  nextMatch,
-  participants,
-} from "@/lib/mock";
+import { formatMatchTime } from "@/lib/mock/clock";
+import { computeStandings, type StandingsInput } from "@/lib/scoring/leaderboard";
+import { computePredictionStreaks } from "@/lib/scoring/streaks";
+import { listTournamentMatches, type MatchWithTeams } from "@/lib/matches/list";
+import { createClient } from "@/lib/supabase/server";
+import { getCurrentParticipant } from "@/lib/tournaments/current";
 import {
   Avatar,
   Card,
+  EmptyState,
   Pill,
   RankBadge,
   SectionHeader,
 } from "../_components/ui";
 import { MatchCard } from "../_components/match-card";
 
-const latestFinished = [...matches]
-  .filter((m) => m.status === "finished")
-  .sort(
-    (a, b) => new Date(b.kickoff).getTime() - new Date(a.kickoff).getTime(),
-  )[0]!;
+type ParticipantRow = {
+  id: string;
+  display_name: string;
+  avatar_initials: string | null;
+};
+type SnapshotRow = {
+  participant_id: string;
+  rank: number;
+  total_points: number;
+  match_points: number;
+  group_ranking_points: number;
+  bonus_points: number;
+  captured_at: string;
+};
+type BonusCategoryRow = { id: string; name: string; sort_order: number };
+type BonusStatRow = { category_id: string; label: string; value: number };
 
-const topThree = [...participants].sort((a, b) => a.rank - b.rank).slice(0, 3);
+/** Same batching approach as leaderboard/page.tsx: every row from one
+ * snapshot capture shares an identical `captured_at`, so grouping by that
+ * timestamp recovers each historical batch without a separate table. */
+function groupIntoBatches(rows: SnapshotRow[]): SnapshotRow[][] {
+  const byTimestamp = new Map<number, SnapshotRow[]>();
+  for (const row of rows) {
+    const key = new Date(row.captured_at).getTime();
+    const batch = byTimestamp.get(key);
+    if (batch) batch.push(row);
+    else byTimestamp.set(key, [row]);
+  }
+  return [...byTimestamp.entries()]
+    .sort(([a], [b]) => b - a)
+    .map(([, batch]) => batch);
+}
 
-const activity = [
-  {
-    id: "a1",
-    text: `יובל לוי ${scoring.exactScore} במשחק באיירן מינכן נגד ליברפול — ${scoring.pointsAccumulated(9)}`,
-  },
-  { id: "a2", text: `אתה ${scoring.rankUp} למקום 2 בטבלה` },
-  {
-    id: "a3",
-    text: `מאיה בר ${scoring.winnerAndDifference} במשחק מנצ'סטר סיטי נגד אינטר`,
-  },
-  {
-    id: "a4",
-    text: `ריאל מדריד ${scoring.scoredGoal} פעמיים במשחק החי מול אינטר`,
-  },
-];
+export const dynamic = "force-dynamic";
 
-export default function HomePage() {
-  const rankMoved = currentParticipant.previousRank - currentParticipant.rank;
+/**
+ * Screen 1 (UX-BLUEPRINT.md): rank hero, achievements, next/latest match,
+ * leaderboard preview, tournament (bonus) leaders, recent results.
+ *
+ * Real-data pass (ROADMAP.md Phase 9 gap-fill, predates the phase itself) —
+ * this screen ran entirely on `@/lib/mock` fixtures through Phases 2-8, see
+ * lib/matches/list.ts's doc comment for why. Guard chain and standings
+ * computation mirror leaderboard/page.tsx exactly (same
+ * `getCurrentParticipant` MVP stand-in, same `computeStandings` recompute
+ * rather than trusting a possibly-stale snapshot's stored rank).
+ *
+ * Two cards that had no real backing data model at all were dropped rather
+ * than left fabricated: the mock "3 exact predictions in a row" badge never
+ * actually reflected the mock participant's data (a static string regardless
+ * of input) — replaced with a real `exactStreak` computed from the caller's
+ * own scored `match_predictions.outcome` history (lib/scoring/streaks.ts).
+ * The mock "activity feed" had per-participant narrative text
+ * ("X קלע בול...") with no backing table anywhere in DATABASE.md — building
+ * that is a real feature (a social/audit feed), not a wiring task, so it's
+ * replaced here with the tournament's actual most-recent finished results,
+ * which *is* real data already on hand from `listTournamentMatches`.
+ */
+export default async function HomePage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return <EmptyState message={content.errorUnauthenticated} />;
+  }
+
+  const current = await getCurrentParticipant(supabase, user.id);
+  if (!current) {
+    return <EmptyState message={content.errorNotAMember} />;
+  }
+  const { tournamentId, participantId: selfId } = current;
+
+  const [{ data: participants }, { data: snapshotRows }, matches, { data: categories }] =
+    await Promise.all([
+      supabase
+        .from("participants")
+        .select("id, display_name, avatar_initials")
+        .eq("tournament_id", tournamentId)
+        .returns<ParticipantRow[]>(),
+      supabase
+        .from("leaderboard_snapshots")
+        .select(
+          "participant_id, rank, total_points, match_points, group_ranking_points, bonus_points, captured_at",
+        )
+        .eq("tournament_id", tournamentId)
+        .returns<SnapshotRow[]>(),
+      listTournamentMatches(supabase, tournamentId, selfId),
+      supabase
+        .from("bonus_categories")
+        .select("id, name, sort_order")
+        .eq("tournament_id", tournamentId)
+        .order("sort_order", { ascending: true })
+        .returns<BonusCategoryRow[]>(),
+    ]);
+
+  const topCategories = (categories ?? []).slice(0, 3);
+  const { data: leaderRows } =
+    topCategories.length > 0
+      ? await supabase
+          .from("bonus_stats")
+          .select("category_id, label, value")
+          .in(
+            "category_id",
+            topCategories.map((c) => c.id),
+          )
+          .eq("rank", 1)
+          .returns<BonusStatRow[]>()
+      : { data: null as BonusStatRow[] | null };
+
+  const self = (participants ?? []).find((p) => p.id === selfId);
+
+  // Standings recomputed the same way as leaderboard/page.tsx (see its doc
+  // comment) rather than trusted off the latest snapshot's stored fields.
+  const batches = groupIntoBatches(snapshotRows ?? []);
+  const latestBatch = batches[0] ?? [];
+  const previousBatch = batches[1] ?? [];
+  const latestByParticipant = new Map(latestBatch.map((r) => [r.participant_id, r]));
+  const previousRankByParticipant = new Map(
+    previousBatch.map((r) => [r.participant_id, r.rank]),
+  );
+  const standingsInput: StandingsInput[] = (participants ?? []).map((p) => {
+    const latest = latestByParticipant.get(p.id);
+    return {
+      participantId: p.id,
+      matchPoints: latest?.match_points ?? 0,
+      groupRankingPoints: latest?.group_ranking_points ?? 0,
+      bonusPoints: latest?.bonus_points ?? 0,
+    };
+  });
+  const standings = computeStandings(standingsInput);
+  const selfStanding = standings.find((s) => s.participantId === selfId);
+  const selfRank = selfStanding?.rank ?? 0;
+  const selfPreviousRank = previousRankByParticipant.get(selfId) ?? selfRank;
+  const rankMoved = selfPreviousRank - selfRank;
+
+  const participantById = new Map((participants ?? []).map((p) => [p.id, p]));
+  const topThree = [...standings]
+    .sort(
+      (a, b) =>
+        a.rank - b.rank ||
+        (participantById.get(a.participantId)?.display_name ?? "").localeCompare(
+          participantById.get(b.participantId)?.display_name ?? "",
+        ),
+    )
+    .slice(0, 3);
+
+  const nextMatch: MatchWithTeams | null =
+    matches.find((m) => m.status === "scheduled" || m.status === "live") ?? null;
+  const finishedMatches = matches.filter((m) => m.status === "finished");
+  const latestFinished: MatchWithTeams | null =
+    [...finishedMatches].sort(
+      (a, b) => new Date(b.kickoff).getTime() - new Date(a.kickoff).getTime(),
+    )[0] ?? null;
+  const recentResults = [...finishedMatches]
+    .sort((a, b) => new Date(b.kickoff).getTime() - new Date(a.kickoff).getTime())
+    .slice(0, 4);
+
+  const { exactStreak, correctStreak, accuracyPercent } = computePredictionStreaks(
+    matches
+      .filter((m) => m.ownPrediction !== null)
+      .map((m) => ({ kickoff: m.kickoff, outcome: m.ownPrediction!.outcome })),
+  );
 
   return (
     <div
@@ -58,7 +194,7 @@ export default function HomePage() {
           />
           <div className="relative flex flex-col gap-3">
             <p className="text-sm font-bold text-[var(--text-secondary)]">
-              {content.greeting(currentParticipant.displayName)}
+              {content.greeting(self?.display_name ?? "")}
             </p>
             <div className="flex items-end justify-between">
               <div className="flex flex-col">
@@ -73,7 +209,7 @@ export default function HomePage() {
                     lineHeight: typography.scale.heroRankNumber.lineHeight,
                   }}
                 >
-                  {currentParticipant.rank}
+                  {selfRank}
                 </span>
               </div>
               <div className="flex flex-col items-end">
@@ -88,7 +224,7 @@ export default function HomePage() {
                     lineHeight: typography.scale.heroTotalPoints.lineHeight,
                   }}
                 >
-                  {currentParticipant.totalPoints}
+                  {selfStanding?.totalPoints ?? 0}
                 </span>
               </div>
             </div>
@@ -103,15 +239,19 @@ export default function HomePage() {
 
         <Card className="flex flex-col gap-3">
           <SectionHeader title={content.achievementsLabel} />
-          <div className="flex flex-wrap gap-2">
-            <Pill tone="gold">🎯 3 ניחושים מדויקים ברצף</Pill>
-            <Pill tone="interactive">
-              🔥 רצף של {currentParticipant.streak}
-            </Pill>
-            <Pill tone="muted">
-              📈 {currentParticipant.accuracyPercent}% דיוק
-            </Pill>
-          </div>
+          {accuracyPercent === null ? (
+            <EmptyState message={content.noAchievementsYet} />
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              <Pill tone="gold">
+                🎯 {content.exactStreakLabel(exactStreak)}
+              </Pill>
+              <Pill tone="interactive">
+                🔥 {content.correctStreakLabel(correctStreak)}
+              </Pill>
+              <Pill tone="muted">📈 {content.accuracyLabel(accuracyPercent)}</Pill>
+            </div>
+          )}
         </Card>
       </div>
 
@@ -119,82 +259,109 @@ export default function HomePage() {
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <SectionHeader title={content.nextMatchLabel} />
-          <MatchCard match={nextMatch} />
+          {nextMatch ? (
+            <MatchCard match={nextMatch} />
+          ) : (
+            <EmptyState message={content.noNextMatch} />
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <SectionHeader title={content.latestResultLabel} />
-          <MatchCard match={latestFinished} />
+          {latestFinished ? (
+            <MatchCard match={latestFinished} />
+          ) : (
+            <EmptyState message={content.noLatestResult} />
+          )}
         </div>
       </div>
 
-      {/* Right column (desktop) — leaderboard preview / leaders / activity */}
+      {/* Right column (desktop) — leaderboard preview / leaders / recent results */}
       <div className="flex flex-col gap-4">
         <Card className="flex flex-col gap-3">
           <SectionHeader title={content.leaderboardPreviewLabel} />
-          <ul className="flex flex-col gap-2.5">
-            {topThree.map((p) => (
-              <li key={p.id} className="flex items-center gap-2.5">
-                <RankBadge rank={p.rank} />
-                <Avatar
-                  initials={p.avatarInitials}
-                  rank={p.rank}
-                  self={p.id === currentParticipant.id}
-                  size={30}
-                />
-                <span className="flex-1 truncate text-sm font-bold text-[var(--text-primary)]">
-                  {p.displayName}
-                </span>
-                <span className="ltr text-sm font-extrabold text-[var(--gold)] tabular-nums">
-                  {p.totalPoints}
-                </span>
-              </li>
-            ))}
-          </ul>
+          {topThree.length === 0 ? (
+            <EmptyState message={content.noLeaderboardYet} />
+          ) : (
+            <ul className="flex flex-col gap-2.5">
+              {topThree.map((entry) => {
+                const p = participantById.get(entry.participantId);
+                return (
+                  <li key={entry.participantId} className="flex items-center gap-2.5">
+                    <RankBadge rank={entry.rank} />
+                    <Avatar
+                      initials={p?.avatar_initials ?? "?"}
+                      rank={entry.rank}
+                      self={entry.participantId === selfId}
+                      size={30}
+                    />
+                    <span className="flex-1 truncate text-sm font-bold text-[var(--text-primary)]">
+                      {p?.display_name ?? entry.participantId}
+                    </span>
+                    <span className="ltr text-sm font-extrabold text-[var(--gold)] tabular-nums">
+                      {entry.totalPoints}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </Card>
 
         <Card className="flex flex-col gap-3">
           <SectionHeader title={content.tournamentLeadersLabel} />
-          <ul className="flex flex-col gap-2">
-            <li className="flex items-center justify-between text-xs">
-              <span className="text-[var(--text-secondary)]">
-                {scoring.topScorer}
-              </span>
-              <span className="font-bold text-[var(--text-primary)]">
-                {bonusLeaders["bc-top-scorer"]![0]!.label}
-              </span>
-            </li>
-            <li className="flex items-center justify-between text-xs">
-              <span className="text-[var(--text-secondary)]">
-                {scoring.topAssistProvider}
-              </span>
-              <span className="font-bold text-[var(--text-primary)]">
-                {bonusLeaders["bc-top-assists"]![0]!.label}
-              </span>
-            </li>
-            <li className="flex items-center justify-between text-xs">
-              <span className="text-[var(--text-secondary)]">
-                {scoring.topScoringTeam}
-              </span>
-              <span className="font-bold text-[var(--text-primary)]">
-                {bonusLeaders["bc-top-team"]![0]!.label}
-              </span>
-            </li>
-          </ul>
+          {topCategories.length === 0 || (leaderRows ?? []).length === 0 ? (
+            <EmptyState message={content.noLeadersYet} />
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {topCategories.map((category) => {
+                const leader = (leaderRows ?? []).find(
+                  (r) => r.category_id === category.id,
+                );
+                if (!leader) return null;
+                return (
+                  <li
+                    key={category.id}
+                    className="flex items-center justify-between text-xs"
+                  >
+                    <span className="text-[var(--text-secondary)]">
+                      {category.name}
+                    </span>
+                    <span className="font-bold text-[var(--text-primary)]">
+                      {leader.label}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </Card>
 
         <Card className="flex flex-col gap-3">
           <SectionHeader title={content.activityFeedLabel} />
-          <ul className="flex flex-col gap-2.5">
-            {activity.map((item) => (
-              <li
-                key={item.id}
-                className="border-b pb-2.5 text-xs leading-relaxed text-[var(--text-secondary)] last:border-b-0 last:pb-0"
-                style={{ borderColor: colors.border }}
-              >
-                {item.text}
-              </li>
-            ))}
-          </ul>
+          {recentResults.length === 0 ? (
+            <EmptyState message={content.noRecentResults} />
+          ) : (
+            <ul className="flex flex-col gap-2.5">
+              {recentResults.map((match) => (
+                <li
+                  key={match.id}
+                  className="border-b pb-2.5 text-xs leading-relaxed text-[var(--text-secondary)] last:border-b-0 last:pb-0"
+                  style={{ borderColor: colors.border }}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-bold text-[var(--text-primary)]">
+                      {match.homeTeam?.shortName ?? "?"} {match.regularResult?.home}
+                      {" – "}
+                      {match.regularResult?.away} {match.awayTeam?.shortName ?? "?"}
+                    </span>
+                    <span className="ltr shrink-0 text-[10.5px] text-[var(--text-muted)] tabular-nums">
+                      {formatMatchTime(match.kickoff)}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </Card>
       </div>
     </div>

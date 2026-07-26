@@ -1,22 +1,18 @@
 import { colors } from "@/lib/design-tokens";
 import { predictions as predictionsContent } from "@/lib/content/he";
-import {
-  MOCK_NOW,
-  formatMatchTime,
-  predictionForMatch,
-  teamById,
-} from "@/lib/mock";
-import type { Match } from "@/lib/mock/types";
+import { formatMatchTime } from "@/lib/mock/clock";
+import { isPast } from "@/lib/time";
+import type { MatchTeam, MatchWithTeams } from "@/lib/matches/list";
 import { Card, Pill } from "./ui";
 
 function TeamLabel({
-  teamId,
+  team,
   align,
 }: {
-  teamId: string;
+  team: MatchTeam | null;
   align: "start" | "end";
 }) {
-  if (!teamId) {
+  if (!team) {
     return (
       <span
         className={`flex-1 text-sm font-bold text-[var(--text-muted)] ${align === "end" ? "text-end" : "text-start"}`}
@@ -25,18 +21,28 @@ function TeamLabel({
       </span>
     );
   }
-  const team = teamById(teamId);
   return (
     <span
       className={`flex flex-1 items-center gap-1.5 text-sm font-bold text-[var(--text-primary)] ${align === "end" ? "flex-row-reverse text-end" : "text-start"}`}
     >
-      <span aria-hidden>{team.flagEmoji}</span>
+      {team.flagAssetUrl && (
+        // Team flags come from arbitrary provider/manual-entry URLs, not a
+        // known-at-build-time host set — next/image's remotePatterns would
+        // need every one allow-listed, so a plain <img> is used here.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={team.flagAssetUrl}
+          alt=""
+          aria-hidden
+          className="h-3.5 w-3.5 shrink-0 rounded-full object-cover"
+        />
+      )}
       {team.shortName}
     </span>
   );
 }
 
-function StatusPill({ match }: { match: Match }) {
+function StatusPill({ match }: { match: MatchWithTeams }) {
   if (match.status === "live") {
     return (
       <Pill tone="danger" pulse>
@@ -47,7 +53,7 @@ function StatusPill({ match }: { match: Match }) {
   if (match.status === "finished") {
     return <Pill tone="muted">{predictionsContent.finishedLabel}</Pill>;
   }
-  const isLocked = new Date(match.lockTime) <= MOCK_NOW;
+  const isLocked = isPast(match.lockTime);
   return (
     <Pill tone={isLocked ? "muted" : "interactive"}>
       {isLocked ? predictionsContent.lockedLabel : predictionsContent.openLabel}
@@ -56,8 +62,8 @@ function StatusPill({ match }: { match: Match }) {
 }
 
 /** Compact match row used by the Predictions list, Home's next/latest cards, and Bracket. */
-export function MatchCard({ match }: { match: Match }) {
-  const prediction = predictionForMatch(match.id);
+export function MatchCard({ match }: { match: MatchWithTeams }) {
+  const prediction = match.ownPrediction;
   const score =
     match.status === "finished"
       ? match.regularResult
@@ -75,7 +81,7 @@ export function MatchCard({ match }: { match: Match }) {
       </div>
 
       <div className="flex items-center gap-2">
-        <TeamLabel teamId={match.homeTeamId} align="start" />
+        <TeamLabel team={match.homeTeam} align="start" />
         {score ? (
           <span className="ltr shrink-0 px-2 text-base font-black text-[var(--text-primary)] tabular-nums">
             {score.home} – {score.away}
@@ -85,7 +91,7 @@ export function MatchCard({ match }: { match: Match }) {
             {"–"}
           </span>
         )}
-        <TeamLabel teamId={match.awayTeamId} align="end" />
+        <TeamLabel team={match.awayTeam} align="end" />
       </div>
 
       {prediction && (

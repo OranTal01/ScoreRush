@@ -1,15 +1,48 @@
 import { colors } from "@/lib/design-tokens";
 import { bracket as content } from "@/lib/content/he";
-import { matches } from "@/lib/mock";
+import { listTournamentMatches } from "@/lib/matches/list";
+import { createClient } from "@/lib/supabase/server";
+import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { MatchCard } from "../../_components/match-card";
 import { SubTabs } from "../../_components/nav/sub-tabs";
 import { EmptyState, SectionHeader } from "../../_components/ui";
 
-/** Screen 12 (UX-BLUEPRINT.md): knockout bracket visualization. This mock
- * tournament only has semifinal + final rounds (8 teams, top 2 per group
- * advance directly) — teams are still TBD until the group stage finishes,
- * which MatchCard's TeamLabel already renders as "טרם נקבע". */
-export default function BracketPage() {
+// Lock status and live scores change independently of any admin action, so
+// this must never be statically cached (same rationale as
+// predictions/page.tsx and leaderboard/page.tsx).
+export const dynamic = "force-dynamic";
+
+/**
+ * Screen 12 (UX-BLUEPRINT.md): knockout bracket visualization — semifinal +
+ * final rounds only, same scope as the Phase 2 mock tournament this replaces
+ * (8 teams, top 2 per group advance directly). Teams are still TBD until the
+ * group stage finishes, which `MatchCard`'s `TeamLabel` already renders as
+ * "טרם נקבע" (a null `homeTeam`/`awayTeam`, never fabricated).
+ *
+ * Real-data pass (ROADMAP.md Phase 9 gap-fill, predates the phase itself) —
+ * this screen ran on `@/lib/mock` fixtures through Phases 2-8, see
+ * lib/matches/list.ts's doc comment for why. Guard chain mirrors
+ * leaderboard/page.tsx and predictions/page.tsx.
+ */
+export default async function BracketPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return <EmptyState message={content.errorUnauthenticated} />;
+  }
+
+  const current = await getCurrentParticipant(supabase, user.id);
+  if (!current) {
+    return <EmptyState message={content.errorNotAMember} />;
+  }
+
+  const matches = await listTournamentMatches(
+    supabase,
+    current.tournamentId,
+    current.participantId,
+  );
   const semifinals = matches.filter((m) => m.stage === "semifinal");
   const final = matches.find((m) => m.stage === "final") ?? null;
 
