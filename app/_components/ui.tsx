@@ -160,6 +160,27 @@ export function EmptyState({ message }: { message: string }) {
   );
 }
 
+/**
+ * Pulsing placeholder block for route-level `loading.tsx` skeletons (Phase 9
+ * #72 performance pass — gives Next.js's automatic per-segment Suspense
+ * boundary something to render immediately on both cold loads and
+ * client-side nav, instead of a blank content area while the page's
+ * Supabase queries resolve). `animate-pulse` is a plain CSS animation, so
+ * it's already covered by globals.css's global `prefers-reduced-motion`
+ * override (forces near-zero animation duration) — no extra handling
+ * needed here. `aria-hidden` because the parent skeleton wrapper carries
+ * the single `role="status"` announcement; these blocks are decorative.
+ */
+export function Skeleton({ className = "" }: { className?: string }) {
+  return (
+    <div
+      aria-hidden
+      className={`animate-pulse bg-[var(--surface-card-2)] ${className}`}
+      style={{ borderRadius: "var(--radius-row)" }}
+    />
+  );
+}
+
 export function DataFreshnessNote({ message }: { message: string }) {
   return (
     <p className="flex items-center gap-1.5 text-[11px] text-[var(--text-muted)]">
