@@ -384,7 +384,12 @@ export function CreateTournamentForm() {
                 onClick={() => removeCategory(category.key)}
               />
             </div>
-            <div className="flex gap-2">
+            {/* Phase 9 #74 responsive review: stack these two free-text
+                fields on mobile instead of a fixed 50/50 split — at ~360px
+                wide each input previously had ~120px of usable text space,
+                too tight for a real bonus name/type value. Row layout from
+                `md:` matches every other breakpoint decision in this form. */}
+            <div className="flex flex-col gap-2 md:flex-row">
               <div className="flex flex-1 flex-col gap-1.5">
                 <label
                   htmlFor={`bonus-name-${category.key}`}

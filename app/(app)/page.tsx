@@ -205,7 +205,17 @@ export default async function HomePage() {
 
   return (
     <div
-      className="flex flex-col gap-4 md:grid md:grid-cols-[340px_1fr_360px] md:items-start"
+      // Phase 9 #74 responsive review: UX-BLUEPRINT.md §6 specs the 3-column
+      // grid for "Desktop (≥1024px)" and "still single column, centered,
+      // wider max-width" for "Tablet (~768px)" — this previously switched to
+      // the grid at `md:` (768px) instead, which crammed 3 columns into a
+      // ~700px-wide viewport with almost nothing left for the center column.
+      // Now: still single column (with a centered, wider cap) through the
+      // `md:` tablet band, only grid-ing at `lg:` (1024px) where there's
+      // room. The app shell's own `md:` nav switch (bottom nav -> top bar,
+      // app/(app)/layout.tsx) is unaffected — that's a separate, already-
+      // shipped, already-reviewed decision out of scope here.
+      className="mx-auto flex w-full flex-col gap-4 md:max-w-[640px] lg:grid lg:max-w-none lg:grid-cols-[340px_1fr_360px] lg:items-start"
       style={{ gap: spacing.desktopGutter }}
     >
       <h1 className="sr-only">{nav.home}</h1>

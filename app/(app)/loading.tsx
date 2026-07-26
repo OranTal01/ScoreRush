@@ -9,13 +9,15 @@ import { Card, Skeleton } from "../_components/ui";
  * immediately — on cold loads once the shared app-shell layout resolves,
  * and on every client-side nav into "/" — while the page's ~4 parallel
  * Supabase queries are still in flight. Mirrors the real page's outer
- * `md:grid-cols-[340px_1fr_360px]` container so swapping in real content
- * doesn't shift layout.
+ * container class exactly (Phase 9 #74 responsive review moved the grid
+ * from `md:` to `lg:` — single column with a centered, wider cap through
+ * the tablet band, grid only from `lg:` — see page.tsx's comment) so
+ * swapping in real content doesn't shift layout at any breakpoint.
  */
 export default function HomeLoading() {
   return (
     <div
-      className="flex flex-col gap-4 md:grid md:grid-cols-[340px_1fr_360px] md:items-start"
+      className="mx-auto flex w-full flex-col gap-4 md:max-w-[640px] lg:grid lg:max-w-none lg:grid-cols-[340px_1fr_360px] lg:items-start"
       style={{ gap: spacing.desktopGutter }}
     >
       <span role="status" aria-live="polite" className="sr-only">

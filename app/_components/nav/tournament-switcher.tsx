@@ -58,7 +58,13 @@ export function TournamentSwitcher() {
             <motion.div
               role="dialog"
               aria-label={tournamentSwitcher.title}
-              className="fixed inset-x-0 bottom-0 z-50 flex flex-col gap-3 border-t p-4 md:absolute md:inset-x-auto md:top-full md:bottom-auto md:mt-2 md:w-72 md:rounded-[var(--radius-card)] md:border"
+              // Phase 9 #74 responsive review: the desktop dropdown had no
+              // max-height, so a user in enough tournaments to overflow a
+              // shorter browser window would have the list clipped off the
+              // bottom of the screen with no way to scroll to it. Mobile's
+              // bottom sheet already scrolls the whole viewport, so this
+              // only needs to apply at `md:`.
+              className="fixed inset-x-0 bottom-0 z-50 flex flex-col gap-3 border-t p-4 md:absolute md:inset-x-auto md:top-full md:bottom-auto md:mt-2 md:max-h-[70vh] md:w-72 md:overflow-y-auto md:rounded-[var(--radius-card)] md:border"
               style={{
                 background: colors.bgElevated,
                 borderColor: colors.border,
