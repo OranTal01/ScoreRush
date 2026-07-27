@@ -104,7 +104,7 @@ Not in MVP scope (Phase 8). Planned order: email (transactional, e.g. via Resend
 
 ## 11. Deployment & environments
 
-Vercel for hosting (mirroring the legacy project's proven setup), with separate Supabase projects (or at minimum clearly separated schemas) for local/dev, preview, and production, so schema migrations and seed/test data never touch real tournament data. Environment variables (Supabase keys, provider API keys/tokens) follow the same "server-side only, never logged, never returned in API responses" discipline established for the legacy project's FIFA token handling.
+Vercel for hosting (mirroring the legacy project's proven setup). The original plan called for separate Supabase projects (or at minimum clearly separated schemas) for local/dev, preview, and production; in practice, Phase 10 reused the single `scorerush-dev` Supabase project for both dev and production to avoid additional infra cost for a solo-maintainer launch — see [DEVELOPMENT.md §3](./DEVELOPMENT.md#3-deviation-from-architecturemd-11-one-shared-supabase-project-not-per-environment) for the accepted risk and the trigger for revisiting it. Environment variables (Supabase keys, provider API keys/tokens) follow the same "server-side only, never logged, never returned in API responses" discipline established for the legacy project's FIFA token handling. See [DEVELOPMENT.md](./DEVELOPMENT.md) for the live hosting setup, deploy commands, and known gotchas.
 
 ## 12. Future native distribution
 

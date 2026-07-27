@@ -69,6 +69,16 @@ No hands-on UEFA.com network inspection was needed — the assumption in §3 tha
 
 **Rejected, confirmed again:** API-Football (api-football.com) — the legacy project's own decision doc already rejected it (free plan doesn't cover the relevant seasons). Not adopted for ScoreRush.
 
+## 3b. Phase 10 infrastructure — RESOLVED (2026-07-27)
+
+Historical import (§6) was explicitly skipped for now — infra was tackled first. Three infra decisions, in order:
+
+- **Production database**: reuse `scorerush-dev` (the existing Supabase project) as production too, rather than creating a dedicated prod project — zero added cost, available immediately. This is a deliberate deviation from the per-environment separation ARCHITECTURE.md §11 originally called for; see [DEVELOPMENT.md §3](./DEVELOPMENT.md#3-deviation-from-architecturemd-11-one-shared-supabase-project-not-per-environment) for the accepted risk and the trigger to revisit.
+- **Vercel project scope**: the original intent was a Vercel scope fully separate from the "World Cup Friends" team (which hosts `world-cup-bets` and `tal-family-os`). This proved technically unavailable — this account has no standalone personal scope (`personal_scope_not_allowed`); "World Cup Friends" *is* the account's one default Hobby team. Resolved: `scorerush` is a new, independent project inside "World Cup Friends", coexisting with `tal-family-os` the same way, sharing only the team/billing scope — `world-cup-bets` itself was not touched. See [DEVELOPMENT.md §2](./DEVELOPMENT.md#2-why-the-vercel-project-lives-inside-world-cup-friends).
+- **Deployment Protection**: Vercel's SSO wall (on by default for new projects in this team) was disabled for `scorerush`, since it has no custom domain and no preview deployments yet.
+
+Full deploy commands, gotchas (e.g. the framework-preset issue that caused a platform-level 404 on first deploy), and live URL are tracked in [DEVELOPMENT.md](./DEVELOPMENT.md), not duplicated here.
+
 ## 4. Remaining open decisions
 
 ### Native app-store distribution path
