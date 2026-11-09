@@ -11,7 +11,7 @@ import { syncLogs } from "@/lib/db/schema/audit";
 import { tournamentProviders } from "@/lib/db/schema/config";
 import { getMatchDataAdapter } from "@/lib/providers";
 import type { ProviderConfig } from "@/lib/providers/types";
-import { upsertCanonicalMatch } from "./upsert-matches";
+import { upsertCanonicalMatch, loadUpsertContext } from "./upsert-matches";
 
 export interface SyncRunResult {
   tournamentId: string;
@@ -27,6 +27,7 @@ export interface SyncRunResult {
 
 export async function syncTournamentMatches(
   tournamentId: string,
+  dates?: { from: string; to: string },
 ): Promise<SyncRunResult> {
   const startedAt = Date.now();
 
@@ -64,9 +65,10 @@ export async function syncTournamentMatches(
       );
     }
 
-    const fetchResult = await adapter.fetchMatches(
-      (config.matchDataConfig as ProviderConfig) ?? {},
-    );
+    const fetchResult = await adapter.fetchMatches({
+      ...((config.matchDataConfig as ProviderConfig) ?? {}),
+      ...(dates ? { dateFrom: dates.from, dateTo: dates.to } : {}),
+    });
     result.warnings.push(
       ...fetchResult.warnings.map((w) => `${w.refId}: ${w.message}`),
     );
@@ -75,8 +77,16 @@ export async function syncTournamentMatches(
     // valid last-known data. We only ever add/update rows here — a match
     // this fetch didn't mention (e.g. dropped by a validation failure
     // upstream) simply isn't touched, so its last-known-good state stands.
+    const context = fetchResult.matches.length
+      ? await loadUpsertContext(tournamentId)
+      : undefined;
     for (const canonical of fetchResult.matches) {
-      const outcome = await upsertCanonicalMatch(tournamentId, canonical);
+      const outcome = await upsertCanonicalMatch(
+        tournamentId,
+        canonical,
+        context,
+        new Date(startedAt),
+      );
       result.matchesUpserted += 1;
       if (outcome.created) {
         result.matchesCreated += 1;

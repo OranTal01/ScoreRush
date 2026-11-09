@@ -1,3 +1,4 @@
+import { footballName } from "@/lib/content/football-names";
 /**
  * Shared real-data matches query (ROADMAP.md Phase 9 gap-fill, predates the
  * phase itself): backs the home dashboard, predictions list, and bracket
@@ -15,16 +16,16 @@
  * `participantId` here, which RLS also independently enforces.
  */
 import "server-only";
+import {
+  allowsRetrospectiveEntry,
+  type OnboardingSettings,
+} from "@/lib/tournaments/onboarding";
 import type { createClient } from "@/lib/supabase/server";
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
 
 export type MatchStatus =
-  | "scheduled"
-  | "live"
-  | "finished"
-  | "postponed"
-  | "cancelled";
+  "scheduled" | "live" | "finished" | "postponed" | "cancelled";
 export type MatchScore = { home: number; away: number };
 
 export interface MatchTeam {
@@ -36,13 +37,10 @@ export interface MatchTeam {
 }
 
 export type PredictionOutcome =
-  | "exact"
-  | "winner_diff"
-  | "winner"
-  | "draw_correct"
-  | "wrong";
+  "exact" | "winner_diff" | "winner" | "draw_correct" | "wrong";
 
 export interface MatchOwnPrediction {
+  isDefault?: boolean;
   predictedHome: number;
   predictedAway: number;
   pointsEarned: number | null;
@@ -67,9 +65,11 @@ export interface MatchWithTeams {
   awayTeam: MatchTeam | null;
   /** The caller's own prediction for this match, if any. Always null when `participantId` is null. */
   ownPrediction: MatchOwnPrediction | null;
+  retrospectiveEntry?: boolean;
 }
 
 type MatchRow = {
+  tournaments?: OnboardingSettings | null;
   id: string;
   tournament_id: string;
   stage: string;
@@ -90,6 +90,7 @@ type TeamRow = {
   flag_asset_url: string | null;
 };
 type PredictionRow = {
+  is_default?: boolean;
   match_id: string;
   predicted_home: number;
   predicted_away: number;
@@ -104,22 +105,28 @@ export async function listTournamentMatches(
   tournamentId: string,
   participantId: string | null,
 ): Promise<MatchWithTeams[]> {
-  const { data: matchRows } = await supabase
+  const { data: matchRows, error: matchesError } = await supabase
     .from("matches")
     .select(
-      "id, tournament_id, stage, group, matchday, home_team_id, away_team_id, kickoff, lock_time, status, regular_result, live_score",
+      "id, tournament_id, stage, group, matchday, home_team_id, away_team_id, kickoff, lock_time, status, regular_result, live_score, tournaments(onboarding_open, onboarding_matchday, onboarding_closes_at)",
     )
     .eq("tournament_id", tournamentId)
     .order("kickoff", { ascending: true })
     .returns<MatchRow[]>();
 
+  if (matchesError) throw new Error("לא ניתן לטעון את המשחקים כרגע. נסו שוב.");
   const matches = matchRows ?? [];
   if (matches.length === 0) return [];
 
-  const teamIds = [...new Set(matches.flatMap((m) => [m.home_team_id, m.away_team_id]))];
+  const teamIds = [
+    ...new Set(matches.flatMap((m) => [m.home_team_id, m.away_team_id])),
+  ];
   const matchIds = matches.map((m) => m.id);
 
-  const [{ data: teamRows }, { data: predictionRows }] = await Promise.all([
+  const [
+    { data: teamRows, error: teamsError },
+    { data: predictionRows, error: predictionsError },
+  ] = await Promise.all([
     supabase
       .from("teams")
       .select("id, name, short_name, flag_asset_url")
@@ -128,22 +135,29 @@ export async function listTournamentMatches(
     participantId
       ? supabase
           .from("match_predictions")
-          .select("match_id, predicted_home, predicted_away, points_earned, outcome")
+          .select(
+            "match_id, predicted_home, predicted_away, points_earned, outcome, is_default",
+          )
           .eq("participant_id", participantId)
           .in("match_id", matchIds)
           .returns<PredictionRow[]>()
-      : Promise.resolve({ data: null as PredictionRow[] | null }),
+      : Promise.resolve({ data: null as PredictionRow[] | null, error: null }),
   ]);
 
+  if (teamsError || predictionsError)
+    throw new Error("לא ניתן לטעון את הניחושים כרגע. רעננו כדי לראות מה נשמר.");
+
   const teamById = new Map((teamRows ?? []).map((t) => [t.id, t]));
-  const predictionByMatchId = new Map((predictionRows ?? []).map((p) => [p.match_id, p]));
+  const predictionByMatchId = new Map(
+    (predictionRows ?? []).map((p) => [p.match_id, p]),
+  );
 
   const toTeam = (row: TeamRow | undefined): MatchTeam | null =>
     row
       ? {
           id: row.id,
-          name: row.name,
-          shortName: row.short_name,
+          name: footballName(row.name),
+          shortName: footballName(row.short_name),
           flagAssetUrl: row.flag_asset_url,
         }
       : null;
@@ -158,6 +172,9 @@ export async function listTournamentMatches(
       matchday: m.matchday,
       kickoff: m.kickoff,
       lockTime: m.lock_time,
+      ...(allowsRetrospectiveEntry(m.tournaments, m)
+        ? { retrospectiveEntry: true }
+        : {}),
       status: m.status,
       regularResult: m.regular_result,
       liveScore: m.live_score,
@@ -165,6 +182,7 @@ export async function listTournamentMatches(
       awayTeam: toTeam(teamById.get(m.away_team_id)),
       ownPrediction: prediction
         ? {
+            ...(prediction.is_default ? { isDefault: true } : {}),
             predictedHome: prediction.predicted_home,
             predictedAway: prediction.predicted_away,
             pointsEarned: prediction.points_earned,

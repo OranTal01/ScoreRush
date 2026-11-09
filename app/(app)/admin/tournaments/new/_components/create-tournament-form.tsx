@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
+import { CHAMPIONS_LEAGUE_PRESET } from "@/lib/tournaments/presets";
 import { createTournament as content } from "@/lib/content/he";
 import { colors } from "@/lib/design-tokens";
 import { Card, SectionHeader } from "@/app/_components/ui";
@@ -37,6 +38,7 @@ type BonusCategoryDraft = {
   key: string;
   name: string;
   type: string;
+  statKey: string;
   resolvesAt: "ongoing" | "tournament_end";
   duplicateStackingAllowed: boolean;
   slots: SlotDraft[];
@@ -111,6 +113,10 @@ export function CreateTournamentForm() {
   const [dataSource, setDataSource] = useState<"football_data_org" | "manual">(
     "manual",
   );
+  const [rankingMode, setRankingMode] = useState("exact");
+  const [bandSizes, setBandSizes] = useState("8,16,12");
+  const [deadline, setDeadline] = useState("");
+  const [competitionCode, setCompetitionCode] = useState("");
   const [scoring, setScoring] = useState(DEFAULT_SCORING);
   const [categories, setCategories] = useState<BonusCategoryDraft[]>([]);
   const [prizeList, setPrizeList] = useState<PrizeDraft[]>([]);
@@ -121,7 +127,8 @@ export function CreateTournamentForm() {
       {
         key: makeKey(),
         name: "",
-        type: "",
+        type: "team",
+        statKey: "manual",
         resolvesAt: "ongoing",
         duplicateStackingAllowed: true,
         slots: [{ key: makeKey(), points: "10" }],
@@ -210,11 +217,79 @@ export function CreateTournamentForm() {
     <form action={formAction} className="flex flex-col gap-4">
       <input
         type="hidden"
+        name="rankingConfig"
+        value={JSON.stringify(
+          rankingMode === "bands"
+            ? { mode: "bands", sizes: bandSizes.split(",").map(Number) }
+            : { mode: "exact" },
+        )}
+      />
+      <input
+        type="hidden"
+        name="predictionDeadline"
+        value={
+          deadline && !Number.isNaN(Date.parse(deadline))
+            ? new Date(deadline).toISOString()
+            : ""
+        }
+      />
+      <Card className="flex flex-col gap-3">
+        <SectionHeader title="מאיפה מתחילים?" />
+        <p className="text-xs leading-5 text-[var(--text-secondary)]">
+          כל טורניר שומר חוקים משלו. אפשר להתחיל מתבנית ולשנות את הניקוד,
+          הטווחים וכל אפשרויות הבונוס לפני היצירה.
+        </p>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            className="min-h-12 flex-1 rounded-xl border border-[var(--gold)]/40 px-3 text-sm font-bold"
+            onClick={() => {
+              setRankingMode("bands");
+              setBandSizes("8,16,12");
+              setScoring(DEFAULT_SCORING);
+              setDataSource("football_data_org");
+              setCompetitionCode("CL");
+              setCategories(
+                CHAMPIONS_LEAGUE_PRESET.categories.map((category) => ({
+                  key: makeKey(),
+                  name: category.name,
+                  type: category.type,
+                  statKey: category.statKey,
+                  resolvesAt: category.resolvesAt,
+                  duplicateStackingAllowed: true,
+                  slots: category.points.map((points) => ({
+                    key: makeKey(),
+                    points: String(points),
+                  })),
+                })),
+              );
+            }}
+          >
+            ליגת האלופות · טווחים
+          </button>
+          <button
+            type="button"
+            className="min-h-12 flex-1 rounded-xl border border-white/10 px-3 text-sm font-bold"
+            onClick={() => {
+              setRankingMode("exact");
+              setScoring(DEFAULT_SCORING);
+              setCategories([]);
+              setDataSource("football_data_org");
+              setCompetitionCode("WC");
+            }}
+          >
+            מונדיאל · דירוג בתים
+          </button>
+        </div>
+      </Card>
+      <input
+        type="hidden"
         name="bonusCategories"
         value={JSON.stringify(
           categories.map((c) => ({
             name: c.name,
             type: c.type,
+            statKey: c.statKey,
             resolvesAt: c.resolvesAt,
             duplicateStackingAllowed: c.duplicateStackingAllowed,
             slots: c.slots.map((s) => ({ points: s.points })),
@@ -306,6 +381,8 @@ export function CreateTournamentForm() {
               <input
                 id="competitionCode"
                 name="competitionCode"
+                value={competitionCode}
+                onChange={(event) => setCompetitionCode(event.target.value)}
                 dir="ltr"
                 required
                 placeholder={content.competitionCodePlaceholder}
@@ -332,13 +409,62 @@ export function CreateTournamentForm() {
 
       <Card className="flex flex-col gap-3">
         <SectionHeader title={content.scoringSection} />
+        <label className="flex flex-col gap-2 text-xs font-semibold">
+          אופן ניחוש המיקומים
+          <select
+            value={rankingMode}
+            onChange={(event) => setRankingMode(event.target.value)}
+            className={textInputClass}
+            style={inputStyle}
+          >
+            <option value="exact">מיקום מדויק בכל בית</option>
+            <option value="bands">טווחי מיקומים ללא סדר פנימי</option>
+          </select>
+        </label>
+        {rankingMode === "bands" && (
+          <label className="flex flex-col gap-2 text-xs font-semibold">
+            מספר הקבוצות בכל טווח, מופרד בפסיקים
+            <input
+              value={bandSizes}
+              onChange={(event) => setBandSizes(event.target.value)}
+              required
+              pattern="[0-9]+(,[0-9]+)+"
+              dir="ltr"
+              className={textInputClass}
+              style={inputStyle}
+            />
+            <span className="text-[var(--text-muted)]">
+              למשל 8,16,12 יוצר את הטווחים 1–8, 9–24 ו־25–36.
+            </span>
+          </label>
+        )}
+        <label className="flex flex-col gap-2 text-xs font-semibold">
+          נעילת ניחושי הדירוג והבונוסים
+          <input
+            type="datetime-local"
+            required
+            value={deadline}
+            onChange={(event) => setDeadline(event.target.value)}
+            dir="ltr"
+            className={textInputClass}
+            style={inputStyle}
+          />
+          <span className="text-[var(--text-muted)]">
+            לפי השעה במכשיר. בחרו מועד לפני משחק הפתיחה.
+          </span>
+        </label>
         {(
           [
             ["exactScorePoints", content.exactScoreLabel],
             ["winnerAndDiffPoints", content.winnerAndDiffLabel],
             ["winnerOnlyPoints", content.winnerOnlyLabel],
             ["wrongPoints", content.wrongLabel],
-            ["groupRankingPointsPerPosition", content.groupRankingLabel],
+            [
+              "groupRankingPointsPerPosition",
+              rankingMode === "bands"
+                ? "נקודות לקבוצה בטווח הנכון"
+                : content.groupRankingLabel,
+            ],
           ] as const
         ).map(([field, label]) => (
           <div key={field} className="flex items-center justify-between gap-3">
@@ -430,6 +556,44 @@ export function CreateTournamentForm() {
                 />
               </div>
             </div>
+            <label className="flex flex-col gap-2 text-xs font-semibold">
+              על מה מהמרים?
+              <select
+                value={category.statKey}
+                onChange={(event) => {
+                  const statKey = event.target.value;
+                  updateCategory(category.key, {
+                    statKey,
+                    type: ["top_scorer", "top_assists"].includes(statKey)
+                      ? "player"
+                      : "team",
+                    resolvesAt:
+                      statKey === "league_winner"
+                        ? "ongoing"
+                        : "tournament_end",
+                  });
+                }}
+                className={textInputClass}
+                style={inputStyle}
+              >
+                <option value="manual">בונוס מותאם אישית · תוצאה ידנית</option>
+                {CHAMPIONS_LEAGUE_PRESET.categories.map((item) => (
+                  <option key={item.statKey} value={item.statKey}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+              {category.statKey === "league_winner" && (
+                <span className="text-[var(--text-muted)]">
+                  יחושב לאחר השלמת שלב הליגה ואימות הטבלה הרשמית.
+                </span>
+              )}
+              {category.statKey === "top_assists" && (
+                <span className="text-[var(--text-muted)]">
+                  נתוני הבישולים דורשים אימות נפרד לפני מתן הניקוד.
+                </span>
+              )}
+            </label>
             <div className="flex items-center justify-between gap-3">
               <label
                 htmlFor={`bonus-resolves-at-${category.key}`}

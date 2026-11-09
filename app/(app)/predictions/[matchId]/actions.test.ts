@@ -14,13 +14,17 @@
  */
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-const { fromQueue, calls, authUser } = vi.hoisted(() => ({
+const { fromQueue, calls, authUser, continuation } = vi.hoisted(() => ({
+  continuation: vi.fn(),
   fromQueue: [] as { data: unknown; error: unknown }[],
   calls: [] as { table: string; op: string; payload: unknown }[],
   authUser: { current: null as { id: string } | null },
 }));
 
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
+vi.mock("@/lib/predictions/read-continuation", () => ({
+  readPredictionContinuation: continuation,
+}));
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({
@@ -74,13 +78,60 @@ beforeEach(() => {
   fromQueue.length = 0;
   calls.length = 0;
   authUser.current = null;
+  continuation.mockReset();
 });
 
 describe("submitMatchPrediction", () => {
+  it.each([false, true])(
+    "keeps an acknowledged save when next-game lookup fails: %s",
+    async (fail) => {
+      authUser.current = { id: "u1" };
+      const match = {
+        id: MATCH_ID,
+        tournament_id: "t1",
+        lock_time: FUTURE,
+        status: "scheduled",
+        stage: "league_stage",
+        matchday: 2,
+      };
+      fromQueue.push(
+        { data: match, error: null },
+        { data: { id: "p1" }, error: null },
+        { data: null, error: null },
+      );
+      const next = {
+        nextMatchId: "22222222-2222-4222-8222-222222222222",
+        remaining: 2,
+      };
+      if (fail) continuation.mockRejectedValue(new Error("Timeout"));
+      else continuation.mockResolvedValue(next);
+      const result = await submitMatchPrediction(
+        { status: "idle" },
+        formData({
+          matchId: MATCH_ID,
+          predictedHome: "0",
+          predictedAway: "0",
+          advance: "1",
+        }),
+      );
+      expect(result).toEqual({
+        status: "success",
+        predictedHome: 0,
+        predictedAway: 0,
+        ...(fail ? {} : { continuation: next }),
+      });
+      expect(continuation).toHaveBeenCalledWith(expect.anything(), match, "p1");
+      expect(calls).toHaveLength(1);
+    },
+  );
   it("rejects malformed input before touching the database", async () => {
     const result = await submitMatchPrediction(
       { status: "idle" },
-      formData({ matchId: "not-a-uuid", predictedHome: "1", predictedAway: "0" }),
+      formData({
+        matchId: "not-a-uuid",
+        predictedHome: "1",
+        predictedAway: "0",
+      }),
     );
     expect(result).toEqual({ status: "error", code: "invalid_input" });
     expect(calls).toHaveLength(0);
@@ -112,7 +163,12 @@ describe("submitMatchPrediction", () => {
   it("rejects a caller who isn't a participant in the match's tournament", async () => {
     authUser.current = { id: "u1" };
     fromQueue.push({
-      data: { id: MATCH_ID, tournament_id: "t1", lock_time: FUTURE },
+      data: {
+        id: MATCH_ID,
+        tournament_id: "t1",
+        lock_time: FUTURE,
+        status: "scheduled",
+      },
       error: null,
     });
     fromQueue.push({ data: null, error: null }); // participants lookup — no row
@@ -127,7 +183,12 @@ describe("submitMatchPrediction", () => {
   it("inserts a new prediction and returns success", async () => {
     authUser.current = { id: "u1" };
     fromQueue.push({
-      data: { id: MATCH_ID, tournament_id: "t1", lock_time: FUTURE },
+      data: {
+        id: MATCH_ID,
+        tournament_id: "t1",
+        lock_time: FUTURE,
+        status: "scheduled",
+      },
       error: null,
     });
     fromQueue.push({ data: { id: "p1" }, error: null }); // participant found
@@ -160,12 +221,17 @@ describe("submitMatchPrediction", () => {
   it("falls back to updating the existing row on a unique-violation (editing a prediction)", async () => {
     authUser.current = { id: "u1" };
     fromQueue.push({
-      data: { id: MATCH_ID, tournament_id: "t1", lock_time: FUTURE },
+      data: {
+        id: MATCH_ID,
+        tournament_id: "t1",
+        lock_time: FUTURE,
+        status: "scheduled",
+      },
       error: null,
     });
     fromQueue.push({ data: { id: "p1" }, error: null }); // participant found
     fromQueue.push({ data: null, error: { code: "23505" } }); // insert: unique violation
-    fromQueue.push({ data: null, error: null }); // update succeeds
+    fromQueue.push({ data: [{ match_id: MATCH_ID }], error: null }); // update succeeds
 
     const result = await submitMatchPrediction(
       { status: "idle" },
@@ -193,5 +259,37 @@ describe("submitMatchPrediction", () => {
       predicted_home: 0,
       predicted_away: 0,
     });
+  });
+  it("rejects blanks rather than silently turning them into a zero draw", async () => {
+    expect(
+      await submitMatchPrediction(
+        { status: "idle" },
+        formData({ matchId: MATCH_ID, predictedHome: "", predictedAway: "" }),
+      ),
+    ).toEqual({ status: "error", code: "invalid_input" });
+    expect(calls).toHaveLength(0);
+  });
+  it("does not report success if a concurrent lock makes an update affect zero rows", async () => {
+    authUser.current = { id: "u1" };
+    fromQueue.push(
+      {
+        data: {
+          id: MATCH_ID,
+          tournament_id: "t1",
+          lock_time: FUTURE,
+          status: "scheduled",
+        },
+        error: null,
+      },
+      { data: { id: "p1" }, error: null },
+      { data: null, error: { code: "23505" } },
+      { data: [], error: null },
+    );
+    expect(
+      await submitMatchPrediction(
+        { status: "idle" },
+        formData({ matchId: MATCH_ID, predictedHome: "2", predictedAway: "1" }),
+      ),
+    ).toEqual({ status: "error", code: "locked" });
   });
 });

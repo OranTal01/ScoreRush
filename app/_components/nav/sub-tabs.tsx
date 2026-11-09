@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { colors } from "@/lib/design-tokens";
-import { bracket, groups, predictions } from "@/lib/content/he";
+import { predictions } from "@/lib/content/he";
 
 const items = [
   { href: "/predictions", label: predictions.title },
-  { href: "/groups", label: groups.title },
-  { href: "/bracket", label: bracket.title },
+  { href: "/groups", label: "דירוג קבוצות" },
+  { href: "/bracket", label: "הדרך לגמר" },
 ] as const;
 
 /**
@@ -21,20 +21,18 @@ export function SubTabs() {
   const pathname = usePathname();
 
   return (
-    <div
-      role="tablist"
+    <nav
       aria-label="ניווט בין מבנה הטורניר"
       className="flex gap-1 border-b p-1"
       style={{ borderColor: colors.border }}
     >
       {items.map(({ href, label }) => {
-        const active = pathname === href;
+        const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
           <Link
             key={href}
             href={href}
-            role="tab"
-            aria-selected={active}
+            aria-current={active ? "page" : undefined}
             className="flex min-h-11 flex-1 items-center justify-center px-3 py-2 text-center text-[13px] font-bold transition-colors"
             style={{
               color: active ? colors.textPrimary : colors.textMuted,
@@ -46,6 +44,6 @@ export function SubTabs() {
           </Link>
         );
       })}
-    </div>
+    </nav>
   );
 }

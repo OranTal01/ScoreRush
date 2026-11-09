@@ -1,6 +1,6 @@
-import { colors, gradients, spacing } from "@/lib/design-tokens";
-import { home as content, nav } from "@/lib/content/he";
-import { formatMatchTime } from "@/lib/mock/clock";
+import { footballName } from "@/lib/content/football-names";
+import { WelcomeNudge } from "@/app/_components/welcome-nudge";
+import { home as content } from "@/lib/content/he";
 import {
   computeStandings,
   type StandingsInput,
@@ -9,21 +9,11 @@ import { computePredictionStreaks } from "@/lib/scoring/streaks";
 import { listTournamentMatches, type MatchWithTeams } from "@/lib/matches/list";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
-import {
-  Avatar,
-  Card,
-  EmptyState,
-  Pill,
-  RankBadge,
-  SectionHeader,
-} from "../_components/ui";
-import { MatchCard } from "../_components/match-card";
-import { MotionIn } from "../_components/motion/motion-in";
-import {
-  HeroPointsCounter,
-  HeroRankNumber,
-  RankMovementChip,
-} from "../_components/home/hero-stats";
+import { EmptyState } from "../_components/ui";
+import { HomeDashboard } from "../_components/home/dashboard";
+import { focusMatches, roundProgress } from "@/lib/matches/progress";
+import { readSummaries } from "@/lib/notifications/summaries";
+import { currentTimeMs } from "@/lib/time";
 
 type ParticipantRow = {
   id: string;
@@ -98,10 +88,17 @@ export default async function HomePage() {
   const { tournamentId, participantId: selfId } = current;
 
   const [
-    { data: participants },
-    { data: snapshotRows },
+    { data: participants, error: participantsError },
+    { data: snapshotRows, error: snapshotsError },
     matches,
     { data: categories },
+    { data: tournament, error: tournamentError },
+
+    { count: bonusTotal, error: slotsError },
+    { count: bonusSaved, error: bonusError },
+    { count: rankingSaved, error: rankingError },
+    { data: groupTeams, error: teamsError },
+    [latestDigest],
   ] = await Promise.all([
     supabase
       .from("participants")
@@ -122,7 +119,40 @@ export default async function HomePage() {
       .eq("tournament_id", tournamentId)
       .order("sort_order", { ascending: true })
       .returns<BonusCategoryRow[]>(),
+    supabase
+      .from("tournaments")
+      .select("name, onboarding_open")
+      .eq("id", tournamentId)
+      .single(),
+    supabase
+      .from("bonus_slots")
+      .select("id, bonus_categories!inner(tournament_id)", {
+        count: "exact",
+        head: true,
+      })
+      .eq("bonus_categories.tournament_id", tournamentId),
+    supabase
+      .from("bonus_predictions")
+      .select("slot_id", { count: "exact", head: true })
+      .eq("participant_id", selfId),
+    supabase
+      .from("group_predictions")
+      .select("group", { count: "exact", head: true })
+      .eq("participant_id", selfId)
+      .eq("tournament_id", tournamentId),
+    supabase
+      .from("teams")
+      .select("group")
+      .eq("tournament_id", tournamentId)
+      .not("group", "is", null),
+    readSummaries(tournamentId, 1),
   ]);
+
+  if (participantsError || snapshotsError) {
+    throw new Error(
+      "לא ניתן לטעון את הדירוג כרגע. נסו שוב — הנקודות שלכם נשמרו.",
+    );
+  }
 
   const topCategories = (categories ?? []).slice(0, 3);
   const { data: leaderRows } =
@@ -203,202 +233,98 @@ export default async function HomePage() {
         })),
     );
 
+  const now = currentTimeMs();
+  const entryMatches = focusMatches(matches, now);
+  const round = roundProgress(entryMatches, now);
+
+  const progressAvailable =
+    !tournamentError &&
+    !slotsError &&
+    !bonusError &&
+    !rankingError &&
+    !teamsError;
+  const rankingTotal = new Set((groupTeams ?? []).map((team) => team.group))
+    .size;
+
   return (
-    <div
-      // Phase 9 #74 responsive review: UX-BLUEPRINT.md §6 specs the 3-column
-      // grid for "Desktop (≥1024px)" and "still single column, centered,
-      // wider max-width" for "Tablet (~768px)" — this previously switched to
-      // the grid at `md:` (768px) instead, which crammed 3 columns into a
-      // ~700px-wide viewport with almost nothing left for the center column.
-      // Now: still single column (with a centered, wider cap) through the
-      // `md:` tablet band, only grid-ing at `lg:` (1024px) where there's
-      // room. The app shell's own `md:` nav switch (bottom nav -> top bar,
-      // app/(app)/layout.tsx) is unaffected — that's a separate, already-
-      // shipped, already-reviewed decision out of scope here.
-      className="mx-auto flex w-full flex-col gap-4 md:max-w-[640px] lg:grid lg:max-w-none lg:grid-cols-[340px_1fr_360px] lg:items-start"
-      style={{ gap: spacing.desktopGutter }}
-    >
-      <h1 className="sr-only">{nav.home}</h1>
-      {/* Left column (desktop) — rank hero */}
-      <div className="flex flex-col gap-4">
-        <MotionIn index={0}>
-          <Card padding="hero" className="relative overflow-hidden">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{ background: gradients.hero }}
-            />
-            <div className="relative flex flex-col gap-3">
-              <p className="text-sm font-bold text-[var(--text-secondary)]">
-                {content.greeting(self?.display_name ?? "")}
-              </p>
-              <div className="flex items-end justify-between">
-                <div className="flex flex-col">
-                  <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                    {content.rankHeroLabel}
-                  </span>
-                  <HeroRankNumber rank={selfRank} />
-                </div>
-                <div className="flex flex-col items-end">
-                  <span className="text-[10.5px] font-semibold text-[var(--text-muted)]">
-                    {content.totalPointsLabel}
-                  </span>
-                  <HeroPointsCounter points={selfStanding?.totalPoints ?? 0} />
-                </div>
-              </div>
-              <RankMovementChip rankMoved={rankMoved} />
-            </div>
-          </Card>
-        </MotionIn>
-
-        <MotionIn index={1}>
-          <Card className="flex flex-col gap-3">
-            <SectionHeader title={content.achievementsLabel} />
-            {accuracyPercent === null ? (
-              <EmptyState message={content.noAchievementsYet} />
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                <MotionIn as="span" variant="pop" index={0}>
-                  <Pill tone="gold">
-                    🎯 {content.exactStreakLabel(exactStreak)}
-                  </Pill>
-                </MotionIn>
-                <MotionIn as="span" variant="pop" index={1}>
-                  <Pill tone="interactive">
-                    🔥 {content.correctStreakLabel(correctStreak)}
-                  </Pill>
-                </MotionIn>
-                <MotionIn as="span" variant="pop" index={2}>
-                  <Pill tone="muted">
-                    📈 {content.accuracyLabel(accuracyPercent)}
-                  </Pill>
-                </MotionIn>
-              </div>
-            )}
-          </Card>
-        </MotionIn>
-      </div>
-
-      {/* Center column (desktop) — next match / latest result */}
-      <div className="flex flex-col gap-4">
-        <MotionIn index={2} className="flex flex-col gap-2">
-          <SectionHeader title={content.nextMatchLabel} />
-          {nextMatch ? (
-            <MatchCard match={nextMatch} />
-          ) : (
-            <EmptyState message={content.noNextMatch} />
-          )}
-        </MotionIn>
-        <MotionIn index={3} className="flex flex-col gap-2">
-          <SectionHeader title={content.latestResultLabel} />
-          {latestFinished ? (
-            <MatchCard match={latestFinished} />
-          ) : (
-            <EmptyState message={content.noLatestResult} />
-          )}
-        </MotionIn>
-      </div>
-
-      {/* Right column (desktop) — leaderboard preview / leaders / recent results */}
-      <div className="flex flex-col gap-4">
-        <Card className="flex flex-col gap-3">
-          <SectionHeader title={content.leaderboardPreviewLabel} />
-          {topThree.length === 0 ? (
-            <EmptyState message={content.noLeaderboardYet} />
-          ) : (
-            <ul className="flex flex-col gap-2.5">
-              {topThree.map((entry, index) => {
-                const p = participantById.get(entry.participantId);
-                return (
-                  <MotionIn
-                    key={entry.participantId}
-                    as="li"
-                    index={index}
-                    className="flex items-center gap-2.5"
-                  >
-                    <RankBadge rank={entry.rank} />
-                    <Avatar
-                      initials={p?.avatar_initials ?? "?"}
-                      rank={entry.rank}
-                      self={entry.participantId === selfId}
-                      size={30}
-                    />
-                    <span className="flex-1 truncate text-sm font-bold text-[var(--text-primary)]">
-                      {p?.display_name ?? entry.participantId}
-                    </span>
-                    <span className="ltr text-sm font-extrabold text-[var(--gold)] tabular-nums">
-                      {entry.totalPoints}
-                    </span>
-                  </MotionIn>
-                );
-              })}
-            </ul>
-          )}
-        </Card>
-
-        <Card className="flex flex-col gap-3">
-          <SectionHeader title={content.tournamentLeadersLabel} />
-          {topCategories.length === 0 || (leaderRows ?? []).length === 0 ? (
-            <EmptyState message={content.noLeadersYet} />
-          ) : (
-            <ul className="flex flex-col gap-2">
-              {topCategories.map((category, index) => {
-                const leader = (leaderRows ?? []).find(
-                  (r) => r.category_id === category.id,
-                );
-                if (!leader) return null;
-                return (
-                  <MotionIn
-                    key={category.id}
-                    as="li"
-                    index={index}
-                    className="flex items-center justify-between text-xs"
-                  >
-                    <span className="text-[var(--text-secondary)]">
-                      {category.name}
-                    </span>
-                    <span className="font-bold text-[var(--text-primary)]">
-                      {leader.label}
-                    </span>
-                  </MotionIn>
-                );
-              })}
-            </ul>
-          )}
-        </Card>
-
-        <Card className="flex flex-col gap-3">
-          <SectionHeader title={content.activityFeedLabel} />
-          {recentResults.length === 0 ? (
-            <EmptyState message={content.noRecentResults} />
-          ) : (
-            <ul className="flex flex-col gap-2.5">
-              {recentResults.map((match, index) => (
-                <MotionIn
-                  key={match.id}
-                  as="li"
-                  index={index}
-                  className="border-b pb-2.5 text-xs leading-relaxed text-[var(--text-secondary)] last:border-b-0 last:pb-0"
-                  style={{ borderColor: colors.border }}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-bold text-[var(--text-primary)]">
-                      {match.homeTeam?.shortName ?? "?"}{" "}
-                      {match.regularResult?.home}
-                      {" – "}
-                      {match.regularResult?.away}{" "}
-                      {match.awayTeam?.shortName ?? "?"}
-                    </span>
-                    <span className="ltr shrink-0 text-[10.5px] text-[var(--text-muted)] tabular-nums">
-                      {formatMatchTime(match.kickoff)}
-                    </span>
-                  </div>
-                </MotionIn>
-              ))}
-            </ul>
-          )}
-        </Card>
-      </div>
-    </div>
+    <>
+      <WelcomeNudge key={selfId} scope={`${tournamentId}:${selfId}`} />
+      <HomeDashboard
+        name={self?.display_name ?? ""}
+        tournamentName={tournament?.name ?? "הליגה שלנו"}
+        onboardingOpen={tournament?.onboarding_open === true}
+        rank={selfRank}
+        points={selfStanding?.totalPoints ?? 0}
+        rankMoved={rankMoved}
+        raceEntries={standings.map((p) => ({
+          id: p.participantId,
+          name: participantById.get(p.participantId)?.display_name ?? "משתתף",
+          rank: p.rank,
+          total: p.totalPoints,
+        }))}
+        selfId={selfId}
+        roundLabel={
+          entryMatches[0]?.matchday
+            ? `מחזור ${entryMatches[0].matchday}`
+            : "המשחקים הקרובים"
+        }
+        missingCount={round.missing.length}
+        deadline={round.deadline}
+        retrospective={round.retrospective}
+        latestSummary={
+          latestDigest
+            ? {
+                day: latestDigest.day,
+                count: latestDigest.standings?.length ?? 0,
+              }
+            : null
+        }
+        participantCount={standings.length}
+        progress={
+          progressAvailable
+            ? {
+                matchesSaved: round.saved,
+                matchesTotal: round.total,
+                bonusSaved: bonusSaved ?? 0,
+                bonusTotal: bonusTotal ?? 0,
+                rankingSaved: rankingSaved ?? 0,
+                rankingTotal,
+              }
+            : null
+        }
+        predictionHref={"/predictions"}
+        nextMatch={
+          matches.find((match) => match.status === "live") ?? nextMatch
+        }
+        latestFinished={latestFinished}
+        leaders={topThree.map((entry) => ({
+          id: entry.participantId,
+          name:
+            participantById.get(entry.participantId)?.display_name ?? "משתתף",
+          initials:
+            participantById.get(entry.participantId)?.avatar_initials ||
+            participantById
+              .get(entry.participantId)
+              ?.display_name?.trim()
+              .slice(0, 2) ||
+            "?",
+          rank: entry.rank,
+          points: entry.totalPoints,
+          self: entry.participantId === selfId,
+        }))}
+        recentResults={recentResults}
+        bonusLeaders={topCategories.flatMap((category) => {
+          const leader = (leaderRows ?? []).find(
+            (row) => row.category_id === category.id,
+          );
+          return leader
+            ? [{ category: category.name, name: footballName(leader.label) }]
+            : [];
+        })}
+        exactStreak={exactStreak}
+        correctStreak={correctStreak}
+        accuracyPercent={accuracyPercent}
+      />
+    </>
   );
 }

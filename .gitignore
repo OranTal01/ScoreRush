@@ -44,3 +44,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Optional local WhatsApp bridge: dependencies and linked-device credentials
+/tools/whatsapp-bridge/node_modules/
+/tools/whatsapp-bridge/.local/

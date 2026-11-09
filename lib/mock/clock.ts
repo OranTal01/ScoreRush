@@ -22,11 +22,4 @@ export function formatCountdown(
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
-export function formatMatchTime(iso: string): string {
-  return new Date(iso).toLocaleString("he-IL", {
-    day: "2-digit",
-    month: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+export { formatMatchTime } from "@/lib/time";

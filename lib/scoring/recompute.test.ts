@@ -23,6 +23,7 @@ function queuedWhere() {
   const promise = Promise.resolve(value);
   return {
     limit: () => promise,
+    orderBy: () => ({ limit: () => promise }),
     then: promise.then.bind(promise),
     catch: promise.catch.bind(promise),
   };
@@ -30,6 +31,12 @@ function queuedWhere() {
 
 vi.mock("@/lib/db/client", () => ({
   db: {
+    transaction: async function <T>(
+      run: (tx: unknown) => Promise<T>,
+    ): Promise<T> {
+      return run(this);
+    },
+    execute: vi.fn(async () => undefined),
     select: vi.fn(() => ({ from: () => ({ where: queuedWhere }) })),
     update: vi.fn((table: unknown) => ({
       set: (values: unknown) => {
@@ -41,9 +48,8 @@ vi.mock("@/lib/db/client", () => ({
 }));
 
 const { recomputeTournamentScores } = await import("./recompute");
-const { matchPredictions, groupPredictions, bonusPredictions } = await import(
-  "@/lib/db/schema/predictions"
-);
+const { matchPredictions, groupPredictions, bonusPredictions } =
+  await import("@/lib/db/schema/predictions");
 
 beforeEach(() => {
   selectQueue.length = 0;
@@ -182,9 +188,7 @@ describe("recomputeTournamentScores", () => {
     selectQueue.push([]); // matches
     // no match_predictions select — finishedMatches is empty
     // no group_predictions select — no group matches at all
-    selectQueue.push([
-      { id: "catChampion", resolvesAt: "tournament_end" },
-    ]); // bonus_categories — terminal, skipped before any further query
+    selectQueue.push([{ id: "catChampion", resolvesAt: "tournament_end" }]); // bonus_categories — terminal, skipped before any further query
 
     const result = await recomputeTournamentScores("tid");
 

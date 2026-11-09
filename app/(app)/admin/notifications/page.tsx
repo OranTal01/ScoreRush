@@ -1,11 +1,16 @@
 import { notificationCenter as content } from "@/lib/content/he";
+import Link from "next/link";
+import { eq, sql } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { notificationRuntime, pushSubscriptions } from "@/lib/db/schema/push";
+import { participants } from "@/lib/db/schema/identity";
+import { formatMatchTime } from "@/lib/time";
 import { colors } from "@/lib/design-tokens";
 import { getAdminContext } from "@/lib/auth/admin";
 import {
   getNotificationLog,
   type NotificationLogEntry,
 } from "@/lib/notifications/list";
-import { formatMatchTime } from "@/lib/mock/clock";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { AdminSubTabs } from "@/app/_components/nav/admin-sub-tabs";
@@ -94,6 +99,15 @@ export default async function NotificationCenterPage() {
   }
 
   const entries = await getNotificationLog(tournamentId);
+  const [runtime] = await db
+    .select()
+    .from(notificationRuntime)
+    .where(eq(notificationRuntime.id, "push"));
+  const [devices] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(pushSubscriptions)
+    .innerJoin(participants, eq(participants.userId, pushSubscriptions.userId))
+    .where(eq(participants.tournamentId, tournamentId));
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[640px]">
@@ -101,6 +115,33 @@ export default async function NotificationCenterPage() {
       <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
         {content.title}
       </h1>
+      <Card className="space-y-3">
+        <h2 className="font-bold">התראות לטלפון</h2>
+        <p className="text-sm">
+          {runtime?.enabled
+            ? "התזכורות האוטומטיות פעילות"
+            : "הפעלת התזמון בהכנה"}{" "}
+          · {devices?.count ?? 0} מכשירים רשומים
+        </p>
+        <p className="text-xs leading-6 text-[var(--text-secondary)]">
+          התראות נשלחות רק למי שהפעיל אותן בפרופיל. תזכורות מגיעות רק כשחסרים
+          ניחושים.
+        </p>
+        {runtime?.lastRunAt && (
+          <p className="text-xs text-[var(--text-secondary)]">
+            בדיקה אחרונה: {formatMatchTime(runtime.lastRunAt.toISOString())}
+          </p>
+        )}
+        <Link
+          href="/summaries"
+          className="inline-block min-h-11 content-center text-sm text-[var(--interactive)]"
+        >
+          סיכומים מוכנים לשיתוף בוואטסאפ ←
+        </Link>
+        <p className="text-xs text-[var(--text-muted)]">
+          שליחה אוטומטית לקבוצת וואטסאפ עדיין לא מחוברת.
+        </p>
+      </Card>
 
       <Card className="flex flex-col gap-3">
         {entries.length === 0 ? (

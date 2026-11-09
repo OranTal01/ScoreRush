@@ -10,6 +10,7 @@ import {
   type MatchDiagnosticDetail,
 } from "@/lib/sync/diagnostics";
 import { Card, EmptyState, Pill, SectionHeader } from "@/app/_components/ui";
+import { ScorePair } from "@/app/_components/score-pair";
 
 type MatchScore = { home: number; away: number };
 
@@ -24,9 +25,11 @@ function ScoreRow({
     <div className="flex items-center justify-between gap-2 text-xs">
       <span className="text-[var(--text-secondary)]">{label}</span>
       {score ? (
-        <span className="ltr font-bold text-[var(--text-primary)] tabular-nums">
-          {score.home} – {score.away}
-        </span>
+        <ScorePair
+          home={score.home}
+          away={score.away}
+          className="font-bold text-[var(--text-primary)]"
+        />
       ) : (
         <span className="text-[var(--text-muted)]">{content.noResultYet}</span>
       )}

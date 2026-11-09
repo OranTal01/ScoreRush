@@ -13,26 +13,32 @@ export function TopBar({
   isAdmin,
   tournaments,
   canCreateTournament,
+  avatarInitials,
 }: {
   isAdmin: boolean;
   tournaments: UserTournament[];
   canCreateTournament: boolean;
+  avatarInitials?: string;
 }) {
   const pathname = usePathname();
 
   return (
     <header
-      className="sticky top-0 z-30 hidden items-center justify-between border-b px-7 md:flex"
+      className="sticky top-0 z-30 hidden items-center justify-between gap-4 border-b px-5 lg:flex xl:px-7"
       style={{
         height: spacing.desktopTopBarHeight,
         background: colors.bgPage,
         borderColor: colors.border,
       }}
     >
-      <div className="flex items-center gap-8">
-        <span className="text-lg font-black text-[var(--text-primary)]">
-          ScoreRush
-        </span>
+      <div className="flex min-w-0 items-center gap-4 xl:gap-8">
+        <Link
+          href="/"
+          aria-label="ScoreRush — דף הבית"
+          className="shrink-0 text-lg font-black tracking-tight text-[var(--text-primary)]"
+        >
+          Score<span className="text-[var(--interactive)]">Rush</span>
+        </Link>
         <TournamentSwitcher
           tournaments={tournaments}
           canCreateTournament={canCreateTournament}
@@ -41,7 +47,12 @@ export function TopBar({
 
       <nav aria-label="ניווט ראשי" className="flex items-center gap-1">
         {primaryNavItems.map(({ href, label, Icon }) => {
-          const active = pathname === href;
+          const active =
+            href === "/"
+              ? pathname === "/"
+              : pathname.startsWith(href) ||
+                (href === "/predictions" &&
+                  ["/groups", "/bracket"].includes(pathname));
           return (
             <Link
               key={href}
@@ -61,7 +72,7 @@ export function TopBar({
         })}
       </nav>
 
-      <HeaderActions isAdmin={isAdmin} />
+      <HeaderActions isAdmin={isAdmin} avatarInitials={avatarInitials} />
     </header>
   );
 }

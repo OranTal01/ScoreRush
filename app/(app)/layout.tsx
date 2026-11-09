@@ -11,6 +11,7 @@ import {
 import { MobileHeader } from "../_components/nav/mobile-header";
 import { TopBar } from "../_components/nav/top-bar";
 import { BottomNav } from "../_components/nav/bottom-nav";
+import { SaveFeedbackProvider } from "../_components/save-feedback";
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
 
@@ -50,9 +51,21 @@ export default async function AppShellLayout({
   let isAdmin = false;
   let canCreateTournament = false;
   let tournaments: UserTournament[] = [];
+  let avatarInitials = "?";
 
   if (user) {
     const current = await getCurrentParticipant(supabase, user.id);
+    if (current) {
+      const { data: profile } = await supabase
+        .from("participants")
+        .select("avatar_initials, display_name")
+        .eq("id", current.participantId)
+        .maybeSingle();
+      avatarInitials =
+        profile?.avatar_initials ||
+        profile?.display_name?.trim().slice(0, 2) ||
+        "?";
+    }
     [isAdmin, canCreateTournament, tournaments] = await Promise.all([
       resolveIsAdmin(supabase, user.id, current),
       isPlatformAdmin(supabase, user.id),
@@ -61,28 +74,30 @@ export default async function AppShellLayout({
   }
 
   return (
-    <>
+    <SaveFeedbackProvider>
+      <a href="#main-content" className="skip-link action-primary">
+        דילוג לתוכן
+      </a>
       <MobileHeader
         isAdmin={isAdmin}
         tournaments={tournaments}
         canCreateTournament={canCreateTournament}
+        avatarInitials={avatarInitials}
       />
       <TopBar
         isAdmin={isAdmin}
         tournaments={tournaments}
         canCreateTournament={canCreateTournament}
+        avatarInitials={avatarInitials}
       />
       <main
-        className="mx-auto w-full px-4 md:max-w-[var(--spacing-desktop-max-width,1320px)] md:px-7 md:py-6"
-        style={{
-          paddingBottom: "var(--spacing-page-padding-bottom, 90px)",
-          paddingTop: 16,
-        }}
+        id="main-content"
+        className="mx-auto w-full max-w-[1320px] min-w-0 px-4 pt-5 pb-[calc(96px+env(safe-area-inset-bottom))] sm:px-6 lg:px-7 lg:pt-7 lg:pb-12"
       >
         {children}
       </main>
       <BottomNav />
-    </>
+    </SaveFeedbackProvider>
   );
 }
 

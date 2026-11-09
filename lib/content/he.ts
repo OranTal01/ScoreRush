@@ -35,7 +35,7 @@ export const common = {
   emptyGeneric: "אין עדיין נתונים להצגה",
   errorGeneric: "משהו השתבש. ננסה שוב בקרוב.",
   dataDelayed: "הנתונים עשויים להיות מעודכנים בעיכוב",
-  offline: "אתה במצב לא מקוון — מוצגים הנתונים האחרונים שנשמרו",
+  offline: "אין חיבור לרשת — התחזיות יישמרו רק לאחר חזרת החיבור",
   backOnline: "החיבור לרשת חזר",
   retry: "ניסיון נוסף",
   viewAll: "לצפייה בהכול",
@@ -169,7 +169,7 @@ export const bonuses = {
 
 export const groups = {
   title: "קבוצות",
-  groupLabel: (group: string) => `בית ${group}`,
+  groupLabel: (group: string) => group === "league" ? "שלב הליגה · 36 קבוצות" : `בית ${group}`,
   tableHeaders: {
     team: "קבוצה",
     played: "מש'",
@@ -189,7 +189,7 @@ export const groups = {
   saveLoading: "שומר…",
   saveSuccess: "נשמר",
   saveError: "השמירה נכשלה, נסה שוב",
-  editableUntilFinalized: "ניתן לערוך עד סיום שלב הבתים",
+  editableUntilFinalized: "ניתן לערוך עד תחילת המשחק הראשון בשלב",
   errorNotAMember: "אינך חבר בטורניר הזה",
   errorFinalized: "שלב הבתים כבר הסתיים — לא ניתן לערוך יותר",
   errorInvalidInput: "הסדר שנשלח אינו תקין",

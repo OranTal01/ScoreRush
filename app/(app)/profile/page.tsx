@@ -1,8 +1,8 @@
 import { colors, gradients } from "@/lib/design-tokens";
+import { competitionLabel } from "@/lib/tournaments/competition-label";
 import {
   auth as authContent,
   common,
-  nav,
   profile as content,
   scoring,
   tournamentSwitcher,
@@ -24,6 +24,12 @@ import {
   SectionHeader,
 } from "../../_components/ui";
 import { signOut } from "../../auth/actions";
+import { NicknameForm } from "./nickname-form";
+import { PushSettings } from "./push-settings";
+import Link from "next/link";
+import { db } from "@/lib/db/client";
+import { sql } from "drizzle-orm";
+import { setAutoPredictions } from "./actions";
 
 type ParticipantRow = {
   id: string;
@@ -75,8 +81,7 @@ export const dynamic = "force-dynamic";
  * `user_id` (RLS's `participants_select_members` policy allows this — a
  * user's own membership row always proves membership of that row's
  * tournament) and the matching `tournaments` rows, active tournament first.
- * "Edit profile" stays a non-functional stub, same as the Phase 2 mock —
- * no edit flow exists yet, out of scope here.
+ * Nickname editing updates only the current user's tournament membership.
  */
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -92,6 +97,10 @@ export default async function ProfilePage() {
     return <EmptyState message={content.errorNotAMember} />;
   }
   const { tournamentId, participantId: selfId } = current;
+  const [autoPreference] = await db.execute(
+    sql`select enabled from auto_prediction_preferences where participant_id=${selfId}::uuid`,
+  );
+  const autoEnabled = autoPreference?.enabled === true;
 
   const [
     { data: myParticipantRows },
@@ -178,7 +187,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[480px]">
-      <h1 className="sr-only">{nav.profile}</h1>
+      <h1 className="page-heading">הפרופיל שלכם</h1>
       <MotionIn index={0}>
         <Card padding="hero" className="relative overflow-hidden">
           <div
@@ -216,20 +225,44 @@ export default async function ProfilePage() {
                 </span>
               </div>
             </div>
-            <button
-              type="button"
-              className="px-4 py-3.5 text-xs font-bold text-[var(--text-primary)]"
-              style={{
-                background: colors.surfaceCard2,
-                borderRadius: "var(--radius-button)",
-              }}
-            >
-              {content.editProfile}
-            </button>
+            <NicknameForm name={self.display_name} />
           </div>
         </Card>
       </MotionIn>
 
+      <PushSettings />
+      <Card className="flex flex-col gap-3">
+        <SectionHeader title="ניחושים אוטומטיים" />
+        <p className="text-sm leading-6 text-[var(--text-muted)]">
+          ביום המשחק, לפני תחילתו, המערכת תציע תוצאה לפי תוצאות קודמות ותשמור
+          אותה רק אם עדיין לא בחרת בעצמך. אפשר לשנות את הניחוש עד סגירת המשחק.
+        </p>
+        <form action={setAutoPredictions}>
+          <input
+            type="hidden"
+            name="enabled"
+            value={autoEnabled ? "false" : "true"}
+          />
+          <button
+            type="submit"
+            className="min-h-11 rounded-xl bg-[var(--interactive)] px-4 py-2 text-sm font-bold text-white"
+          >
+            {autoEnabled
+              ? "מופעל · כיבוי מילוי אוטומטי"
+              : "הפעלת מילוי אוטומטי"}
+          </button>
+        </form>
+        <p className="text-xs text-[var(--text-muted)]">
+          הניחושים מבוססים על משחקים שכבר הסתיימו. אין הבטחה לתוצאה מדויקת, ולכן
+          כדאי לבדוק אותם לפני השריקה.
+        </p>
+      </Card>
+      <Link
+        href="/summaries"
+        className="min-h-12 rounded-xl border border-white/10 p-3 text-sm font-bold text-[var(--interactive)]"
+      >
+        סיכומי המשחקים והטבלה ←
+      </Link>
       <MotionIn index={1}>
         <Card className="flex flex-col gap-3">
           <SectionHeader title={content.rankHistoryLabel} />
@@ -281,7 +314,7 @@ export default async function ProfilePage() {
                     {t.name}
                   </span>
                   <span className="text-[var(--text-muted)]">
-                    {t.competition}
+                    {competitionLabel(t.competition)}
                   </span>
                 </div>
                 {t.id === tournamentId && (
@@ -295,6 +328,12 @@ export default async function ProfilePage() {
         </Card>
       </MotionIn>
 
+      <Link href="/welcome" className="recap-teaser text-sm font-bold">
+        מדריך ההיכרות · חוזרים לצעדים הראשונים ←
+      </Link>
+      <Link href="/history" className="recap-teaser text-sm font-bold">
+        הסיפור של העונה · היסטוריית המחזורים ←
+      </Link>
       <form action={signOut}>
         <button
           type="submit"

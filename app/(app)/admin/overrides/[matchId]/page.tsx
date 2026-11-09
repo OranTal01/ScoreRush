@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getMatchDiagnostic } from "@/lib/sync/diagnostics";
 import { Card, EmptyState } from "@/app/_components/ui";
 import { MatchCorrectionForm } from "./_components/match-correction-form";
+import { ScorePair } from "@/app/_components/score-pair";
 
 // Read live on every request — same rationale as the diagnostics pages this
 // flow is linked from.
@@ -73,11 +74,17 @@ export default async function MatchCorrectionPage({
         </div>
         <p className="text-xs text-[var(--text-secondary)]">
           {content.currentResultLabel}:{" "}
-          <span className="ltr font-bold text-[var(--text-primary)] tabular-nums">
-            {match.regularResult
-              ? `${match.regularResult.home} – ${match.regularResult.away}`
-              : diagnosticsContent.noResultYet}
-          </span>
+          {match.regularResult ? (
+            <ScorePair
+              home={match.regularResult.home}
+              away={match.regularResult.away}
+              homeLabel={match.homeTeamName}
+              awayLabel={match.awayTeamName}
+              className="font-bold text-[var(--text-primary)]"
+            />
+          ) : (
+            <span>{diagnosticsContent.noResultYet}</span>
+          )}
         </p>
       </Card>
 

@@ -1,5 +1,6 @@
 import {
   boolean,
+  integer,
   pgTable,
   text,
   timestamp,
@@ -35,6 +36,12 @@ export const tournaments = pgTable("tournaments", {
   /** e.g. "world_cup" | "euro" | "champions_league" | "custom" — free text, see ARCHITECTURE.md §6. */
   competition: text("competition").notNull(),
   status: tournamentStatusEnum("status").notNull().default("upcoming"),
+  settingsRevision: integer("settings_revision").notNull().default(0),
+  matchLockMinutes: integer("match_lock_minutes").notNull().default(5),
+  onboardingOpen: boolean("onboarding_open").notNull().default(false),
+  onboardingMatchday: integer("onboarding_matchday").notNull().default(1),
+  onboardingClosesAt: timestamp("onboarding_closes_at", { withTimezone: true }),
+  onboardingClosedAt: timestamp("onboarding_closed_at", { withTimezone: true }),
   createdBy: uuid("created_by")
     .notNull()
     .references(() => users.id),
@@ -76,6 +83,8 @@ export const invitations = pgTable("invitations", {
     .notNull()
     .references(() => tournaments.id, { onDelete: "cascade" }),
   token: text("token").notNull().unique(),
+  maxUses: integer("max_uses").notNull().default(1),
+  useCount: integer("use_count").notNull().default(0),
   /** Optional — binds the invitation to one email address only. */
   boundEmail: text("bound_email"),
   status: invitationStatusEnum("status").notNull().default("pending"),

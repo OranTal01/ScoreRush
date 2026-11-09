@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { competitionLabel } from "@/lib/tournaments/competition-label";
 import { createClient } from "@/lib/supabase/server";
 import { join as content } from "@/lib/content/he";
 import { colors, gradients } from "@/lib/design-tokens";
@@ -15,6 +16,7 @@ type InvitationPreview = {
 const ERROR_CONTENT: Record<string, string> = {
   already_member: content.errorAlreadyMember,
   wrong_email: content.errorWrongEmail,
+  nickname: "הכינוי תפוס או אינו תקין. בחרו כינוי אחר, עד 32 תווים.",
 };
 
 /**
@@ -51,15 +53,21 @@ export default async function JoinPage({
   const confirmAction = confirmJoinInvitation.bind(null, token);
 
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-10">
-      <div className="flex w-full flex-col gap-6 md:max-w-[400px]">
+    <main className="flex min-h-svh flex-1 items-center justify-center bg-[radial-gradient(ellipse_at_50%_0%,#172c3b_0%,transparent_60%)] px-4 py-10">
+      <div className="flex w-full max-w-[440px] flex-col gap-6">
         <div className="flex flex-col items-center gap-1 text-center">
-          <span className="text-xl font-black text-[var(--text-primary)]">
-            ScoreRush
+          <span
+            dir="ltr"
+            className="mb-6 text-xl font-black tracking-tight text-[var(--text-primary)]"
+          >
+            Score<span className="text-[var(--interactive)]">Rush</span>
           </span>
-          <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
-            {content.title}
+          <h1 className="text-3xl font-black text-[var(--text-primary)]">
+            החבר׳ה מחכים לכם.
           </h1>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
+            הליגה שלכם מתחילה כאן.
+          </p>
         </div>
 
         <Card padding="hero" className="relative overflow-hidden">
@@ -91,7 +99,7 @@ export default async function JoinPage({
                   {content.confirmPrompt(preview.tournament_name)}
                 </p>
                 <span className="text-xs text-[var(--text-muted)]">
-                  {preview.competition}
+                  {competitionLabel(preview.competition)}
                 </span>
 
                 {errorCode && (
@@ -104,7 +112,23 @@ export default async function JoinPage({
                 )}
 
                 {user ? (
-                  <form action={confirmAction} className="w-full">
+                  <form
+                    action={confirmAction}
+                    className="flex w-full flex-col gap-4"
+                  >
+                    <label className="flex flex-col gap-2 text-start text-sm font-semibold">
+                      איך קוראים לכם בחבר׳ה?
+                      <input
+                        name="nickname"
+                        maxLength={32}
+                        autoComplete="nickname"
+                        placeholder="הכינוי שיופיע בטבלה (לא חובה)"
+                        className="min-h-12 w-full min-w-0 rounded-xl border border-white/15 bg-[var(--surface-card)] px-3 text-sm"
+                      />
+                      <span className="text-xs font-normal text-[var(--text-muted)]">
+                        אם תשאירו ריק, נשתמש בשם מהחשבון שלכם.
+                      </span>
+                    </label>
                     <JoinSubmitButton />
                   </form>
                 ) : (

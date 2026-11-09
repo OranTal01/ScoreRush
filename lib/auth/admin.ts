@@ -29,7 +29,10 @@ export async function getAdminContext(
   userId: string,
   tournamentId: string,
 ): Promise<AdminContext> {
-  const [{ data: userRow }, { data: participantRow }] = await Promise.all([
+  const [
+    { data: userRow, error: userError },
+    { data: participantRow, error: participantError },
+  ] = await Promise.all([
     supabase
       .from("users")
       .select("is_platform_admin")
@@ -42,6 +45,8 @@ export async function getAdminContext(
       .eq("tournament_id", tournamentId)
       .maybeSingle<{ role: string }>(),
   ]);
+  if (userError || participantError)
+    throw new Error("לא ניתן לבדוק את הרשאות הניהול כרגע. נסו שוב.");
 
   const isPlatformAdmin = userRow?.is_platform_admin ?? false;
   const isTournamentAdmin = participantRow?.role === "tournament_admin";
@@ -60,10 +65,12 @@ export async function isPlatformAdmin(
   supabase: SupabaseServerClient,
   userId: string,
 ): Promise<boolean> {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("users")
     .select("is_platform_admin")
     .eq("id", userId)
     .maybeSingle<{ is_platform_admin: boolean }>();
+  if (error)
+    throw new Error("לא ניתן לבדוק את הרשאת מנהל המערכת כרגע. נסו שוב.");
   return data?.is_platform_admin ?? false;
 }

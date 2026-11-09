@@ -8,14 +8,16 @@ export function MobileHeader({
   isAdmin,
   tournaments,
   canCreateTournament,
+  avatarInitials,
 }: {
   isAdmin: boolean;
   tournaments: UserTournament[];
   canCreateTournament: boolean;
+  avatarInitials?: string;
 }) {
   return (
     <header
-      className="sticky top-0 z-30 flex items-center justify-between border-b px-4 md:hidden"
+      className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b px-4 lg:hidden"
       style={{
         background: colors.bgPage,
         borderColor: colors.border,
@@ -27,7 +29,7 @@ export function MobileHeader({
         tournaments={tournaments}
         canCreateTournament={canCreateTournament}
       />
-      <HeaderActions isAdmin={isAdmin} />
+      <HeaderActions isAdmin={isAdmin} avatarInitials={avatarInitials} />
     </header>
   );
 }

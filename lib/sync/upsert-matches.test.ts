@@ -81,7 +81,7 @@ beforeEach(() => {
 });
 
 describe("upsertCanonicalMatch — lock-time semantics", () => {
-  it("sets lockTime = kickoff when creating a new match", async () => {
+  it("locks a new match five minutes before kickoff", async () => {
     // resolveTeamId(home): not found -> insert
     selectQueue.push([]);
     insertReturningQueue.push([{ id: "home-id" }]);
@@ -104,8 +104,10 @@ describe("upsertCanonicalMatch — lock-time semantics", () => {
       lockTime: Date;
       kickoff: Date;
     };
-    expect(matchInsert.lockTime.toISOString()).toBe("2026-08-01T18:00:00.000Z");
-    expect(matchInsert.lockTime.getTime()).toBe(matchInsert.kickoff.getTime());
+    expect(matchInsert.lockTime.toISOString()).toBe("2026-08-01T17:55:00.000Z");
+    expect(matchInsert.lockTime.getTime()).toBe(
+      matchInsert.kickoff.getTime() - 5 * 60_000,
+    );
   });
 
   it("leaves lockTime untouched when kickoff hasn't changed", async () => {
@@ -127,11 +129,14 @@ describe("upsertCanonicalMatch — lock-time semantics", () => {
       created: false,
       warnings: [],
     });
-    const matchUpdate = updateSetCalls[0] as { lockTime: Date };
-    expect(matchUpdate.lockTime.getTime()).toBe(customLock.getTime());
+    expect(
+      updateSetCalls.every(
+        (value) => !(value && typeof value === "object" && "lockTime" in value),
+      ),
+    ).toBe(true);
   });
 
-  it("auto-moves lockTime with a rescheduled kickoff when it was never customized", async () => {
+  it("lets the database move the deadline with a rescheduled kickoff", async () => {
     selectQueue.push([{ id: "home-id" }]);
     selectQueue.push([{ id: "away-id" }]);
     const oldKickoff = new Date("2026-08-01T18:00:00.000Z");
@@ -147,8 +152,11 @@ describe("upsertCanonicalMatch — lock-time semantics", () => {
     );
 
     expect(outcome.warnings).toEqual([]);
-    const matchUpdate = updateSetCalls[0] as { lockTime: Date };
-    expect(matchUpdate.lockTime.toISOString()).toBe(newKickoff);
+    expect(
+      updateSetCalls.every(
+        (value) => !(value && typeof value === "object" && "lockTime" in value),
+      ),
+    ).toBe(true);
   });
 
   it("preserves an admin-customized lockTime and warns when the provider reschedules", async () => {
@@ -170,8 +178,10 @@ describe("upsertCanonicalMatch — lock-time semantics", () => {
     expect(outcome.warnings[0]).toContain(
       "lock_time was left as admin-configured",
     );
-    const matchUpdate = updateSetCalls[0] as { lockTime: Date };
-    // lockTime must stay at the admin's custom value, not move to newKickoff.
-    expect(matchUpdate.lockTime.getTime()).toBe(customLock.getTime());
+    expect(
+      updateSetCalls.every(
+        (value) => !(value && typeof value === "object" && "lockTime" in value),
+      ),
+    ).toBe(true);
   });
 });

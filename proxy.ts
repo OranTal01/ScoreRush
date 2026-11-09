@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
+import { sanitizeNext } from "@/lib/auth/sanitize-next";
 
 /**
  * Routes reachable while signed out. ARCHITECTURE.md §4: account creation
@@ -22,6 +23,8 @@ import { updateSession } from "@/lib/supabase/middleware";
 const PUBLIC_PATH_PREFIXES = ["/login", "/auth", "/join", "/api/cron"];
 
 function isPublicPath(pathname: string): boolean {
+  if (["/manifest.webmanifest", "/sw.js", "/icon"].includes(pathname))
+    return true;
   return PUBLIC_PATH_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
@@ -59,9 +62,14 @@ export async function proxy(request: NextRequest) {
   }
 
   if (user && pathname === "/login") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    url.search = "";
+    const url = new URL(
+      sanitizeNext(request.nextUrl.searchParams.get("next")),
+      request.url,
+    );
+    if (url.pathname === "/login") {
+      url.pathname = "/";
+      url.search = "";
+    }
     return withRefreshedCookies(NextResponse.redirect(url), supabaseResponse);
   }
 

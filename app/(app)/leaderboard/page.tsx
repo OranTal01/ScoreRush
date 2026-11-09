@@ -1,4 +1,5 @@
-import { leaderboard as content, nav } from "@/lib/content/he";
+import { LiveLink } from "@/app/_components/live-link";
+import { leaderboard as content } from "@/lib/content/he";
 import {
   computeStandings,
   type StandingsInput,
@@ -7,7 +8,10 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { Podium } from "../../_components/leaderboard/podium";
 import { PointsBreakdown } from "../../_components/leaderboard/points-breakdown";
-import { RankRow } from "../../_components/leaderboard/rank-row";
+import { CompetitionTable } from "../../_components/leaderboard/competition-table";
+import { RaceCard } from "../../_components/leaderboard/race-card";
+import { formatMatchTime } from "@/lib/time";
+import Link from "next/link";
 import type { LeaderboardParticipant } from "../../_components/leaderboard/types";
 import { Card, EmptyState, SectionHeader } from "../../_components/ui";
 
@@ -50,7 +54,9 @@ export const dynamic = "force-dynamic";
  * most-recently-joined tournament — a documented MVP stand-in until the real
  * tournament switcher exists.
  *
- * Standings are recomputed here via `computeStandings` (not read directly
+ * Only the latest two complete snapshot batches are loaded; fetching the
+ * entire history can hit PostgREST's row cap mid-batch. Standings are
+ * recomputed here via `computeStandings` (not read directly
  * off the latest snapshot's stored `rank`/`total_points`) so a participant
  * who joined after the last cron capture — and so has no snapshot row yet —
  * is still ranked correctly alongside everyone else, at zero points, through
@@ -74,7 +80,10 @@ export default async function LeaderboardPage() {
   }
   const { tournamentId, participantId: selfId } = current;
 
-  const [{ data: participants }, { data: snapshotRows }] = await Promise.all([
+  const [
+    { data: participants, error: participantsError },
+    { data: newestSnapshot, error: newestSnapshotError },
+  ] = await Promise.all([
     supabase
       .from("participants")
       .select("id, display_name, avatar_initials")
@@ -82,18 +91,61 @@ export default async function LeaderboardPage() {
       .returns<ParticipantRow[]>(),
     supabase
       .from("leaderboard_snapshots")
-      .select(
-        "participant_id, rank, total_points, match_points, group_ranking_points, bonus_points, captured_at",
-      )
+      .select("captured_at")
       .eq("tournament_id", tournamentId)
-      .returns<SnapshotRow[]>(),
+      .order("captured_at", { ascending: false })
+      .limit(1)
+      .returns<Pick<SnapshotRow, "captured_at">[]>(),
   ]);
+
+  if (participantsError || newestSnapshotError) {
+    throw new Error(
+      "לא ניתן לטעון את הדירוג כרגע. נסו שוב — הנקודות שלכם נשמרו.",
+    );
+  }
 
   if (!participants || participants.length === 0) {
     return <EmptyState message={content.emptyState} />;
   }
 
-  const batches = groupIntoBatches(snapshotRows ?? []);
+  let snapshotRows: SnapshotRow[] = [];
+  const latestTimestamp = newestSnapshot?.[0]?.captured_at;
+  if (latestTimestamp) {
+    const { data: previousSnapshot, error: previousSnapshotError } =
+      await supabase
+        .from("leaderboard_snapshots")
+        .select("captured_at")
+        .eq("tournament_id", tournamentId)
+        .lt("captured_at", latestTimestamp)
+        .order("captured_at", { ascending: false })
+        .limit(1)
+        .returns<Pick<SnapshotRow, "captured_at">[]>();
+    if (previousSnapshotError) {
+      throw new Error("לא ניתן לטעון את הדירוג כרגע. נסו שוב — הנקודות שלכם נשמרו.");
+    }
+
+    // Fetch complete batches by timestamp. Loading the entire history hits
+    // PostgREST's row cap and silently drops participants from the latest one.
+    const timestamps = [
+      latestTimestamp,
+      ...(previousSnapshot?.[0] ? [previousSnapshot[0].captured_at] : []),
+    ];
+    const { data, error } = await supabase
+      .from("leaderboard_snapshots")
+      .select(
+        "participant_id, rank, total_points, match_points, group_ranking_points, bonus_points, captured_at",
+      )
+      .eq("tournament_id", tournamentId)
+      .in("captured_at", timestamps)
+      .order("captured_at", { ascending: false })
+      .returns<SnapshotRow[]>();
+    if (error) {
+      throw new Error("לא ניתן לטעון את הדירוג כרגע. נסו שוב — הנקודות שלכם נשמרו.");
+    }
+    snapshotRows = data ?? [];
+  }
+
+  const batches = groupIntoBatches(snapshotRows);
   const latestBatch = batches[0] ?? [];
   const previousBatch = batches[1] ?? [];
 
@@ -121,7 +173,10 @@ export default async function LeaderboardPage() {
     return {
       id: entry.participantId,
       displayName: participant?.display_name ?? entry.participantId,
-      avatarInitials: participant?.avatar_initials ?? "?",
+      avatarInitials:
+        participant?.avatar_initials ||
+        participant?.display_name?.trim().slice(0, 2) ||
+        "?",
       totalPoints: entry.totalPoints,
       matchPoints: entry.matchPoints,
       groupRankingPoints: entry.groupRankingPoints,
@@ -136,35 +191,80 @@ export default async function LeaderboardPage() {
   const sorted = [...rows].sort(
     (a, b) => a.rank - b.rank || a.displayName.localeCompare(b.displayName),
   );
-  const topThree = sorted.slice(0, 3);
-  const rest = sorted.slice(3);
+  // Include everyone sharing a podium rank; never choose an arbitrary tied member.
+  const topThree = sorted.filter((p) => p.rank <= 3);
 
   return (
-    <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
-      <h1 className="sr-only">{nav.leaderboard}</h1>
-      <Card className="flex flex-col gap-4">
-        <SectionHeader title={content.podiumTitle} />
-        <Podium topThree={topThree} selfId={selfId} />
-      </Card>
-
-      <Card className="flex flex-col gap-1">
-        <SectionHeader title={content.title} />
-        <ol className="flex flex-col gap-1">
-          {rest.map((participant, index) => (
-            <RankRow
-              key={participant.id}
-              participant={participant}
-              selfId={selfId}
-              index={index}
-            />
-          ))}
-        </ol>
-      </Card>
-
-      <Card className="flex flex-col gap-3">
-        <SectionHeader title={content.breakdownTitle} />
-        <PointsBreakdown participants={sorted} selfId={selfId} />
-      </Card>
+    <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[960px]">
+      <header>
+        <h1 className="page-heading">הטבלה של החבר׳ה</h1>
+        <p className="page-intro mt-2">
+          כל נקודה מקרבת לפסגה. כאן רואים מי מוביל ואיפה אתם במרוץ.
+        </p>
+      </header>
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--text-secondary)]">
+        <span>
+          {latestBatch[0]
+            ? `הדירוג עודכן ב־${formatMatchTime(latestBatch[0].captured_at)}`
+            : "ממתינים לעדכון הניקוד הראשון"}
+        </span>
+        <Link
+          className="inline-flex min-h-11 items-center font-bold text-[var(--interactive)]"
+          href="#my-standing"
+        >
+          קפיצה למיקום שלי ↓
+        </Link>
+      </div>
+      <div className="grid gap-4 lg:grid-cols-2 lg:items-stretch">
+        <RaceCard
+          compact
+          entries={sorted.map((p) => ({
+            id: p.id,
+            name: p.displayName,
+            rank: p.rank,
+            total: p.totalPoints,
+          }))}
+          selfId={selfId}
+        />
+        <Card className="flex flex-col gap-4">
+          <SectionHeader title={content.podiumTitle} />
+          <Podium topThree={topThree} selfId={selfId} />
+          {new Set(topThree.map((p) => p.rank)).size < topThree.length && (
+            <p className="mt-3 text-center text-xs leading-5 text-[var(--text-secondary)]">
+              אותו מספר נקודות — אותו מקום. משתתפים בתיקו מוצגים יחד.
+            </p>
+          )}
+        </Card>
+      </div>
+      <Link
+        href="/history"
+        className="recap-teaser flex flex-wrap items-center justify-between gap-2"
+      >
+        <span>
+          <b className="block text-sm">הסיפור של העונה ↗</b>
+          <span className="mt-1 block text-xs text-[var(--text-secondary)]">
+            גרף הדירוג, נקודות ומנצחי המחזורים
+          </span>
+        </span>
+        <span className="text-[var(--interactive)]">למסלול שלנו ←</span>
+      </Link>
+      <LiveLink />
+      <CompetitionTable participants={sorted} selfId={selfId} />
+      <p className="text-xs leading-6 text-[var(--text-secondary)]">
+        לחצו על חבר לפירוט הנקודות. החצים משווים לעדכון הדירוג הקודם. בשוויון
+        חולקים מקום, והמקום הבא מדלג בהתאם (למשל 1, 2, 2, 4).
+      </p>
+      <details className="rounded-2xl border border-white/10 p-4">
+        <summary className="cursor-pointer text-sm font-bold">
+          השוואת כל רכיבי הניקוד
+        </summary>
+        <div className="mt-4">
+          <PointsBreakdown participants={sorted} selfId={selfId} />
+        </div>
+      </details>
+      <Link href="/summaries" className="recap-teaser text-sm font-bold">
+        הסיפור שמאחורי המספרים · לסיכומי המשחקים ←
+      </Link>
     </div>
   );
 }

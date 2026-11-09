@@ -9,13 +9,21 @@ import { publicEnv } from "@/lib/env/public";
  * Must be created fresh per request (never module-level singleton), per
  * the official @supabase/ssr Next.js App Router pattern.
  */
-export async function createClient() {
+export async function createClient(options?: { signal?: AbortSignal }) {
   const cookieStore = await cookies();
 
   return createServerClient(
     publicEnv.NEXT_PUBLIC_SUPABASE_URL,
     publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
+      ...(options?.signal
+        ? {
+            global: {
+              fetch: (input: RequestInfo | URL, init?: RequestInit) =>
+                fetch(input, { ...init, signal: options.signal }),
+            },
+          }
+        : {}),
       cookies: {
         getAll() {
           return cookieStore.getAll();

@@ -6,6 +6,7 @@ import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { AdminSubTabs } from "@/app/_components/nav/admin-sub-tabs";
 import { EmptyState } from "@/app/_components/ui";
 import { ParticipantsAdminScreen } from "./_components/participants-admin-screen";
+import { z } from "zod";
 
 type ParticipantQueryRow = {
   id: string;
@@ -46,7 +47,11 @@ export const dynamic = "force-dynamic";
  * already grant exactly the read this admin needs, matching the write
  * actions in ./actions.ts.
  */
-export default async function ParticipantsAdminPage() {
+export default async function ParticipantsAdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tournament?: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -56,23 +61,27 @@ export default async function ParticipantsAdminPage() {
   }
 
   const current = await getCurrentParticipant(supabase, user.id);
-  if (!current) {
+  const query = await searchParams;
+  const tournamentId = query.tournament ?? current?.tournamentId;
+  if (!tournamentId || !z.uuid().safeParse(tournamentId).success) {
     return <EmptyState message={content.errorNotAMember} />;
   }
-  const { tournamentId } = current;
 
   const { isAdmin } = await getAdminContext(supabase, user.id, tournamentId);
   if (!isAdmin) {
     return <EmptyState message={content.errorNotAdmin} />;
   }
+  const { data: tournament } = await supabase
+    .from("tournaments")
+    .select("name")
+    .eq("id", tournamentId)
+    .single();
 
   const [{ data: participantRows }, { data: invitationRows }, origin] =
     await Promise.all([
       supabase
         .from("participants")
-        .select(
-          "id, user_id, role, display_name, avatar_initials, joined_at",
-        )
+        .select("id, user_id, role, display_name, avatar_initials, joined_at")
         .eq("tournament_id", tournamentId)
         .order("joined_at", { ascending: true })
         .returns<ParticipantQueryRow[]>(),
@@ -109,6 +118,7 @@ export default async function ParticipantsAdminPage() {
       <h1 className="text-lg font-extrabold text-[var(--text-primary)]">
         {content.title}
       </h1>
+      <p className="text-sm text-[var(--text-secondary)]">{tournament?.name}</p>
       <ParticipantsAdminScreen
         tournamentId={tournamentId}
         currentUserId={user.id}

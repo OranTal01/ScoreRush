@@ -7,17 +7,12 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 import { AdminSubTabs } from "@/app/_components/nav/admin-sub-tabs";
 import { Card, EmptyState, Pill } from "@/app/_components/ui";
+import { ScorePair } from "@/app/_components/score-pair";
 
 /** Renders one previous/new audit value with the right formatting for its field — a
  * `{ home, away }` score object, a "winner" enum string, or a generic fallback for
  * whatever future entity/field combos get added. */
-function AuditValue({
-  field,
-  value,
-}: {
-  field: string;
-  value: unknown;
-}) {
+function AuditValue({ field, value }: { field: string; value: unknown }) {
   if (value === null || value === undefined) {
     return <span className="text-[var(--text-muted)]">{content.noValue}</span>;
   }
@@ -31,11 +26,7 @@ function AuditValue({
     "away" in value
   ) {
     const score = value as { home: number; away: number };
-    return (
-      <span className="ltr tabular-nums">
-        {score.home} – {score.away}
-      </span>
-    );
+    return <ScorePair home={score.home} away={score.away} />;
   }
   return <span>{String(value)}</span>;
 }
@@ -66,7 +57,7 @@ function AuditEntryCard({ entry }: { entry: AuditLogEntry }) {
 
       {entry.type === "score_change" && (
         <p className="text-[var(--text-secondary)]">
-          {(content.entityLabels[entry.entity] ?? entry.entity)}
+          {content.entityLabels[entry.entity] ?? entry.entity}
           {entry.match && (
             <>
               {" · "}

@@ -1,21 +1,14 @@
 import Link from "next/link";
+import { RoundReadiness } from "./_components/round-readiness";
+import { OnboardingPanel } from "./_components/onboarding-panel";
 import { colors } from "@/lib/design-tokens";
 import { admin as content, common } from "@/lib/content/he";
 import { getAdminContext, isPlatformAdmin } from "@/lib/auth/admin";
-import {
-  adminOverrides,
-  formatMatchTime,
-  pendingLockMatches,
-  predictionForMatch,
-  teamById,
-} from "@/lib/mock";
-import type { Match as MockMatch } from "@/lib/mock/types";
-import type { MatchWithTeams } from "@/lib/matches/list";
+import { formatMatchTime } from "@/lib/mock/clock";
 import { PROVIDER_LABELS } from "@/lib/providers/labels";
 import { createClient } from "@/lib/supabase/server";
 import { getFlaggedMatches, getRecentSyncLogs } from "@/lib/sync/diagnostics";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
-import { MatchCard } from "../../_components/match-card";
 import { AdminSubTabs } from "../../_components/nav/admin-sub-tabs";
 import {
   Card,
@@ -24,42 +17,6 @@ import {
   SectionHeader,
   type StatusTone,
 } from "../../_components/ui";
-
-// Pending-locks below is still mock data (see doc comment) while MatchCard's
-// prop contract is now the real `MatchWithTeams` shape (lib/matches/list.ts,
-// ROADMAP.md Phase 9 gap-fill) — this adapts the mock fixture on the fly
-// rather than fabricating a `flagAssetUrl` the mock `Team` type doesn't have.
-function toMatchWithTeams(match: MockMatch): MatchWithTeams {
-  const home = match.homeTeamId ? teamById(match.homeTeamId) : null;
-  const away = match.awayTeamId ? teamById(match.awayTeamId) : null;
-  const prediction = predictionForMatch(match.id);
-  return {
-    id: match.id,
-    tournamentId: match.tournamentId,
-    stage: match.stage,
-    group: match.group,
-    matchday: match.matchday,
-    kickoff: match.kickoff,
-    lockTime: match.lockTime,
-    status: match.status,
-    regularResult: match.regularResult,
-    liveScore: match.liveScore,
-    homeTeam: home
-      ? { id: home.id, name: home.name, shortName: home.shortName, flagAssetUrl: null }
-      : null,
-    awayTeam: away
-      ? { id: away.id, name: away.name, shortName: away.shortName, flagAssetUrl: null }
-      : null,
-    ownPrediction: prediction
-      ? {
-          predictedHome: prediction.predictedHome,
-          predictedAway: prediction.predictedAway,
-          pointsEarned: prediction.pointsEarned,
-          outcome: prediction.outcome,
-        }
-      : null,
-  };
-}
 
 type SyncHealth = "healthy" | "failed";
 
@@ -172,6 +129,39 @@ export default async function AdminOverviewPage() {
         )}
       </div>
 
+      <RoundReadiness tournamentId={tournamentId} />
+      <section className="grid gap-3 sm:grid-cols-2">
+        <Link href="/admin/diagnostics" className="race-card">
+          <p className="eyebrow">בריאות התוצאות</p>
+          <h2 className="mt-2 text-lg font-bold">
+            {flaggedMatches.length
+              ? `${flaggedMatches.length} משחקים לבדיקה`
+              : syncHealth === "failed"
+                ? "העדכון האחרון נכשל"
+                : "אין משחקים שסומנו לבדיקה"}
+          </h2>
+          <p className="mt-2 text-xs leading-6 text-[var(--text-secondary)]">
+            {latestLog
+              ? `ניסיון עדכון אחרון: ${formatMatchTime(latestLog.timestamp)}`
+              : "עוד לא התקבל עדכון תוצאות"}
+          </p>
+        </Link>
+        <Link href="/admin/participants" className="recap-teaser">
+          <p className="eyebrow">החבר׳ה</p>
+          <h2 className="mt-2 text-lg font-bold">משתתפים והזמנות</h2>
+          <p className="mt-2 text-xs leading-6 text-[var(--text-secondary)]">
+            בדיקת הרשמות, הזמנות ממתינות וקישור ההצטרפות לטורניר ←
+          </p>
+        </Link>
+      </section>
+      <OnboardingPanel tournamentId={tournamentId} />
+      <Link
+        href="/admin/settings"
+        className="rounded-xl border border-[var(--interactive)] px-4 py-4 text-sm font-bold text-[var(--interactive)]"
+      >
+        הגדרות הטורניר — חוקים, ניקוד, בונוסים ומחיקה
+      </Link>
+
       <Card className="flex flex-col gap-3">
         <SectionHeader
           title={content.syncStatusLabel}
@@ -192,35 +182,46 @@ export default async function AdminOverviewPage() {
         {syncLogEntries.length === 0 ? (
           <EmptyState message={content.noSyncLogsYet} />
         ) : (
-          <ul className="flex flex-col gap-2">
-            {syncLogEntries.map((log) => (
-              <li
-                key={log.id}
-                className="flex flex-col gap-1 border-t pt-2 text-xs"
-                style={{ borderColor: colors.border }}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[var(--text-secondary)]">
-                    {log.tournamentName} ·{" "}
-                    {PROVIDER_LABELS[log.provider] ?? log.provider}
+          <details>
+            <summary className="min-h-11 cursor-pointer content-center text-xs font-bold">
+              היסטוריית עדכונים ופרטים ↓
+            </summary>
+            <ul className="flex flex-col gap-2">
+              {syncLogEntries.map((log) => (
+                <li
+                  key={log.id}
+                  className="flex flex-col gap-1 border-t pt-2 text-xs"
+                  style={{ borderColor: colors.border }}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[var(--text-secondary)]">
+                      {log.tournamentName} ·{" "}
+                      {PROVIDER_LABELS[log.provider] ?? log.provider}
+                    </span>
+                    <Pill
+                      tone={log.outcome === "success" ? "success" : "danger"}
+                    >
+                      {log.outcome === "success"
+                        ? content.syncAttemptSuccess
+                        : content.syncAttemptFailed}{" "}
+                      ·{" "}
+                      <span className="ltr tabular-nums">
+                        {log.durationMs}ms
+                      </span>
+                    </Pill>
+                  </div>
+                  <span className="ltr text-[var(--text-muted)] tabular-nums">
+                    {formatMatchTime(log.timestamp)}
                   </span>
-                  <Pill tone={log.outcome === "success" ? "success" : "danger"}>
-                    {log.outcome === "success"
-                      ? content.syncAttemptSuccess
-                      : content.syncAttemptFailed}{" "}
-                    ·{" "}
-                    <span className="ltr tabular-nums">{log.durationMs}ms</span>
-                  </Pill>
-                </div>
-                <span className="ltr text-[var(--text-muted)] tabular-nums">
-                  {formatMatchTime(log.timestamp)}
-                </span>
-                {log.errorDetail && (
-                  <p className="text-[var(--text-muted)]">{log.errorDetail}</p>
-                )}
-              </li>
-            ))}
-          </ul>
+                  {log.errorDetail && (
+                    <p className="text-[var(--text-muted)]">
+                      {log.errorDetail}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </details>
         )}
       </Card>
 
@@ -252,50 +253,11 @@ export default async function AdminOverviewPage() {
         )}
       </Card>
 
-      <Card className="flex flex-col gap-3">
-        <SectionHeader title={content.pendingLocksLabel} />
-        {pendingLockMatches.length === 0 ? (
-          <EmptyState message={common.emptyGeneric} />
-        ) : (
-          <div className="flex flex-col gap-2.5">
-            {pendingLockMatches.map((match) => (
-              <MatchCard key={match.id} match={toMatchWithTeams(match)} />
-            ))}
-          </div>
-        )}
-      </Card>
-
-      <Card className="flex flex-col gap-3">
-        <SectionHeader title={content.recentOverridesLabel} />
-        {adminOverrides.length === 0 ? (
-          <EmptyState message={common.emptyGeneric} />
-        ) : (
-          <ul className="flex flex-col gap-2.5">
-            {adminOverrides.map((override) => (
-              <li
-                key={override.id}
-                className="flex flex-col gap-1 border-b pb-2.5 text-xs last:border-b-0 last:pb-0"
-                style={{ borderColor: colors.border }}
-              >
-                <p className="text-[var(--text-secondary)]">
-                  {override.reason}
-                </p>
-                <div className="flex items-center justify-between gap-2 text-[10.5px] text-[var(--text-muted)]">
-                  <span>
-                    {override.enteredBy} ·{" "}
-                    <span className="ltr tabular-nums">
-                      {formatMatchTime(override.timestamp)}
-                    </span>
-                  </span>
-                  {override.reversible && (
-                    <Pill tone="muted">{content.reversibleLabel}</Pill>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Card>
+      <div className="flex flex-wrap gap-3 text-sm font-bold text-[var(--interactive)]">
+        <Link href="/admin/participants">משתתפים והזמנות</Link>
+        <Link href="/admin/audit">יומן הפעולות</Link>
+        <Link href="/rules">חוקי הטורניר</Link>
+      </div>
     </div>
   );
 }

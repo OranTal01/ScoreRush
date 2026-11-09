@@ -36,24 +36,30 @@
  * syncing during a live matchday, without changing this handler.
  */
 import "server-only";
+import { recordLiveEvents } from "@/lib/live/events";
+import { getLiveAccess } from "@/lib/live/access";
+import { captureRoundHistory } from "@/lib/history/capture";
 import { NextResponse } from "next/server";
-import { ne } from "drizzle-orm";
+import { eq, ne } from "drizzle-orm";
+import { syncTournamentBonuses } from "@/lib/sync/bonus-stats";
+import { fillMissingPredictions } from "@/lib/scoring/default-predictions";
 import { db } from "@/lib/db/client";
 import { tournaments } from "@/lib/db/schema/identity";
 import { recomputeTournamentScores } from "@/lib/scoring/recompute";
 import { captureLeaderboardSnapshot } from "@/lib/scoring/snapshots";
+import { tournamentProviders } from "@/lib/db/schema/config";
 import { syncTournamentMatches } from "@/lib/sync/run-sync";
+import { processNotifications } from "@/lib/notifications/run";
 
 // Always run fresh — this is a write path triggered by cron/an authorized
 // caller, never something to cache.
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 function isAuthorized(request: Request): boolean {
   const secret = process.env.CRON_SECRET;
-  // No secret configured: nothing to check against, so allow — this is the
-  // pre-setup local-dev state, not a production posture. CRON_SECRET must be
-  // set in every deployed environment (see .env.local.example).
-  if (!secret) return true;
+  // Fail closed in every environment: this endpoint writes authoritative scores.
+  if (!secret) return false;
   return request.headers.get("authorization") === `Bearer ${secret}`;
 }
 
@@ -69,42 +75,76 @@ export async function GET(request: Request) {
       status: tournaments.status,
     })
     .from(tournaments)
+    .innerJoin(
+      tournamentProviders,
+      eq(tournamentProviders.tournamentId, tournaments.id),
+    )
     .where(ne(tournaments.status, "finished"));
 
   const results = [];
+  const summaryTournamentIds: string[] = [];
   for (const row of rows) {
     const syncResult = await syncTournamentMatches(row.id);
+    const bonusSync = await syncTournamentBonuses(row.id);
 
-    let recompute: Awaited<ReturnType<typeof recomputeTournamentScores>> | null =
-      null;
+    let recompute: Awaited<
+      ReturnType<typeof recomputeTournamentScores>
+    > | null = null;
     let recomputeError: string | null = null;
     try {
+      await fillMissingPredictions(row.id);
       recompute = await recomputeTournamentScores(row.id);
     } catch (err) {
       recomputeError = err instanceof Error ? err.message : String(err);
     }
 
-    let snapshot: Awaited<ReturnType<typeof captureLeaderboardSnapshot>> | null =
-      null;
+    let snapshot: Awaited<
+      ReturnType<typeof captureLeaderboardSnapshot>
+    > | null = null;
     let snapshotError: string | null = null;
     try {
-      snapshot = await captureLeaderboardSnapshot(row.id);
+      if (!recomputeError) snapshot = await captureLeaderboardSnapshot(row.id);
     } catch (err) {
       snapshotError = err instanceof Error ? err.message : String(err);
     }
 
+    if (syncResult.outcome === "success") {
+      try {
+        await recordLiveEvents(row.id, await getLiveAccess(row.id));
+      } catch {
+        /* The fast sync resumes recent event detection independently. */
+      }
+    }
+    let history: unknown = null;
+    if (syncResult.outcome === "success" && !recomputeError && !snapshotError) {
+      summaryTournamentIds.push(row.id);
+      try {
+        history = await captureRoundHistory(row.id);
+      } catch {
+        history = { error: "Round history capture failed" };
+      }
+    }
     results.push({
       name: row.name,
       status: row.status,
       ...syncResult,
+      bonusSync,
       recompute,
       recomputeError,
       snapshot,
       snapshotError,
+      history,
     });
   }
 
+  let notificationResult: unknown = null;
+  try {
+    notificationResult = await processNotifications(summaryTournamentIds);
+  } catch {
+    notificationResult = { error: "Notification processing failed" };
+  }
   return NextResponse.json({
+    notificationResult,
     syncedAt: new Date().toISOString(),
     tournamentsSynced: results.length,
     results,

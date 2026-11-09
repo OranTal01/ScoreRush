@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { competitionLabel } from "@/lib/tournaments/competition-label";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { colors } from "@/lib/design-tokens";
@@ -39,21 +40,22 @@ export function TournamentSwitcher({
   const current = tournaments.find((t) => t.isCurrent) ?? tournaments[0];
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="dialog"
-        className="flex min-h-11 items-center gap-1.5 rounded-full px-2 py-2 text-start"
+        className="flex min-h-11 w-full min-w-0 items-center gap-1.5 rounded-xl px-1 py-2 text-start sm:px-2"
       >
-        <span className="max-w-[180px] truncate text-sm font-extrabold text-[var(--text-primary)] md:text-[15px]">
+        <span className="min-w-0 truncate text-sm font-extrabold text-[var(--text-primary)] lg:max-w-[210px]">
           {current ? current.name : tournamentSwitcher.noTournament}
         </span>
         <IconChevronDown
           width={16}
           height={16}
           aria-hidden
+          className="shrink-0"
           style={{
             color: colors.textSecondary,
             transform: open ? "rotate(180deg)" : undefined,
@@ -85,7 +87,10 @@ export function TournamentSwitcher({
               // bottom of the screen with no way to scroll to it. Mobile's
               // bottom sheet already scrolls the whole viewport, so this
               // only needs to apply at `md:`.
-              className="fixed inset-x-0 bottom-0 z-50 flex flex-col gap-3 border-t p-4 md:absolute md:inset-x-auto md:top-full md:bottom-auto md:mt-2 md:max-h-[70vh] md:w-72 md:overflow-y-auto md:rounded-[var(--radius-card)] md:border"
+              className="fixed inset-x-0 bottom-16 z-50 flex max-h-[70dvh] flex-col gap-3 overflow-y-auto border-t p-4 lg:absolute lg:inset-x-auto lg:top-full lg:bottom-auto lg:mt-2 lg:w-72 lg:rounded-[var(--radius-card)] lg:border"
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setOpen(false);
+              }}
               style={{
                 background: colors.bgElevated,
                 borderColor: colors.border,
@@ -134,7 +139,7 @@ export function TournamentSwitcher({
                         {t.name}
                       </span>
                       <span className="text-xs text-[var(--text-muted)]">
-                        {t.competition}
+                        {competitionLabel(t.competition)}
                       </span>
                     </div>
                     {t.isCurrent ? (
@@ -167,12 +172,9 @@ export function TournamentSwitcher({
                     generates and shares externally (email/WhatsApp); there's
                     no in-app "browse tournaments" or "enter a code" screen to
                     send this to. Left unwired until that flow exists. */}
-                <button
-                  type="button"
-                  className="text-start text-sm font-bold text-[var(--interactive)]"
-                >
-                  {tournamentSwitcher.joinAnother}
-                </button>
+                <p className="text-start text-xs leading-6 text-[var(--text-secondary)]">
+                  כדי להצטרף לטורניר נוסף, פתחו את קישור ההזמנה שקיבלתם מהמארגן.
+                </p>
                 {canCreateTournament && (
                   <Link
                     href="/admin/tournaments/new"

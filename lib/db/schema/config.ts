@@ -7,6 +7,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { RankingConfig } from "@/lib/scoring/ranking-config";
 import { bonusResolvesAtEnum } from "./enums";
 import { tournaments } from "./identity";
 
@@ -30,6 +31,12 @@ export const scoringRules = pgTable("scoring_rules", {
   groupRankingPointsPerPosition: integer("group_ranking_points_per_position")
     .notNull()
     .default(3),
+  rankingConfig: jsonb("ranking_config")
+    .$type<RankingConfig>()
+    .notNull()
+    .default({ mode: "exact" }),
+  // Optional explicit common deadline, otherwise first kickoff in each group.
+  rankingLocksAt: timestamp("ranking_locks_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

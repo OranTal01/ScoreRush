@@ -29,7 +29,7 @@
  * capture always shares one identical timestamp.
  */
 import "server-only";
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { matches } from "@/lib/db/schema/competition";
 import { bonusCategories } from "@/lib/db/schema/config";
@@ -40,7 +40,11 @@ import {
   leaderboardSnapshots,
   matchPredictions,
 } from "@/lib/db/schema/predictions";
-import { computeStandings, type StandingsEntry, type StandingsInput } from "./leaderboard";
+import {
+  computeStandings,
+  type StandingsEntry,
+  type StandingsInput,
+} from "./leaderboard";
 
 export interface SnapshotResult {
   tournamentId: string;
@@ -48,11 +52,20 @@ export interface SnapshotResult {
   captured: boolean;
   participantsCount: number;
 }
+type SnapshotStore = Pick<typeof db, "select" | "insert" | "execute">;
 
 export async function captureLeaderboardSnapshot(
   tournamentId: string,
+  store?: SnapshotStore,
 ): Promise<SnapshotResult> {
-  const tournamentParticipants = await db
+  if (!store)
+    return db.transaction(async (tx) => {
+      await tx.execute(
+        sql`select pg_advisory_xact_lock(hashtextextended(${"scoring:" + tournamentId},0))`,
+      );
+      return captureLeaderboardSnapshot(tournamentId, tx);
+    });
+  const tournamentParticipants = await store
     .select({ id: participants.id })
     .from(participants)
     .where(eq(participants.tournamentId, tournamentId));
@@ -61,9 +74,9 @@ export async function captureLeaderboardSnapshot(
     return { tournamentId, captured: false, participantsCount: 0 };
   }
 
-  const matchPointsByParticipant = await sumMatchPoints(tournamentId);
-  const groupPointsByParticipant = await sumGroupPoints(tournamentId);
-  const bonusPointsByParticipant = await sumBonusPoints(tournamentId);
+  const matchPointsByParticipant = await sumMatchPoints(tournamentId, store);
+  const groupPointsByParticipant = await sumGroupPoints(tournamentId, store);
+  const bonusPointsByParticipant = await sumBonusPoints(tournamentId, store);
 
   const standingsInput: StandingsInput[] = tournamentParticipants.map((p) => ({
     participantId: p.id,
@@ -74,12 +87,16 @@ export async function captureLeaderboardSnapshot(
 
   const standings = computeStandings(standingsInput);
 
-  const latestBatch = await getLatestSnapshotBatch(tournamentId);
+  const latestBatch = await getLatestSnapshotBatch(tournamentId, store);
   if (latestBatch !== null && standingsEqual(standings, latestBatch)) {
-    return { tournamentId, captured: false, participantsCount: standings.length };
+    return {
+      tournamentId,
+      captured: false,
+      participantsCount: standings.length,
+    };
   }
 
-  await db.insert(leaderboardSnapshots).values(
+  await store.insert(leaderboardSnapshots).values(
     standings.map((entry) => ({
       tournamentId,
       participantId: entry.participantId,
@@ -100,7 +117,10 @@ type ScoredRow = { participantId: string; pointsEarned: number | null };
 function sumByParticipant(rows: ScoredRow[]): Map<string, number> {
   const totals = new Map<string, number>();
   for (const row of rows) {
-    totals.set(row.participantId, (totals.get(row.participantId) ?? 0) + (row.pointsEarned ?? 0));
+    totals.set(
+      row.participantId,
+      (totals.get(row.participantId) ?? 0) + (row.pointsEarned ?? 0),
+    );
   }
   return totals;
 }
@@ -110,14 +130,17 @@ function sumByParticipant(rows: ScoredRow[]): Map<string, number> {
  * baseline the proposed correction's delta is applied on top of — the same
  * totals this module sums for a snapshot, so "current standings" always
  * agrees with what the leaderboard/snapshot pipeline would compute. */
-export async function sumMatchPoints(tournamentId: string): Promise<Map<string, number>> {
-  const tournamentMatches = await db
+export async function sumMatchPoints(
+  tournamentId: string,
+  store: SnapshotStore = db,
+): Promise<Map<string, number>> {
+  const tournamentMatches = await store
     .select({ id: matches.id })
     .from(matches)
     .where(eq(matches.tournamentId, tournamentId));
   if (tournamentMatches.length === 0) return new Map();
 
-  const rows = await db
+  const rows = await store
     .select({
       participantId: matchPredictions.participantId,
       pointsEarned: matchPredictions.pointsEarned,
@@ -133,8 +156,11 @@ export async function sumMatchPoints(tournamentId: string): Promise<Map<string, 
 }
 
 /** Exported for reuse by the recalculation-preview orchestration — see `sumMatchPoints` above. */
-export async function sumGroupPoints(tournamentId: string): Promise<Map<string, number>> {
-  const rows = await db
+export async function sumGroupPoints(
+  tournamentId: string,
+  store: SnapshotStore = db,
+): Promise<Map<string, number>> {
+  const rows = await store
     .select({
       participantId: groupPredictions.participantId,
       pointsEarned: groupPredictions.pointsEarned,
@@ -145,14 +171,17 @@ export async function sumGroupPoints(tournamentId: string): Promise<Map<string, 
 }
 
 /** Exported for reuse by the recalculation-preview orchestration — see `sumMatchPoints` above. */
-export async function sumBonusPoints(tournamentId: string): Promise<Map<string, number>> {
-  const categories = await db
+export async function sumBonusPoints(
+  tournamentId: string,
+  store: SnapshotStore = db,
+): Promise<Map<string, number>> {
+  const categories = await store
     .select({ id: bonusCategories.id })
     .from(bonusCategories)
     .where(eq(bonusCategories.tournamentId, tournamentId));
   if (categories.length === 0) return new Map();
 
-  const rows = await db
+  const rows = await store
     .select({
       participantId: bonusPredictions.participantId,
       pointsEarned: bonusPredictions.pointsEarned,
@@ -170,8 +199,9 @@ export async function sumBonusPoints(tournamentId: string): Promise<Map<string, 
 /** The most recent capture's rows, or null if the tournament has never been snapshotted. */
 async function getLatestSnapshotBatch(
   tournamentId: string,
+  store: SnapshotStore,
 ): Promise<StandingsEntry[] | null> {
-  const rows = await db
+  const rows = await store
     .select()
     .from(leaderboardSnapshots)
     .where(eq(leaderboardSnapshots.tournamentId, tournamentId));

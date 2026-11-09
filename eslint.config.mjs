@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "tools/whatsapp-bridge/node_modules/**",
+    "tools/whatsapp-bridge/.local/**",
   ]),
 ]);
 

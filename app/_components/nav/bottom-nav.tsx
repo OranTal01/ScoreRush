@@ -12,24 +12,35 @@ export function BottomNav() {
   return (
     <nav
       aria-label="ניווט ראשי"
-      className="fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around border-t md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around border-t lg:hidden"
       style={{
-        height: "var(--spacing-bottom-nav-height, 56px)",
+        height: "calc(64px + env(safe-area-inset-bottom))",
         background: colors.bgElevated,
         borderColor: colors.border,
         paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
       {primaryNavItems.map(({ href, label, Icon }) => {
-        const active = pathname === href;
+        const active =
+          href === "/"
+            ? pathname === "/"
+            : pathname.startsWith(href) ||
+              (href === "/predictions" &&
+                ["/groups", "/bracket"].includes(pathname));
         return (
           <Link
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className="flex flex-1 flex-col items-center justify-center gap-0.5 text-[10.5px] font-semibold transition-colors"
+            className="relative flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-xs font-semibold transition-colors"
             style={{ color: active ? colors.interactive : colors.textMuted }}
           >
+            {active && (
+              <span
+                aria-hidden
+                className="absolute top-0 h-0.5 w-8 rounded-full bg-[var(--interactive)]"
+              />
+            )}
             <Icon width={20} height={20} aria-hidden />
             {label}
           </Link>

@@ -7,5 +7,9 @@
  */
 export function sanitizeNext(value: string | null | undefined): string {
   if (!value) return "/";
-  return value.startsWith("/") && !value.startsWith("//") ? value : "/";
+  return value.startsWith("/") &&
+    !value.startsWith("//") &&
+    !/[\\\u0000-\u0020]/.test(value)
+    ? value
+    : "/";
 }

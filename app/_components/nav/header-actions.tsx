@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { colors } from "@/lib/design-tokens";
-import { currentParticipant } from "@/lib/mock";
 import { Avatar } from "../ui";
 import { IconAdmin } from "../icons";
 
@@ -14,9 +13,15 @@ import { IconAdmin } from "../icons";
  * mock — wiring the header to the caller's real profile is a separate,
  * unrelated gap (no admin-tooling scope here).
  */
-export function HeaderActions({ isAdmin }: { isAdmin: boolean }) {
+export function HeaderActions({
+  isAdmin,
+  avatarInitials = "?",
+}: {
+  isAdmin: boolean;
+  avatarInitials?: string;
+}) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex shrink-0 items-center gap-1 sm:gap-3">
       {isAdmin && (
         <Link
           href="/admin"
@@ -35,7 +40,7 @@ export function HeaderActions({ isAdmin }: { isAdmin: boolean }) {
         aria-label="פרופיל"
         className="flex h-11 w-11 items-center justify-center"
       >
-        <Avatar initials={currentParticipant.avatarInitials} self size={32} />
+        <Avatar initials={avatarInitials} self size={32} />
       </Link>
     </div>
   );

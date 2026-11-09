@@ -12,6 +12,12 @@ const rubik = Rubik({
 
 export const metadata: Metadata = {
   title: "ScoreRush",
+  appleWebApp: {
+    capable: true,
+    title: "ScoreRush",
+    statusBarStyle: "black-translucent",
+  },
+  icons: { apple: "/icon" },
   description:
     "פלטפורמת ניחושי כדורגל פרטית ופרימיום — תחרויות, בונוסים ופרסים לכל טורניר.",
 };

@@ -110,7 +110,7 @@ function CopyField({ value }: { value: string }) {
         dir="ltr"
         value={value}
         onFocus={(e) => e.target.select()}
-        className="flex-1 px-3 py-2 text-[11px] text-[var(--text-secondary)] outline-none"
+        className="min-w-0 flex-1 px-3 py-2 text-[11px] text-[var(--text-secondary)] outline-none"
         style={inputStyle}
       />
       <button
@@ -210,8 +210,8 @@ function ParticipantRow({
       className="flex flex-col gap-1.5 border-b pb-2.5 last:border-b-0 last:pb-0"
       style={{ borderColor: colors.border }}
     >
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2.5">
           <Avatar
             initials={participant.avatarInitials ?? "?"}
             self={isSelf}
@@ -315,7 +315,7 @@ function InvitationRow({
       style={{ borderColor: colors.border }}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs text-[var(--text-secondary)]">
+        <span className="min-w-0 text-xs break-words text-[var(--text-secondary)]">
           {invitation.boundEmail
             ? `${content.boundEmailLabel} ${invitation.boundEmail}`
             : content.openInvitationLabel}
@@ -328,8 +328,8 @@ function InvitationRow({
           : content.noExpiryLabel}
       </span>
       {invitation.status === "pending" && (
-        <div className="flex items-center gap-2">
-          <div className="flex-1">
+        <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+          <div className="min-w-0 flex-1">
             <CopyField value={invitation.joinUrl} />
           </div>
           <form

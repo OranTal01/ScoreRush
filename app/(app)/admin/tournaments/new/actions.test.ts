@@ -9,14 +9,12 @@
  */
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-const { fromQueue, authUser, insertCalls, returningQueue } = vi.hoisted(
-  () => ({
-    fromQueue: [] as { data: unknown }[],
-    authUser: { current: null as { id: string; email?: string } | null },
-    insertCalls: [] as { table: unknown; values: unknown }[],
-    returningQueue: [] as unknown[][],
-  }),
-);
+const { fromQueue, authUser, insertCalls, returningQueue } = vi.hoisted(() => ({
+  fromQueue: [] as { data: unknown }[],
+  authUser: { current: null as { id: string; email?: string } | null },
+  insertCalls: [] as { table: unknown; values: unknown }[],
+  returningQueue: [] as unknown[][],
+}));
 
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
@@ -45,9 +43,11 @@ vi.mock("@/lib/db/client", () => ({
         insert: (table: unknown) => ({
           values: (values: unknown) => {
             insertCalls.push({ table, values });
-            const base: Promise<unknown> & { returning?: () => Promise<unknown> } =
-              Promise.resolve(undefined);
-            base.returning = () => Promise.resolve(returningQueue.shift() ?? []);
+            const base: Promise<unknown> & {
+              returning?: () => Promise<unknown>;
+            } = Promise.resolve(undefined);
+            base.returning = () =>
+              Promise.resolve(returningQueue.shift() ?? []);
             return base;
           },
         }),
@@ -58,9 +58,7 @@ vi.mock("@/lib/db/client", () => ({
 }));
 
 const { createTournament } = await import("./actions");
-const { tournaments, participants } = await import(
-  "@/lib/db/schema/identity"
-);
+const { tournaments, participants } = await import("@/lib/db/schema/identity");
 const {
   scoringRules,
   bonusCategories,
@@ -162,7 +160,11 @@ describe("createTournament", () => {
       insertCalls.filter((c) => c.table === table).map((c) => c.values);
 
     expect(tableOf(tournaments)).toEqual([
-      { name: "Champions League 2027", competition: "champions_league", createdBy: "u1" },
+      {
+        name: "Champions League 2027",
+        competition: "champions_league",
+        createdBy: "u1",
+      },
     ]);
     expect(tableOf(scoringRules)).toEqual([
       {
@@ -172,10 +174,16 @@ describe("createTournament", () => {
         winnerOnlyPoints: 3,
         wrongPoints: 0,
         groupRankingPointsPerPosition: 3,
+        rankingConfig: { mode: "exact" },
+        rankingLocksAt: null,
       },
     ]);
     expect(tableOf(prizes)).toEqual([
-      { tournamentId: "tournament-1", rank: 1, description: "VIP subscription" },
+      {
+        tournamentId: "tournament-1",
+        rank: 1,
+        description: "VIP subscription",
+      },
     ]);
     expect(tableOf(bonusCategories)).toEqual([
       {
@@ -184,6 +192,8 @@ describe("createTournament", () => {
         type: "player",
         resolvesAt: "ongoing",
         duplicateStackingAllowed: true,
+        locksAt: null,
+        sortOrder: 0,
       },
     ]);
     expect(tableOf(bonusSlots)).toEqual([
@@ -196,7 +206,11 @@ describe("createTournament", () => {
         matchDataProvider: "manual",
         matchDataConfig: { entries: [] },
         bonusStatsProvider: "manual",
-        bonusStatsConfig: { stats: [] },
+        bonusStatsConfig: {
+          stats: [],
+          categoryStatKeys: {},
+          assistsCoverageVerified: false,
+        },
       },
     ]);
     expect(tableOf(participants)).toEqual([

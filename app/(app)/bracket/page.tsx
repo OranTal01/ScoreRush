@@ -1,5 +1,5 @@
 import { colors } from "@/lib/design-tokens";
-import { bracket as content, nav } from "@/lib/content/he";
+import { bracket as content } from "@/lib/content/he";
 import { listTournamentMatches } from "@/lib/matches/list";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
@@ -49,11 +49,16 @@ export default async function BracketPage() {
 
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[720px]">
-      <h1 className="sr-only">{nav.bracket}</h1>
+      <header>
+        <h1 className="page-heading">הדרך לגמר</h1>
+        <p className="page-intro mt-2">
+          שלבי ההכרעה של הטורניר, עד להנפת הגביע.
+        </p>
+      </header>
       <SubTabs />
 
       {semifinals.length === 0 && !final ? (
-        <EmptyState message={content.tbd} />
+        <EmptyState message="משחקי ההכרעה עדיין לא נקבעו. הם יופיעו כאן כשהלוח יתעדכן." />
       ) : (
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
           <div className="flex flex-1 flex-col gap-2">

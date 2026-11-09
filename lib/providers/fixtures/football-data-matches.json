@@ -105,7 +105,7 @@
         "fullTime": { "home": 1, "away": 1 },
         "halfTime": { "home": 0, "away": 1 },
         "regularTime": { "home": 1, "away": 1 },
-        "extraTime": { "home": 1, "away": 1 },
+        "extraTime": { "home": 0, "away": 0 },
         "penalties": { "home": 4, "away": 5 }
       }
     },

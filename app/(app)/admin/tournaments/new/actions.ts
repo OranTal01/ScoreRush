@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { rankingConfigSchema } from "@/lib/scoring/ranking-config";
 import { db } from "@/lib/db/client";
 import { systemEvents } from "@/lib/db/schema/audit";
 import {
@@ -48,6 +49,17 @@ const bonusCategoryInputSchema = z.object({
   type: z.string().trim().min(1).max(50),
   resolvesAt: z.enum(["ongoing", "tournament_end"]),
   duplicateStackingAllowed: z.boolean(),
+  statKey: z
+    .enum([
+      "champion",
+      "runner_up",
+      "top_scoring_team",
+      "league_winner",
+      "top_scorer",
+      "top_assists",
+      "manual",
+    ])
+    .default("manual"),
   slots: z.array(bonusSlotInputSchema).min(1).max(20),
 });
 
@@ -72,6 +84,8 @@ const inputSchema = z
     winnerOnlyPoints: z.coerce.number().int().min(0).max(999),
     wrongPoints: z.coerce.number().int().min(0).max(999),
     groupRankingPointsPerPosition: z.coerce.number().int().min(0).max(999),
+    rankingConfig: rankingConfigSchema.default({ mode: "exact" }),
+    predictionDeadline: z.iso.datetime().optional(),
     bonusCategories: z.array(bonusCategoryInputSchema).max(20),
     prizes: z.array(prizeInputSchema).max(50),
   })
@@ -80,16 +94,14 @@ const inputSchema = z
       data.dataSource !== "football_data_org" ||
       (data.competitionCode !== undefined && data.competitionCode.length > 0),
     {
-      message: "competitionCode is required when dataSource is football_data_org",
+      message:
+        "competitionCode is required when dataSource is football_data_org",
       path: ["competitionCode"],
     },
   );
 
 export type CreateTournamentErrorCode =
-  | "invalid_input"
-  | "unauthenticated"
-  | "not_platform_admin"
-  | "generic";
+  "invalid_input" | "unauthenticated" | "not_platform_admin" | "generic";
 
 export type CreateTournamentState =
   | { status: "idle" }
@@ -102,7 +114,10 @@ export async function createTournament(
 ): Promise<CreateTournamentState> {
   let bonusCategoriesRaw: unknown = [];
   let prizesRaw: unknown = [];
+  let rankingRaw: unknown;
   try {
+    const rank = formData.get("rankingConfig");
+    rankingRaw = typeof rank === "string" ? JSON.parse(rank) : undefined;
     const bc = formData.get("bonusCategories");
     bonusCategoriesRaw = typeof bc === "string" ? JSON.parse(bc) : [];
     const pz = formData.get("prizes");
@@ -124,6 +139,8 @@ export async function createTournament(
     groupRankingPointsPerPosition: formData.get(
       "groupRankingPointsPerPosition",
     ),
+    rankingConfig: rankingRaw,
+    predictionDeadline: formData.get("predictionDeadline") || undefined,
     bonusCategories: bonusCategoriesRaw,
     prizes: prizesRaw,
   });
@@ -131,6 +148,15 @@ export async function createTournament(
     return { status: "error", code: "invalid_input" };
   }
   const data = parsed.data;
+  if (
+    data.predictionDeadline &&
+    Date.parse(data.predictionDeadline) <= Date.now()
+  ) {
+    return { status: "error", code: "invalid_input" };
+  }
+  const locksAt = data.predictionDeadline
+    ? new Date(data.predictionDeadline)
+    : null;
 
   const supabase = await createClient();
   const {
@@ -153,11 +179,17 @@ export async function createTournament(
 
   const matchDataConfig =
     data.dataSource === "football_data_org"
-      ? { competitionCode: data.competitionCode, ...(data.season ? { season: data.season } : {}) }
+      ? {
+          competitionCode: data.competitionCode,
+          ...(data.season ? { season: data.season } : {}),
+        }
       : { entries: [] };
   const bonusStatsConfig =
     data.dataSource === "football_data_org"
-      ? { competitionCode: data.competitionCode, ...(data.season ? { season: data.season } : {}) }
+      ? {
+          competitionCode: data.competitionCode,
+          ...(data.season ? { season: data.season } : {}),
+        }
       : { stats: [] };
 
   try {
@@ -178,6 +210,8 @@ export async function createTournament(
         winnerOnlyPoints: data.winnerOnlyPoints,
         wrongPoints: data.wrongPoints,
         groupRankingPointsPerPosition: data.groupRankingPointsPerPosition,
+        rankingConfig: data.rankingConfig,
+        rankingLocksAt: locksAt,
       });
 
       for (const [index, prize] of data.prizes.entries()) {
@@ -188,7 +222,8 @@ export async function createTournament(
         });
       }
 
-      for (const category of data.bonusCategories) {
+      const categoryStatKeys: Record<string, string> = {};
+      for (const [sortOrder, category] of data.bonusCategories.entries()) {
         const [createdCategory] = await tx
           .insert(bonusCategories)
           .values({
@@ -197,9 +232,13 @@ export async function createTournament(
             type: category.type,
             resolvesAt: category.resolvesAt,
             duplicateStackingAllowed: category.duplicateStackingAllowed,
+            locksAt,
+            sortOrder,
           })
           .returning({ id: bonusCategories.id });
 
+        if (category.statKey !== "manual")
+          categoryStatKeys[createdCategory.id] = category.statKey;
         for (const [slotIndex, slot] of category.slots.entries()) {
           await tx.insert(bonusSlots).values({
             categoryId: createdCategory.id,
@@ -214,7 +253,11 @@ export async function createTournament(
         matchDataProvider: data.dataSource,
         matchDataConfig,
         bonusStatsProvider: data.dataSource,
-        bonusStatsConfig,
+        bonusStatsConfig: {
+          ...bonusStatsConfig,
+          categoryStatKeys,
+          assistsCoverageVerified: false,
+        },
       });
 
       await tx.insert(participants).values({

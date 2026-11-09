@@ -13,6 +13,7 @@ import {
 
 const items = [
   { href: "/admin", label: admin.overviewTitle },
+  { href: "/admin/settings", label: "הגדרות" },
   { href: "/admin/participants", label: participantsAdmin.title },
   { href: "/admin/diagnostics", label: diagnostics.title },
   { href: "/admin/notifications", label: notificationCenter.title },
@@ -41,10 +42,9 @@ export function AdminSubTabs() {
   const pathname = usePathname();
 
   return (
-    <div
-      role="tablist"
+    <nav
       aria-label="ניווט בין מסכי הניהול"
-      className="flex gap-1 overflow-x-auto border-b p-1"
+      className="flex max-w-full min-w-0 gap-1 overflow-x-auto border-b p-1"
       style={{ borderColor: colors.border }}
     >
       {items.map(({ href, label }) => {
@@ -53,9 +53,8 @@ export function AdminSubTabs() {
           <Link
             key={href}
             href={href}
-            role="tab"
-            aria-selected={active}
-            className="flex-1 whitespace-nowrap px-3 py-2 text-center text-[13px] font-bold transition-colors"
+            aria-current={active ? "page" : undefined}
+            className="flex min-h-11 flex-1 items-center justify-center px-3 py-2 text-center text-[13px] font-bold whitespace-nowrap transition-colors"
             style={{
               color: active ? colors.textPrimary : colors.textMuted,
               background: active ? colors.surfaceCard2 : "transparent",
@@ -66,6 +65,6 @@ export function AdminSubTabs() {
           </Link>
         );
       })}
-    </div>
+    </nav>
   );
 }

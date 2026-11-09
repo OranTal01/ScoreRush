@@ -17,6 +17,7 @@ import type {
   ValidationWarning,
 } from "../types";
 import { deriveWinner, toMatchScore } from "../normalize";
+import { footballDataLiveDetails } from "./live";
 import type { FDMatch } from "./schema";
 
 const STATUS_MAP: Record<FDMatch["status"], MatchStatus> = {
@@ -24,6 +25,8 @@ const STATUS_MAP: Record<FDMatch["status"], MatchStatus> = {
   TIMED: "scheduled",
   IN_PLAY: "live",
   PAUSED: "live",
+  EXTRA_TIME: "live",
+  PENALTY_SHOOTOUT: "live",
   FINISHED: "finished",
   AWARDED: "finished",
   SUSPENDED: "postponed",
@@ -58,9 +61,13 @@ export function normalizeFootballDataMatch(
       ? toMatchScore(fullTime)
       : toMatchScore(regularTime)
     : null;
+  const extraPeriod = toMatchScore(extraTime);
   const extraTimeResult =
-    isFinished && (duration === "EXTRA_TIME" || duration === "PENALTY_SHOOTOUT")
-      ? (toMatchScore(extraTime) ?? toMatchScore(fullTime))
+    isFinished && duration !== "REGULAR" && regularResult && extraPeriod
+      ? {
+          home: regularResult.home + extraPeriod.home,
+          away: regularResult.away + extraPeriod.away,
+        }
       : null;
   const penaltyResult =
     isFinished && duration === "PENALTY_SHOOTOUT"
@@ -90,12 +97,18 @@ export function normalizeFootballDataMatch(
   };
 
   const match: CanonicalMatch = {
+    liveDetails: footballDataLiveDetails(raw),
     providerId: String(raw.id),
     // Mechanical lowercasing only — no semantic remapping of FD's stage
     // vocabulary (e.g. "LAST_16" -> "round_of_16") without confirming it
     // against real fixtures first; ARCHITECTURE.md §5 says flag, never guess.
     stage: raw.stage.toLowerCase(),
-    group: raw.group ? raw.group.toLowerCase() : null,
+    group:
+      raw.stage === "LEAGUE_STAGE"
+        ? "league"
+        : raw.group
+          ? raw.group.toLowerCase()
+          : null,
     matchday: raw.matchday ?? null,
     homeTeam: {
       providerId: String(raw.homeTeam.id),

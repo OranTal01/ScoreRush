@@ -57,6 +57,8 @@ export const matches = pgTable("matches", {
   penaltyResult: jsonb("penalty_result").$type<MatchScore>(),
   /** In-progress score while `status = 'live'`; null otherwise. */
   liveScore: jsonb("live_score").$type<MatchScore>(),
+  liveDetails:
+    jsonb("live_details").$type<import("@/lib/live/types").LiveDetails>(),
   /** "home" | "away" | "draw" | null while undecided. */
   winner: text("winner"),
 

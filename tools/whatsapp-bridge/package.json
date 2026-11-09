@@ -1,0 +1,14 @@
+{
+  "name": "scorerush-whatsapp-bridge",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node bridge.mjs",
+    "test": "node --test policy.test.mjs"
+  },
+  "dependencies": {
+    "whatsapp-web.js": "1.34.7",
+    "qrcode": "^1.5.4",
+    "postgres": "^3.4.9"
+  }
+}

@@ -1,4 +1,6 @@
-import { bonuses as content, common, nav } from "@/lib/content/he";
+import { footballName } from "@/lib/content/football-names";
+import { getBonusOptions } from "@/lib/tournaments/bonus-options";
+import { bonuses as content, common } from "@/lib/content/he";
 import { colors } from "@/lib/design-tokens";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
@@ -21,6 +23,7 @@ type BonusCategoryRow = {
   duplicate_stacking_allowed: boolean;
   locks_at: string | null;
   sort_order: number;
+  tournaments: { onboarding_open: boolean } | null;
 };
 type BonusSlotRow = {
   id: string;
@@ -32,6 +35,7 @@ type BonusPredictionRow = {
   category_id: string;
   slot_id: string;
   pick_label: string;
+  pick_ref_id: string | null;
   points_earned: number | null;
 };
 type BonusStatRow = {
@@ -69,7 +73,7 @@ export default async function BonusesPage() {
   const { data: categories } = await supabase
     .from("bonus_categories")
     .select(
-      "id, name, type, resolves_at, duplicate_stacking_allowed, locks_at, sort_order",
+      "id, name, type, resolves_at, duplicate_stacking_allowed, locks_at, sort_order, tournaments(onboarding_open)",
     )
     .eq("tournament_id", tournamentId)
     .order("sort_order", { ascending: true })
@@ -90,7 +94,7 @@ export default async function BonusesPage() {
         .returns<BonusSlotRow[]>(),
       supabase
         .from("bonus_predictions")
-        .select("category_id, slot_id, pick_label, points_earned")
+        .select("category_id, slot_id, pick_label, pick_ref_id, points_earned")
         .eq("participant_id", participantId)
         .in("category_id", categoryIds)
         .returns<BonusPredictionRow[]>(),
@@ -101,9 +105,30 @@ export default async function BonusesPage() {
         .returns<BonusStatRow[]>(),
     ]);
 
+  const optionTypes = [...new Set(categories.map((category) => category.type))];
+  const optionsByType = new Map(
+    await Promise.all(
+      optionTypes.map(
+        async (type) =>
+          [type, await getBonusOptions(supabase, tournamentId, type)] as const,
+      ),
+    ),
+  );
+
   return (
     <div className="flex flex-col gap-4 md:mx-auto md:w-full md:max-w-[560px] lg:max-w-[640px]">
-      <h1 className="sr-only">{nav.bonuses}</h1>
+      <header>
+        <h1 className="page-heading">הבונוסים שלכם</h1>
+        <p className="page-intro mt-2">
+          מהאלופה ועד מלך השערים. הבחירות הגדולות יכולות לעשות את ההבדל בטבלה.
+        </p>
+      </header>
+      {categories[0]?.tournaments?.onboarding_open && (
+        <p className="rounded-2xl border border-amber-400/30 p-4 text-sm leading-6">
+          הבונוסים פתוחים לקליטת הניחושים שכבר נשלחו. הם יינעלו עם סיום תקופת
+          הקליטה.
+        </p>
+      )}
       {categories.map((category, index) => {
         const categorySlots = (slots ?? [])
           .filter((s) => s.category_id === category.id)
@@ -119,7 +144,9 @@ export default async function BonusesPage() {
 
         const isTerminal = category.resolves_at === "tournament_end";
         const isLocked =
-          category.locks_at !== null && isPast(category.locks_at);
+          !category.tournaments?.onboarding_open &&
+          category.locks_at !== null &&
+          isPast(category.locks_at);
 
         const slotPoints = categorySlots.map(
           (s) => predictionBySlot.get(s.id)?.points_earned ?? null,
@@ -169,7 +196,7 @@ export default async function BonusesPage() {
                             >
                               {slot.slot_index}
                             </span>
-                            {pick?.pick_label ?? "—"}
+                            {footballName(pick?.pick_label ?? "—")}
                           </span>
                           <span className="ltr shrink-0 font-bold text-[var(--gold)] tabular-nums">
                             {slot.points} {common.points}
@@ -193,11 +220,15 @@ export default async function BonusesPage() {
                   )}
                   <BonusPredictionForm
                     categoryId={category.id}
+                    categoryLabel={category.name}
+                    options={optionsByType.get(category.type) ?? []}
                     slots={categorySlots.map((s) => ({
                       id: s.id,
                       index: s.slot_index,
                       points: s.points,
                       pickLabel: predictionBySlot.get(s.id)?.pick_label ?? "",
+                      pickRefId:
+                        predictionBySlot.get(s.id)?.pick_ref_id ?? null,
                     }))}
                   />
                 </>
@@ -218,7 +249,7 @@ export default async function BonusesPage() {
                         className="flex items-center justify-between text-xs"
                       >
                         <span className="text-[var(--text-secondary)]">
-                          {leader.rank}. {leader.label}
+                          {leader.rank}. {footballName(leader.label)}
                         </span>
                         <span className="ltr font-bold text-[var(--text-primary)] tabular-nums">
                           {leader.value}

@@ -35,8 +35,8 @@ export function SectionHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between">
-      <h2 className="text-xs font-extrabold tracking-wide text-[var(--text-secondary)]">
+    <div className="flex min-w-0 items-center justify-between gap-3">
+      <h2 className="min-w-0 text-sm leading-6 font-bold text-[var(--text-primary)]">
         {title}
       </h2>
       {action}

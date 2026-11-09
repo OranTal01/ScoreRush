@@ -17,10 +17,14 @@
  * (app/(app)/*\/actions.ts), not this job.
  */
 import "server-only";
-import { eq, inArray } from "drizzle-orm";
+import { desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { matches } from "@/lib/db/schema/competition";
-import { bonusCategories, bonusSlots, scoringRules } from "@/lib/db/schema/config";
+import {
+  bonusCategories,
+  bonusSlots,
+  scoringRules,
+} from "@/lib/db/schema/config";
 import { tournaments } from "@/lib/db/schema/identity";
 import {
   bonusPredictions,
@@ -40,6 +44,8 @@ import {
   standingsByGroup,
   type StandingsMatch,
 } from "./group-standings";
+import { getOfficialLeagueOrder } from "./official-league-order";
+import { parseRankingConfig, type RankingConfig } from "./ranking-config";
 import { scoreGroupRanking } from "./group-scoring";
 import { scoreMatch, type MatchScoringRules } from "./match-scoring";
 
@@ -68,6 +74,10 @@ export const DEFAULT_SCORING_RULES: ScoringRulesValues = {
 };
 
 type TournamentMatch = typeof matches.$inferSelect;
+export type ScoringStore = Pick<
+  typeof db,
+  "select" | "update" | "insert" | "execute"
+>;
 
 export interface RecomputeResult {
   tournamentId: string;
@@ -79,8 +89,16 @@ export interface RecomputeResult {
 
 export async function recomputeTournamentScores(
   tournamentId: string,
+  store?: ScoringStore,
 ): Promise<RecomputeResult> {
-  const [tournament] = await db
+  if (!store)
+    return db.transaction(async (tx) => {
+      await tx.execute(
+        sql`select pg_advisory_xact_lock(hashtextextended(${"scoring:" + tournamentId},0))`,
+      );
+      return recomputeTournamentScores(tournamentId, tx);
+    });
+  const [tournament] = await store
     .select({ status: tournaments.status })
     .from(tournaments)
     .where(eq(tournaments.id, tournamentId))
@@ -89,14 +107,15 @@ export async function recomputeTournamentScores(
     throw new Error(`tournament ${tournamentId} not found`);
   }
 
-  const [rulesRow] = await db
+  const [rulesRow] = await store
     .select()
     .from(scoringRules)
     .where(eq(scoringRules.tournamentId, tournamentId))
+    .orderBy(desc(scoringRules.version))
     .limit(1);
   const rules: ScoringRulesValues = rulesRow ?? DEFAULT_SCORING_RULES;
 
-  const tournamentMatches = await db
+  const tournamentMatches = await store
     .select()
     .from(matches)
     .where(eq(matches.tournamentId, tournamentId));
@@ -104,15 +123,19 @@ export async function recomputeTournamentScores(
   const matchPredictionsScored = await recomputeMatchPredictions(
     tournamentMatches,
     rules,
+    store,
   );
   const groupResult = await recomputeGroupPredictions(
     tournamentId,
     tournamentMatches,
     rules.groupRankingPointsPerPosition,
+    parseRankingConfig(rulesRow?.rankingConfig),
+    store,
   );
   const bonusPredictionsScored = await recomputeBonusPredictions(
     tournamentId,
     tournament.status,
+    store,
   );
 
   return {
@@ -131,6 +154,7 @@ export async function recomputeTournamentScores(
 async function recomputeMatchPredictions(
   tournamentMatches: TournamentMatch[],
   rules: MatchScoringRules,
+  store: ScoringStore,
 ): Promise<number> {
   const finishedMatches = tournamentMatches.filter(
     (m) => m.status === "finished" && m.regularResult !== null,
@@ -138,7 +162,7 @@ async function recomputeMatchPredictions(
   if (finishedMatches.length === 0) return 0;
 
   const matchById = new Map(finishedMatches.map((m) => [m.id, m]));
-  const predictions = await db
+  const predictions = await store
     .select()
     .from(matchPredictions)
     .where(
@@ -160,7 +184,14 @@ async function recomputeMatchPredictions(
     );
     if (result === null) continue;
 
-    await db
+    if (
+      prediction.pointsEarned === result.points &&
+      prediction.outcome === result.outcome
+    ) {
+      scored += 1;
+      continue;
+    }
+    await store
       .update(matchPredictions)
       .set({ pointsEarned: result.points, outcome: result.outcome })
       .where(eq(matchPredictions.id, prediction.id));
@@ -179,6 +210,8 @@ async function recomputeGroupPredictions(
   tournamentId: string,
   tournamentMatches: TournamentMatch[],
   pointsPerPosition: number,
+  rankingConfig: RankingConfig,
+  store: ScoringStore,
 ): Promise<{ scored: number; finalized: boolean }> {
   const standingsInput: StandingsMatch[] = tournamentMatches.map((m) => ({
     status: m.status,
@@ -192,9 +225,16 @@ async function recomputeGroupPredictions(
     return { scored: 0, finalized: false };
   }
 
-  const actualByGroup = standingsByGroup(calculateGroupStandings(standingsInput));
+  const actualByGroup = standingsByGroup(
+    calculateGroupStandings(standingsInput),
+  );
+  if (actualByGroup.has("league"))
+    actualByGroup.set(
+      "league",
+      await getOfficialLeagueOrder(tournamentId, store),
+    );
 
-  const predictions = await db
+  const predictions = await store
     .select()
     .from(groupPredictions)
     .where(eq(groupPredictions.tournamentId, tournamentId));
@@ -206,8 +246,13 @@ async function recomputeGroupPredictions(
       actualOrder,
       prediction.predictedOrder,
       pointsPerPosition,
+      rankingConfig,
     );
-    await db
+    if (prediction.pointsEarned === points && prediction.finalized) {
+      scored += 1;
+      continue;
+    }
+    await store
       .update(groupPredictions)
       .set({ pointsEarned: points, finalized: true })
       .where(eq(groupPredictions.id, prediction.id));
@@ -226,8 +271,9 @@ async function recomputeGroupPredictions(
 async function recomputeBonusPredictions(
   tournamentId: string,
   tournamentStatus: "upcoming" | "active" | "finished",
+  store: ScoringStore,
 ): Promise<number> {
-  const categories = await db
+  const categories = await store
     .select()
     .from(bonusCategories)
     .where(eq(bonusCategories.tournamentId, tournamentId));
@@ -243,7 +289,7 @@ async function recomputeBonusPredictions(
       continue;
     }
 
-    const stats = await db
+    const stats = await store
       .select()
       .from(bonusStats)
       .where(eq(bonusStats.categoryId, category.id));
@@ -255,13 +301,13 @@ async function recomputeBonusPredictions(
       rank: s.rank,
     }));
 
-    const slots = await db
+    const slots = await store
       .select()
       .from(bonusSlots)
       .where(eq(bonusSlots.categoryId, category.id));
     const pointsBySlot = new Map(slots.map((s) => [s.id, s.points]));
 
-    const picks = await db
+    const picks = await store
       .select()
       .from(bonusPredictions)
       .where(eq(bonusPredictions.categoryId, category.id));
@@ -278,7 +324,11 @@ async function recomputeBonusPredictions(
       };
       const points = scoreBonusCategory([bonusPick], winners);
 
-      await db
+      if (pick.pointsEarned === points) {
+        scored += 1;
+        continue;
+      }
+      await store
         .update(bonusPredictions)
         .set({ pointsEarned: points })
         .where(eq(bonusPredictions.id, pick.id));

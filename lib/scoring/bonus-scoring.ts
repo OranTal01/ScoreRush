@@ -35,7 +35,8 @@ function isWinningPick(winner: BonusStatWinner, pick: BonusPick): boolean {
   if (winner.refId !== null && pick.pickRefId !== null) {
     return winner.refId === pick.pickRefId;
   }
-  return winner.label === pick.pickLabel;
+  const normalize = (label: string) => label.normalize("NFD").replace(/\p{Diacritic}/gu, "").trim().toLocaleLowerCase().replace(/\s+/g, " ");
+  return normalize(winner.label) === normalize(pick.pickLabel);
 }
 
 /**

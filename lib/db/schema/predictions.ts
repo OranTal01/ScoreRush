@@ -24,6 +24,7 @@ export const matchPredictions = pgTable(
     participantId: uuid("participant_id")
       .notNull()
       .references(() => participants.id, { onDelete: "cascade" }),
+    isDefault: boolean("is_default").notNull().default(false),
     predictedHome: integer("predicted_home").notNull(),
     predictedAway: integer("predicted_away").notNull(),
     submittedAt: timestamp("submitted_at", { withTimezone: true })

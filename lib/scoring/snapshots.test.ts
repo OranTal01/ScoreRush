@@ -25,6 +25,12 @@ function queuedWhere() {
 
 vi.mock("@/lib/db/client", () => ({
   db: {
+    transaction: async function <T>(
+      run: (tx: unknown) => Promise<T>,
+    ): Promise<T> {
+      return run(this);
+    },
+    execute: vi.fn(async () => undefined),
     select: vi.fn(() => ({ from: () => ({ where: queuedWhere }) })),
     insert: vi.fn((table: unknown) => ({
       values: (values: unknown) => {
@@ -53,7 +59,11 @@ describe("captureLeaderboardSnapshot", () => {
 
     const result = await captureLeaderboardSnapshot(T1);
 
-    expect(result).toEqual({ tournamentId: T1, captured: false, participantsCount: 0 });
+    expect(result).toEqual({
+      tournamentId: T1,
+      captured: false,
+      participantsCount: 0,
+    });
     expect(insertCalls).toHaveLength(0);
   });
 
@@ -74,7 +84,11 @@ describe("captureLeaderboardSnapshot", () => {
 
     const result = await captureLeaderboardSnapshot(T1);
 
-    expect(result).toEqual({ tournamentId: T1, captured: true, participantsCount: 2 });
+    expect(result).toEqual({
+      tournamentId: T1,
+      captured: true,
+      participantsCount: 2,
+    });
     expect(insertCalls).toHaveLength(1);
     expect(insertCalls[0].table).toBe(leaderboardSnapshots);
     // P1: 9+6+0=15, P2: 3+0+20=23 -> P2 ranks 1st, P1 ranks 2nd.
@@ -109,7 +123,11 @@ describe("captureLeaderboardSnapshot", () => {
 
     const result = await captureLeaderboardSnapshot(T1);
 
-    expect(result).toEqual({ tournamentId: T1, captured: true, participantsCount: 1 });
+    expect(result).toEqual({
+      tournamentId: T1,
+      captured: true,
+      participantsCount: 1,
+    });
     expect(insertCalls[0].values).toEqual([
       {
         tournamentId: T1,
@@ -160,7 +178,11 @@ describe("captureLeaderboardSnapshot", () => {
 
     const result = await captureLeaderboardSnapshot(T1);
 
-    expect(result).toEqual({ tournamentId: T1, captured: false, participantsCount: 2 });
+    expect(result).toEqual({
+      tournamentId: T1,
+      captured: false,
+      participantsCount: 2,
+    });
     expect(insertCalls).toHaveLength(0);
   });
 
@@ -198,7 +220,11 @@ describe("captureLeaderboardSnapshot", () => {
 
     const result = await captureLeaderboardSnapshot(T1);
 
-    expect(result).toEqual({ tournamentId: T1, captured: true, participantsCount: 1 });
+    expect(result).toEqual({
+      tournamentId: T1,
+      captured: true,
+      participantsCount: 1,
+    });
     expect(insertCalls).toHaveLength(1);
     expect(insertCalls[0].values).toEqual([
       {

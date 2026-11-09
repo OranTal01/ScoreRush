@@ -11,10 +11,36 @@
  * a participant-scoped request.
  */
 import "server-only";
-import { and, eq } from "drizzle-orm";
+import { and, eq, lte, sql } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { matches, teams } from "@/lib/db/schema/competition";
 import type { CanonicalMatch, CanonicalTeamRef } from "@/lib/providers/types";
+
+type StoredMatch = typeof matches.$inferSelect;
+export type UpsertContext = {
+  teamIds: Map<string, string>;
+  teamGroups: Map<string, string | null>;
+  matchesByProvider: Map<string, StoredMatch>;
+};
+const teamKey = (ref: CanonicalTeamRef) =>
+  ref.providerId ? `provider:${ref.providerId}` : `name:${ref.name}`;
+export async function loadUpsertContext(
+  tournamentId: string,
+): Promise<UpsertContext> {
+  const [roster, fixtures] = await Promise.all([
+    db.select().from(teams).where(eq(teams.tournamentId, tournamentId)),
+    db.select().from(matches).where(eq(matches.tournamentId, tournamentId)),
+  ]);
+  return {
+    teamIds: new Map(roster.map((team) => [teamKey(team), team.id])),
+    teamGroups: new Map(roster.map((team) => [team.id, team.group])),
+    matchesByProvider: new Map(
+      fixtures
+        .filter((match) => match.providerId)
+        .map((match) => [match.providerId!, match]),
+    ),
+  };
+}
 
 export interface UpsertOutcome {
   matchId: string;
@@ -33,7 +59,10 @@ export interface UpsertOutcome {
 async function resolveTeamId(
   tournamentId: string,
   ref: CanonicalTeamRef,
+  context?: UpsertContext,
 ): Promise<string> {
+  const cached = context?.teamIds.get(teamKey(ref));
+  if (cached) return cached;
   const existing = ref.providerId
     ? await db
         .select({ id: teams.id })
@@ -53,7 +82,10 @@ async function resolveTeamId(
         )
         .limit(1);
 
-  if (existing[0]) return existing[0].id;
+  if (existing[0]) {
+    context?.teamIds.set(teamKey(ref), existing[0].id);
+    return existing[0].id;
+  }
 
   const [created] = await db
     .insert(teams)
@@ -65,6 +97,7 @@ async function resolveTeamId(
     })
     .returning({ id: teams.id });
 
+  context?.teamIds.set(teamKey(ref), created.id);
   return created.id;
 }
 
@@ -107,18 +140,41 @@ async function findExistingMatch(
 export async function upsertCanonicalMatch(
   tournamentId: string,
   canonical: CanonicalMatch,
+  context?: UpsertContext,
+  fetchedAt = new Date(),
 ): Promise<UpsertOutcome> {
   const warnings: string[] = [];
-  const homeTeamId = await resolveTeamId(tournamentId, canonical.homeTeam);
-  const awayTeamId = await resolveTeamId(tournamentId, canonical.awayTeam);
-  const kickoff = new Date(canonical.kickoff);
-
-  const existing = await findExistingMatch(
+  const homeTeamId = await resolveTeamId(
     tournamentId,
-    canonical,
-    homeTeamId,
-    awayTeamId,
+    canonical.homeTeam,
+    context,
   );
+  const awayTeamId = await resolveTeamId(
+    tournamentId,
+    canonical.awayTeam,
+    context,
+  );
+  const kickoff = new Date(canonical.kickoff);
+  if (canonical.group !== null) {
+    for (const teamId of [homeTeamId, awayTeamId]) {
+      if (context?.teamGroups.get(teamId) === canonical.group) continue;
+      context?.teamGroups.set(teamId, canonical.group);
+      await db
+        .update(teams)
+        .set({ group: canonical.group })
+        .where(eq(teams.id, teamId));
+    }
+  }
+
+  const existing =
+    context && canonical.providerId
+      ? (context.matchesByProvider.get(canonical.providerId) ?? null)
+      : await findExistingMatch(
+          tournamentId,
+          canonical,
+          homeTeamId,
+          awayTeamId,
+        );
 
   const sharedFields = {
     stage: canonical.stage,
@@ -132,9 +188,10 @@ export async function upsertCanonicalMatch(
     extraTimeResult: canonical.result.extraTimeResult,
     penaltyResult: canonical.result.penaltyResult,
     liveScore: canonical.result.liveScore,
+    liveDetails: canonical.liveDetails ?? null,
     winner: canonical.result.winner,
     rawProviderPayload: canonical.rawProviderPayload,
-    lastSyncedAt: new Date(),
+    lastSyncedAt: fetchedAt,
     normalizationStatus: (canonical.warning ? "flagged" : "normalized") as
       "flagged" | "normalized",
     warningFlag: canonical.warning?.message ?? null,
@@ -146,10 +203,8 @@ export async function upsertCanonicalMatch(
       .values({
         tournamentId,
         providerId: canonical.providerId,
-        // MVP default: predictions lock exactly at kickoff. Phase 7 will
-        // make lock-time policy admin-configurable per tournament; until
-        // then this is the only sane default (UX-BLUEPRINT.md §12).
-        lockTime: kickoff,
+        // League rules: predictions close five minutes before kickoff.
+        lockTime: new Date(kickoff.getTime() - 5 * 60_000),
         ...sharedFields,
       })
       .returning({ id: matches.id });
@@ -160,10 +215,15 @@ export async function upsertCanonicalMatch(
   // equals the previously-stored kickoff, no one has customized it, so it's
   // safe to keep tracking a rescheduled kickoff; otherwise leave it and
   // surface a warning so a human notices the mismatch.
-  let lockTime = existing.lockTime;
+  // The database deadline trigger follows the latest tournament setting.
+  // Do not write a deadline from this cached context: an admin may have
+  // changed it while this provider sync was in flight.
   if (existing.kickoff.getTime() !== kickoff.getTime()) {
-    if (existing.lockTime.getTime() === existing.kickoff.getTime()) {
-      lockTime = kickoff;
+    if (
+      existing.lockTime.getTime() === existing.kickoff.getTime() ||
+      existing.lockTime.getTime() === existing.kickoff.getTime() - 5 * 60_000
+    ) {
+      // Automatic deadline adjustment is handled by the database trigger.
     } else {
       warnings.push(
         `match ${existing.id}: kickoff changed (${existing.kickoff.toISOString()} -> ${kickoff.toISOString()}) but lock_time was left as admin-configured (${existing.lockTime.toISOString()})`,
@@ -173,8 +233,16 @@ export async function upsertCanonicalMatch(
 
   await db
     .update(matches)
-    .set({ ...sharedFields, lockTime })
-    .where(eq(matches.id, existing.id));
+    .set(sharedFields)
+    .where(
+      and(
+        eq(matches.id, existing.id),
+        sql`(${matches.lastSyncedAt} is null or ${lte(matches.lastSyncedAt, fetchedAt)})`,
+        canonical.liveDetails?.sourceUpdatedAt
+          ? sql`(${matches.liveDetails}->>'sourceUpdatedAt' is null or (${matches.liveDetails}->>'sourceUpdatedAt')::timestamptz <= ${canonical.liveDetails.sourceUpdatedAt}::timestamptz)`
+          : undefined,
+      ),
+    );
 
   return { matchId: existing.id, created: false, warnings };
 }

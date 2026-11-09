@@ -1,0 +1,4725 @@
+{
+  "teams": [
+    {
+      "providerId": "57",
+      "en": "Arsenal FC",
+      "he": "ארסנל",
+      "aliases": ["Arsenal"]
+    },
+    {
+      "providerId": "100",
+      "en": "AS Roma",
+      "he": "רומא",
+      "aliases": ["Roma"]
+    },
+    {
+      "providerId": "58",
+      "en": "Aston Villa FC",
+      "he": "אסטון וילה",
+      "aliases": ["Aston Villa"]
+    },
+    {
+      "providerId": "4",
+      "en": "Borussia Dortmund",
+      "he": "בורוסיה דורטמונד",
+      "aliases": ["Dortmund"]
+    },
+    {
+      "providerId": "78",
+      "en": "Club Atlético de Madrid",
+      "he": "אתלטיקו מדריד",
+      "aliases": ["Atleti", "Atlético de Madrid", "Atletico Madrid"]
+    },
+    {
+      "providerId": "851",
+      "en": "Club Brugge KV",
+      "he": "קלאב ברוז׳",
+      "aliases": ["Club Brugge"]
+    },
+    {
+      "providerId": "7397",
+      "en": "Como 1907",
+      "he": "קומו",
+      "aliases": ["Como 1907", "Como"]
+    },
+    {
+      "providerId": "81",
+      "en": "FC Barcelona",
+      "he": "ברצלונה",
+      "aliases": ["Barça", "Barcelona"]
+    },
+    {
+      "providerId": "5",
+      "en": "FC Bayern München",
+      "he": "באיירן מינכן",
+      "aliases": ["Bayern", "Bayern München", "Bayern Munich"]
+    },
+    {
+      "providerId": "108",
+      "en": "FC Internazionale Milano",
+      "he": "אינטר",
+      "aliases": ["Inter", "Internazionale"]
+    },
+    {
+      "providerId": "503",
+      "en": "FC Porto",
+      "he": "פורטו",
+      "aliases": ["Porto"]
+    },
+    {
+      "providerId": "613",
+      "en": "Fenerbahçe SK",
+      "he": "פנרבחצ׳ה",
+      "aliases": ["Fenerbahçe"]
+    },
+    {
+      "providerId": "675",
+      "en": "Feyenoord Rotterdam",
+      "he": "פיינורד",
+      "aliases": ["Feyenoord"]
+    },
+    {
+      "providerId": "5721",
+      "en": "FK Bodø/Glimt",
+      "he": "בודו גלימט",
+      "aliases": ["Bodø/Glimt"]
+    },
+    {
+      "providerId": "1887",
+      "en": "FK Shakhtar Donetsk",
+      "he": "שחטאר דונייצק",
+      "aliases": ["Shaktar"]
+    },
+    {
+      "providerId": "610",
+      "en": "Galatasaray SK",
+      "he": "גלאטסראיי",
+      "aliases": ["Galatasaray"]
+    },
+    {
+      "providerId": "2016",
+      "en": "LASK Linz",
+      "he": "לאסק לינץ",
+      "aliases": ["LASK"]
+    },
+    {
+      "providerId": "521",
+      "en": "Lille OSC",
+      "he": "ליל",
+      "aliases": ["Lille"]
+    },
+    {
+      "providerId": "64",
+      "en": "Liverpool FC",
+      "he": "ליברפול",
+      "aliases": ["Liverpool"]
+    },
+    {
+      "providerId": "65",
+      "en": "Manchester City FC",
+      "he": "מנצ׳סטר סיטי",
+      "aliases": ["Man City"]
+    },
+    {
+      "providerId": "66",
+      "en": "Manchester United FC",
+      "he": "מנצ׳סטר יונייטד",
+      "aliases": ["Man United"]
+    },
+    {
+      "providerId": "1899",
+      "en": "PAE AEK",
+      "he": "א.א.ק. אתונה",
+      "aliases": ["PAE AEK", "AEK Athens", "AEK"]
+    },
+    {
+      "providerId": "524",
+      "en": "Paris Saint-Germain FC",
+      "he": "פריז סן־ז׳רמן",
+      "aliases": ["PSG", "Paris Saint-Germain", "Paris"]
+    },
+    {
+      "providerId": "674",
+      "en": "PSV",
+      "he": "פ.ס.וו. איינדהובן",
+      "aliases": ["PSV", "PSV Eindhoven"]
+    },
+    {
+      "providerId": "546",
+      "en": "Racing Club de Lens",
+      "he": "לאנס",
+      "aliases": ["RC Lens", "Lens"]
+    },
+    {
+      "providerId": "721",
+      "en": "RB Leipzig",
+      "he": "ר.ב. לייפציג",
+      "aliases": ["RB Leipzig", "Leipzig"]
+    },
+    {
+      "providerId": "90",
+      "en": "Real Betis Balompié",
+      "he": "ריאל בטיס",
+      "aliases": ["Real Betis"]
+    },
+    {
+      "providerId": "86",
+      "en": "Real Madrid CF",
+      "he": "ריאל מדריד",
+      "aliases": ["Real Madrid"]
+    },
+    {
+      "providerId": "10233",
+      "en": "Sabah FK",
+      "he": "סבאח",
+      "aliases": ["Sabah FK"]
+    },
+    {
+      "providerId": "930",
+      "en": "SK Slavia Praha",
+      "he": "סלביה פראג",
+      "aliases": ["Slavia Praha"]
+    },
+    {
+      "providerId": "7509",
+      "en": "ŠK Slovan Bratislava",
+      "he": "סלובן ברטיסלבה",
+      "aliases": ["Sl. Bratislava", "Slovan Bratislava"]
+    },
+    {
+      "providerId": "498",
+      "en": "Sporting Clube de Portugal",
+      "he": "ספורטינג ליסבון",
+      "aliases": ["Sporting CP", "Sporting"]
+    },
+    {
+      "providerId": "113",
+      "en": "SSC Napoli",
+      "he": "נאפולי",
+      "aliases": ["Napoli"]
+    },
+    {
+      "providerId": "10",
+      "en": "VfB Stuttgart",
+      "he": "שטוטגרט",
+      "aliases": ["Stuttgart"]
+    },
+    {
+      "providerId": "5720",
+      "en": "Viking FK",
+      "he": "ויקינג",
+      "aliases": ["Viking"]
+    },
+    {
+      "providerId": "94",
+      "en": "Villarreal CF",
+      "he": "ויאריאל",
+      "aliases": ["Villarreal"]
+    }
+  ],
+  "players": [
+    {
+      "providerId": "8158",
+      "en": "Aaron Wan-Bissaka",
+      "he": "ארון ואן־ביסאקה"
+    },
+    {
+      "providerId": "151264",
+      "en": "Abdallah Sima",
+      "he": "עבדאללה סימה"
+    },
+    {
+      "providerId": "175941",
+      "en": "Abdessamad Ezzalzouli",
+      "he": "עבדסמאד אזלזולי"
+    },
+    {
+      "providerId": "251244",
+      "en": "Abdoul Koné",
+      "he": "עבדול קונה"
+    },
+    {
+      "providerId": "212868",
+      "en": "Abdukodir Khusanov",
+      "he": "עבדוקודיר חוסאנוב"
+    },
+    {
+      "providerId": "29804",
+      "en": "Abdülkerim Bardakcı",
+      "he": "עבדולקרים ברדקצ׳י"
+    },
+    {
+      "providerId": "8916",
+      "en": "Aboubakary Koita",
+      "he": "אבובקארי קויטה"
+    },
+    {
+      "providerId": "53",
+      "en": "Achraf Hakimi",
+      "he": "אשרף חכימי"
+    },
+    {
+      "providerId": "290541",
+      "en": "Ada Yüzgeç",
+      "he": "אדה יוזגץ׳"
+    },
+    {
+      "providerId": "165162",
+      "en": "Adamo Nagalo",
+      "he": "אדאמו נאגאלו"
+    },
+    {
+      "providerId": "296533",
+      "en": "Adem Yeşilyurt",
+      "he": "אדם ישיליורט"
+    },
+    {
+      "providerId": "9554",
+      "en": "Ademola Lookman",
+      "he": "אדמולה לוקמן"
+    },
+    {
+      "providerId": "250600",
+      "en": "Adrian Lahdo",
+      "he": "אדריאן לאהדו"
+    },
+    {
+      "providerId": "33045",
+      "en": "Aitor Ruibal",
+      "he": "אייטור רויבאל"
+    },
+    {
+      "providerId": "245564",
+      "en": "Alaa Ghram",
+      "he": "עלאא גראם"
+    },
+    {
+      "providerId": "191042",
+      "en": "Alan Matturro",
+      "he": "אלן מטורו"
+    },
+    {
+      "providerId": "153629",
+      "en": "Alan Varela",
+      "he": "אלן וארלה"
+    },
+    {
+      "providerId": "273016",
+      "en": "Alassane Diatta",
+      "he": "אלאסן דיאטה"
+    },
+    {
+      "providerId": "8443",
+      "en": "Alassane Pléa",
+      "he": "אלאסן פלאה"
+    },
+    {
+      "providerId": "184496",
+      "en": "Alberto Baio",
+      "he": "אלברטו באיו"
+    },
+    {
+      "providerId": "2306",
+      "en": "Alberto Brignoli",
+      "he": "אלברטו בריניולי"
+    },
+    {
+      "providerId": "40265",
+      "en": "Alberto Dossena",
+      "he": "אלברטו דוסנה"
+    },
+    {
+      "providerId": "150533",
+      "en": "Alberto Moleiro",
+      "he": "אלברטו מוליירו"
+    },
+    {
+      "providerId": "144576",
+      "en": "Alejandro Baena",
+      "he": "אלכס באאנה"
+    },
+    {
+      "providerId": "181901",
+      "en": "Alejandro Garnacho",
+      "he": "אלחנדרו גרנאצ׳ו"
+    },
+    {
+      "providerId": "16739",
+      "en": "Alejandro Grimaldo",
+      "he": "אלחנדרו גרימאלדו"
+    },
+    {
+      "providerId": "202665",
+      "en": "Aleksandar Pavlović",
+      "he": "אלכסנדר פבלוביץ׳"
+    },
+    {
+      "providerId": "188920",
+      "en": "Aleksandar Stankovic",
+      "he": "אלכסנדר סטנקוביץ׳"
+    },
+    {
+      "providerId": "205981",
+      "en": "Aleksey Batrakov",
+      "he": "אלכסיי בטראקוב"
+    },
+    {
+      "providerId": "192269",
+      "en": "Alemao",
+      "he": "אלמאו"
+    },
+    {
+      "providerId": "1834",
+      "en": "Alessandro Bastoni",
+      "he": "אלסנדרו באסטוני"
+    },
+    {
+      "providerId": "2280",
+      "en": "Alessandro Buongiorno",
+      "he": "אלסנדרו בונג׳ורנו"
+    },
+    {
+      "providerId": "6501",
+      "en": "Alessandro Schöpf",
+      "he": "אלסנדרו שופף"
+    },
+    {
+      "providerId": "172761",
+      "en": "Álex Balde",
+      "he": "אלכס באלדה"
+    },
+    {
+      "providerId": "177823",
+      "en": "Alex Freeman",
+      "he": "אלכס פרימן"
+    },
+    {
+      "providerId": "2344",
+      "en": "Alex Meret",
+      "he": "אלכס מרט"
+    },
+    {
+      "providerId": "189493",
+      "en": "Alex Valle",
+      "he": "אלכס ואייה"
+    },
+    {
+      "providerId": "6486",
+      "en": "Alexander Isak",
+      "he": "אלכסנדר איסאק"
+    },
+    {
+      "providerId": "9389",
+      "en": "Alexander Meyer",
+      "he": "אלכסנדר מאייר"
+    },
+    {
+      "providerId": "8167",
+      "en": "Alexander Sørloth",
+      "he": "אלכסנדר סורלות׳"
+    },
+    {
+      "providerId": "45681",
+      "en": "Alexis Mac Allister",
+      "he": "אלכסיס מק אליסטר"
+    },
+    {
+      "providerId": "185196",
+      "en": "Alexsandro Ribeiro",
+      "he": "אלכסנדרו ריביירו"
+    },
+    {
+      "providerId": "1795",
+      "en": "Alisson Becker",
+      "he": "אליסון בקר"
+    },
+    {
+      "providerId": "203300",
+      "en": "Alisson Santana",
+      "he": "אליסון סנטנה"
+    },
+    {
+      "providerId": "220542",
+      "en": "Alisson Santos",
+      "he": "אליסון סנטוס"
+    },
+    {
+      "providerId": "274216",
+      "en": "Allan",
+      "he": "אלן"
+    },
+    {
+      "providerId": "21288",
+      "en": "Alphonso Davies",
+      "he": "אלפונסו דייויס"
+    },
+    {
+      "providerId": "182020",
+      "en": "Álvaro Carreras",
+      "he": "אלבארו קארראס"
+    },
+    {
+      "providerId": "99992",
+      "en": "Álvaro Fidalgo",
+      "he": "אלבארו פידאלגו"
+    },
+    {
+      "providerId": "100130",
+      "en": "Álvaro Vallés Rosa",
+      "he": "אלבארו ואייס רוסה"
+    },
+    {
+      "providerId": "260718",
+      "en": "Alysson",
+      "he": "אליסון"
+    },
+    {
+      "providerId": "133584",
+      "en": "Amad Diallo",
+      "he": "אמאד דיאלו"
+    },
+    {
+      "providerId": "15704",
+      "en": "Amadou Haïdara",
+      "he": "אמאדו היידארה"
+    },
+    {
+      "providerId": "114024",
+      "en": "Amadou Onana",
+      "he": "אמאדו אונאנה"
+    },
+    {
+      "providerId": "296535",
+      "en": "Amara Diouf",
+      "he": "אמארה דיוף"
+    },
+    {
+      "providerId": "170857",
+      "en": "Ameen Al Dakhil",
+      "he": "אמין אל דחיל"
+    },
+    {
+      "providerId": "289046",
+      "en": "Amir Bouhamdi",
+      "he": "אמיר בוחמדי"
+    },
+    {
+      "providerId": "23127",
+      "en": "Amir Rrahmani",
+      "he": "אמיר רחמאני"
+    },
+    {
+      "providerId": "137693",
+      "en": "Anass Salah-Eddine",
+      "he": "אנאס סלאח־אדין"
+    },
+    {
+      "providerId": "43285",
+      "en": "Anastasios Douvikas",
+      "he": "אנסטסיוס דוביקאס"
+    },
+    {
+      "providerId": "1760",
+      "en": "André Silva",
+      "he": "אנדרה סילבה"
+    },
+    {
+      "providerId": "8354",
+      "en": "André Zambo Anguissa",
+      "he": "אנדרה זמבו אנגיסה"
+    },
+    {
+      "providerId": "3455",
+      "en": "Andreas Christensen",
+      "he": "אנדראס כריסטנסן"
+    },
+    {
+      "providerId": "37902",
+      "en": "Andreas Helmersen",
+      "he": "אנדראס הלמרסן"
+    },
+    {
+      "providerId": "272459",
+      "en": "Andrej Vasovic",
+      "he": "אנדריי ואסוביץ׳"
+    },
+    {
+      "providerId": "76711",
+      "en": "Andrés Andrade",
+      "he": "אנדרס אנדרדה"
+    },
+    {
+      "providerId": "166366",
+      "en": "Andrey Santos",
+      "he": "אנדריי סנטוס"
+    },
+    {
+      "providerId": "268900",
+      "en": "Andrija Bulatović",
+      "he": "אנדריה בולאטוביץ׳"
+    },
+    {
+      "providerId": "227045",
+      "en": "Andrija Maksimović",
+      "he": "אנדריה מקסימוביץ׳"
+    },
+    {
+      "providerId": "28995",
+      "en": "Andriy Lunin",
+      "he": "אנדריי לונין"
+    },
+    {
+      "providerId": "168656",
+      "en": "Andy Diouf",
+      "he": "אנדי דיוף"
+    },
+    {
+      "providerId": "152738",
+      "en": "Ange-Yoan Bonny",
+      "he": "אנז׳־יואן בוני"
+    },
+    {
+      "providerId": "272694",
+      "en": "Ángel Ortiz",
+      "he": "אנחל אורטיס"
+    },
+    {
+      "providerId": "128565",
+      "en": "Angelo Stiller",
+      "he": "אנג׳לו שטילר"
+    },
+    {
+      "providerId": "244466",
+      "en": "Anis Moussa",
+      "he": "אניס מוסא"
+    },
+    {
+      "providerId": "7848",
+      "en": "Anthony Gordon",
+      "he": "אנתוני גורדון"
+    },
+    {
+      "providerId": "4417",
+      "en": "Antoine Semenyo",
+      "he": "אנטואן סמניו"
+    },
+    {
+      "providerId": "169295",
+      "en": "Antonio Nusa",
+      "he": "אנטוניו נוסה"
+    },
+    {
+      "providerId": "3177",
+      "en": "Antonio Rüdiger",
+      "he": "אנטוניו רודיגר"
+    },
+    {
+      "providerId": "176944",
+      "en": "Antonio Vergara",
+      "he": "אנטוניו ורגארה"
+    },
+    {
+      "providerId": "97085",
+      "en": "Antony",
+      "he": "אנטוני"
+    },
+    {
+      "providerId": "176219",
+      "en": "Archie Brown",
+      "he": "ארצ׳י בראון"
+    },
+    {
+      "providerId": "169162",
+      "en": "Arda Guler",
+      "he": "ארדה גולר"
+    },
+    {
+      "providerId": "191211",
+      "en": "Arda Unyay",
+      "he": "ארדה אוניאי"
+    },
+    {
+      "providerId": "289951",
+      "en": "Arda Yılmaz",
+      "he": "ארדה ילמאז"
+    },
+    {
+      "providerId": "213455",
+      "en": "Argus Vanden Driessche",
+      "he": "ארגוס ואנדן דרישה"
+    },
+    {
+      "providerId": "184241",
+      "en": "Arild Östbö",
+      "he": "ארילד אוסטבו"
+    },
+    {
+      "providerId": "7443",
+      "en": "Armando Obispo",
+      "he": "ארמנדו אוביספו"
+    },
+    {
+      "providerId": "172828",
+      "en": "Arnau Ortiz",
+      "he": "ארנאו אורטיס"
+    },
+    {
+      "providerId": "9222",
+      "en": "Arnaud Bodart",
+      "he": "ארנו בודאר"
+    },
+    {
+      "providerId": "272834",
+      "en": "Art Smakaj",
+      "he": "ארט סמאקאי"
+    },
+    {
+      "providerId": "184146",
+      "en": "Arthur Vermeeren",
+      "he": "ארתור ורמירן"
+    },
+    {
+      "providerId": "212636",
+      "en": "Assan Ouédraogo",
+      "he": "אסאן אואדראוגו"
+    },
+    {
+      "providerId": "218474",
+      "en": "Assane Diao",
+      "he": "אסאן דיאו"
+    },
+    {
+      "providerId": "7079",
+      "en": "Atakan Karazor",
+      "he": "אטאקאן קראזור"
+    },
+    {
+      "providerId": "8514",
+      "en": "Aurélien Tchouameni",
+      "he": "אורליאן טשואמני"
+    },
+    {
+      "providerId": "213524",
+      "en": "Axl De Corte",
+      "he": "אקסל דה קורטה"
+    },
+    {
+      "providerId": "119460",
+      "en": "Ayase Ueda",
+      "he": "איאסה אואדה"
+    },
+    {
+      "providerId": "247644",
+      "en": "Ayden Heaven",
+      "he": "איידן האבן"
+    },
+    {
+      "providerId": "7936",
+      "en": "Ayoze Pérez",
+      "he": "איוסה פרס"
+    },
+    {
+      "providerId": "221819",
+      "en": "Ayyoub Bouaddi",
+      "he": "איוב בואדי"
+    },
+    {
+      "providerId": "185007",
+      "en": "Badredine Bouanani",
+      "he": "בדרדין בואנאני"
+    },
+    {
+      "providerId": "290450",
+      "en": "Bara Ndiaye",
+      "he": "בארה נדיאיי"
+    },
+    {
+      "providerId": "172081",
+      "en": "Baris Yilmaz",
+      "he": "באריש ילמאז"
+    },
+    {
+      "providerId": "10694",
+      "en": "Barnabás Varga",
+      "he": "ברנבאש ורגה"
+    },
+    {
+      "providerId": "7471",
+      "en": "Bart Nieuwkoop",
+      "he": "בארט ניוקופ"
+    },
+    {
+      "providerId": "33038",
+      "en": "Bartra",
+      "he": "מארק בארטרה"
+    },
+    {
+      "providerId": "157127",
+      "en": "Bartuğ Elmaz",
+      "he": "בארטו אלמאז"
+    },
+    {
+      "providerId": "178127",
+      "en": "Basar Onal",
+      "he": "בשאר אונאל"
+    },
+    {
+      "providerId": "6154",
+      "en": "Ben White",
+      "he": "בן ווייט"
+    },
+    {
+      "providerId": "8811",
+      "en": "Benjamin André",
+      "he": "בנז׳מן אנדרה"
+    },
+    {
+      "providerId": "156",
+      "en": "Benjamin Henrichs",
+      "he": "בנימין הנריכס"
+    },
+    {
+      "providerId": "3364",
+      "en": "Benjamin Pavard",
+      "he": "בנז׳מן פבאר"
+    },
+    {
+      "providerId": "124244",
+      "en": "Benjamin Šeško",
+      "he": "בנימין ששקו"
+    },
+    {
+      "providerId": "289807",
+      "en": "Benno Kaltefleiter",
+      "he": "בנו קלטפלייטר"
+    },
+    {
+      "providerId": "170426",
+      "en": "Benoît Badiashile",
+      "he": "בנואה בדיאשיל"
+    },
+    {
+      "providerId": "270658",
+      "en": "Berat Luş",
+      "he": "בראט לוש"
+    },
+    {
+      "providerId": "29890",
+      "en": "Berke Özer",
+      "he": "ברקה אוזר"
+    },
+    {
+      "providerId": "3254",
+      "en": "Bernardo Silva",
+      "he": "ברנרדו סילבה"
+    },
+    {
+      "providerId": "189873",
+      "en": "Bilal El Khannouss",
+      "he": "בילאל אל חנוס"
+    },
+    {
+      "providerId": "126289",
+      "en": "Billy Gilmour",
+      "he": "בילי גילמור"
+    },
+    {
+      "providerId": "127034",
+      "en": "Borja Sainz",
+      "he": "בורחה סאינס"
+    },
+    {
+      "providerId": "8346",
+      "en": "Boubacar Kamara",
+      "he": "בובקאר קמארה"
+    },
+    {
+      "providerId": "172762",
+      "en": "Bradley Barcola",
+      "he": "בראדלי ברקולה"
+    },
+    {
+      "providerId": "7887",
+      "en": "Brahim Diaz",
+      "he": "ברהים דיאס"
+    },
+    {
+      "providerId": "191102",
+      "en": "Brajan Gruda",
+      "he": "בראיאן גרודה"
+    },
+    {
+      "providerId": "8873",
+      "en": "Brandon Mechele",
+      "he": "ברנדון מכלה"
+    },
+    {
+      "providerId": "298638",
+      "en": "Brian Fariñas",
+      "he": "בריאן פאריניאס"
+    },
+    {
+      "providerId": "280446",
+      "en": "Brian Madjo",
+      "he": "בריאן מאדג׳ו"
+    },
+    {
+      "providerId": "3257",
+      "en": "Bruno Fernandes",
+      "he": "ברונו פרננדש"
+    },
+    {
+      "providerId": "1684",
+      "en": "Bruno Guimarães",
+      "he": "ברונו גימראייש"
+    },
+    {
+      "providerId": "290568",
+      "en": "Bruno Ramos",
+      "he": "ברונו ראמוס"
+    },
+    {
+      "providerId": "1844",
+      "en": "Bryan Cristante",
+      "he": "בריאן כריסטאנטה"
+    },
+    {
+      "providerId": "8626",
+      "en": "Bryan Mbeumo",
+      "he": "בריאן אמבמו"
+    },
+    {
+      "providerId": "99813",
+      "en": "Bukayo Saka",
+      "he": "בוקאיו סאקה"
+    },
+    {
+      "providerId": "9475",
+      "en": "Çağlar Söyüncü",
+      "he": "צ׳אלאר סויונג׳ו"
+    },
+    {
+      "providerId": "9861",
+      "en": "Calvin Verdonk",
+      "he": "קלווין ורדונק"
+    },
+    {
+      "providerId": "289922",
+      "en": "Can Güner",
+      "he": "ג׳אן גונר"
+    },
+    {
+      "providerId": "11224",
+      "en": "Carlos",
+      "he": "קרלוס"
+    },
+    {
+      "providerId": "178604",
+      "en": "Carlos Baleba",
+      "he": "קרלוס באלבה"
+    },
+    {
+      "providerId": "247061",
+      "en": "Carlos Espí",
+      "he": "קרלוס אספי"
+    },
+    {
+      "providerId": "214423",
+      "en": "Carlos Forbs",
+      "he": "קרלוס פורבש"
+    },
+    {
+      "providerId": "289770",
+      "en": "Carlos Macià",
+      "he": "קרלוס מאסיה"
+    },
+    {
+      "providerId": "175937",
+      "en": "Carlos Martin",
+      "he": "קרלוס מרטין"
+    },
+    {
+      "providerId": "186564",
+      "en": "Carlos Romero",
+      "he": "קרלוס רומרו"
+    },
+    {
+      "providerId": "167570",
+      "en": "Carney Chukwuemeka",
+      "he": "קרני צ׳וקוואמקה"
+    },
+    {
+      "providerId": "171405",
+      "en": "Castello Lukeba",
+      "he": "קסטלו לוקבה"
+    },
+    {
+      "providerId": "16990",
+      "en": "Charles Vanhoutte",
+      "he": "שארל ואנהוטה"
+    },
+    {
+      "providerId": "287881",
+      "en": "Cheikne Kébé",
+      "he": "שייקנה קבה"
+    },
+    {
+      "providerId": "247249",
+      "en": "Cheveyo Tsawa",
+      "he": "צ׳ביו צאווה"
+    },
+    {
+      "providerId": "153555",
+      "en": "Chimuanya Ugochukwu",
+      "he": "צ׳ימואניה אוגוצ׳וקוו"
+    },
+    {
+      "providerId": "206",
+      "en": "Chris Führich",
+      "he": "כריס פיריך"
+    },
+    {
+      "providerId": "45735",
+      "en": "Christian Romero",
+      "he": "כריסטיאן רומרו"
+    },
+    {
+      "providerId": "56829",
+      "en": "Christoph Baumgartner",
+      "he": "כריסטוף באומגרטנר"
+    },
+    {
+      "providerId": "160928",
+      "en": "Christoph Lang",
+      "he": "כריסטוף לאנג"
+    },
+    {
+      "providerId": "8484",
+      "en": "Christopher Nkunku",
+      "he": "כריסטופר אנקונקו"
+    },
+    {
+      "providerId": "273853",
+      "en": "Christos Alexiou",
+      "he": "כריסטוס אלקסיו"
+    },
+    {
+      "providerId": "144434",
+      "en": "Christos Tzolis",
+      "he": "כריסטוס צוליס"
+    },
+    {
+      "providerId": "45217",
+      "en": "Cláudio Ramos",
+      "he": "קלאודיו ראמוס"
+    },
+    {
+      "providerId": "7459",
+      "en": "Cody Gakpo",
+      "he": "קודי גאקפו"
+    },
+    {
+      "providerId": "175865",
+      "en": "Conor Bradley",
+      "he": "קונור בראדלי"
+    },
+    {
+      "providerId": "188308",
+      "en": "Costantino Favasuli",
+      "he": "קוסטנטינו פבאסולי"
+    },
+    {
+      "providerId": "172839",
+      "en": "Cristhian Mosquera",
+      "he": "כריסטיאן מוסקרה"
+    },
+    {
+      "providerId": "32415",
+      "en": "Cucho Hernández",
+      "he": "קוצ׳ו הרננדס"
+    },
+    {
+      "providerId": "15863",
+      "en": "Cucurella",
+      "he": "מארק קוקורייה"
+    },
+    {
+      "providerId": "7873",
+      "en": "Curtis Jones",
+      "he": "קרטיס ג׳ונס"
+    },
+    {
+      "providerId": "6483",
+      "en": "Dan-Axel Zagadou",
+      "he": "דן־אקסל זגאדו"
+    },
+    {
+      "providerId": "68",
+      "en": "Dani Ceballos",
+      "he": "דני סבאיוס"
+    },
+    {
+      "providerId": "23132",
+      "en": "Dani Olmo",
+      "he": "דני אולמו"
+    },
+    {
+      "providerId": "182005",
+      "en": "Daniel Bassi",
+      "he": "דניאל באסי"
+    },
+    {
+      "providerId": "289895",
+      "en": "Daniel Martínez",
+      "he": "דניאל מרטינס"
+    },
+    {
+      "providerId": "145937",
+      "en": "Daniel Svensson",
+      "he": "דניאל סוונסון"
+    },
+    {
+      "providerId": "191705",
+      "en": "Daniele Ghilardi",
+      "he": "דניאלה גילארדי"
+    },
+    {
+      "providerId": "279063",
+      "en": "David Daiber",
+      "he": "דויד דייבר"
+    },
+    {
+      "providerId": "15542",
+      "en": "Dávid Hancko",
+      "he": "דויד האנצקו"
+    },
+    {
+      "providerId": "7571",
+      "en": "David Neres",
+      "he": "דויד נרס"
+    },
+    {
+      "providerId": "9905",
+      "en": "David Raum",
+      "he": "דויד ראום"
+    },
+    {
+      "providerId": "4832",
+      "en": "David Raya",
+      "he": "דויד ראיה"
+    },
+    {
+      "providerId": "3733",
+      "en": "Davinson Sánchez",
+      "he": "דבינסון סאנצ׳ס"
+    },
+    {
+      "providerId": "9541",
+      "en": "Dayot Upamecano",
+      "he": "דאיו אופמקאנו"
+    },
+    {
+      "providerId": "191727",
+      "en": "Dean Huijsen",
+      "he": "דין הויסן"
+    },
+    {
+      "providerId": "8215",
+      "en": "Declan Rice",
+      "he": "דקלן רייס"
+    },
+    {
+      "providerId": "188466",
+      "en": "Deniz Gul",
+      "he": "דניז גול"
+    },
+    {
+      "providerId": "6928",
+      "en": "Deniz Undav",
+      "he": "דניז אונדב"
+    },
+    {
+      "providerId": "15781",
+      "en": "Dennis Man",
+      "he": "דניס מאן"
+    },
+    {
+      "providerId": "206327",
+      "en": "Dennis Seimen",
+      "he": "דניס זיימן"
+    },
+    {
+      "providerId": "212694",
+      "en": "Denys Tvardovskyi",
+      "he": "דניס טברדובסקי"
+    },
+    {
+      "providerId": "7417",
+      "en": "Denzel Dumfries",
+      "he": "דנזל דומפריס"
+    },
+    {
+      "providerId": "30727",
+      "en": "Dereck Kutesa",
+      "he": "דרק קוטסה"
+    },
+    {
+      "providerId": "210730",
+      "en": "Dermot Mee",
+      "he": "דרמוט מי"
+    },
+    {
+      "providerId": "177522",
+      "en": "Desire Doue",
+      "he": "דזירה דואה"
+    },
+    {
+      "providerId": "191127",
+      "en": "Devis Vásquez",
+      "he": "דביס ואסקס"
+    },
+    {
+      "providerId": "149173",
+      "en": "Devyne Rensch",
+      "he": "דווין רנש"
+    },
+    {
+      "providerId": "178770",
+      "en": "Diego Callai",
+      "he": "דייגו קלאיי"
+    },
+    {
+      "providerId": "150546",
+      "en": "Diego Conde",
+      "he": "דייגו קונדה"
+    },
+    {
+      "providerId": "9",
+      "en": "Diego Llorente",
+      "he": "דייגו יורנטה"
+    },
+    {
+      "providerId": "151295",
+      "en": "Dilane Bakwa",
+      "he": "דילאן באקווה"
+    },
+    {
+      "providerId": "264418",
+      "en": "Dimitrios Kaloskamis",
+      "he": "דימיטריוס קלוסקאמיס"
+    },
+    {
+      "providerId": "262653",
+      "en": "Dinis Rodrigues",
+      "he": "דיניש רודריגש"
+    },
+    {
+      "providerId": "37362",
+      "en": "Diogo Costa",
+      "he": "דיוגו קוסטה"
+    },
+    {
+      "providerId": "15905",
+      "en": "Diogo Dalot",
+      "he": "דיוגו דאלוט"
+    },
+    {
+      "providerId": "80775",
+      "en": "Djed Spence",
+      "he": "ג׳ד ספנס"
+    },
+    {
+      "providerId": "170972",
+      "en": "Dmytro Kryskiv",
+      "he": "דמיטרו קריסקיב"
+    },
+    {
+      "providerId": "98993",
+      "en": "Dmytro Riznyk",
+      "he": "דמיטרו ריזניק"
+    },
+    {
+      "providerId": "3550",
+      "en": "Domagoj Vida",
+      "he": "דומאגוי וידה"
+    },
+    {
+      "providerId": "3548",
+      "en": "Dominik Livaković",
+      "he": "דומיניק ליבאקוביץ׳"
+    },
+    {
+      "providerId": "216825",
+      "en": "Dominik Prpić",
+      "he": "דומיניק פרפיץ׳"
+    },
+    {
+      "providerId": "16347",
+      "en": "Dominik Szoboszlai",
+      "he": "דומיניק סובוסלאי"
+    },
+    {
+      "providerId": "7457",
+      "en": "Donyell Malen",
+      "he": "דונייל מאלן"
+    },
+    {
+      "providerId": "184700",
+      "en": "Dorgeles Nene",
+      "he": "דורגלס ננה"
+    },
+    {
+      "providerId": "184970",
+      "en": "Dzenan Pejcinovic",
+      "he": "דז׳נאן פייצ׳ינוביץ׳"
+    },
+    {
+      "providerId": "4032",
+      "en": "Eberechi Eze",
+      "he": "אברצ׳י אזה"
+    },
+    {
+      "providerId": "1337",
+      "en": "Éder Militão",
+      "he": "אדר מיליטאו"
+    },
+    {
+      "providerId": "3222",
+      "en": "Ederson",
+      "he": "אדרסון"
+    },
+    {
+      "providerId": "2187",
+      "en": "Edoardo Goldaniga",
+      "he": "אדוארדו גולדאניגה"
+    },
+    {
+      "providerId": "102343",
+      "en": "Eduardo Camavinga",
+      "he": "אדוארדו קמאבינגה"
+    },
+    {
+      "providerId": "144406",
+      "en": "Eduardo Simões",
+      "he": "אדוארדו סימואש"
+    },
+    {
+      "providerId": "205436",
+      "en": "Edvin Austbø",
+      "he": "אדווין אוסטבו"
+    },
+    {
+      "providerId": "187512",
+      "en": "Eguinaldo",
+      "he": "אגינאלדו"
+    },
+    {
+      "providerId": "170415",
+      "en": "El Chadaille Bitshiabu",
+      "he": "אל שדאי ביטשיאבו"
+    },
+    {
+      "providerId": "206781",
+      "en": "Elias Kaua",
+      "he": "אליאס קאואה"
+    },
+    {
+      "providerId": "107330",
+      "en": "Elliot Anderson",
+      "he": "אליוט אנדרסון"
+    },
+    {
+      "providerId": "290391",
+      "en": "Emanuele Lulli",
+      "he": "עמנואלה לולי"
+    },
+    {
+      "providerId": "31941",
+      "en": "Emiliano Buendía",
+      "he": "אמיליאנו בואנדיה"
+    },
+    {
+      "providerId": "3183",
+      "en": "Emre Can",
+      "he": "אמרה ג׳אן"
+    },
+    {
+      "providerId": "188487",
+      "en": "Endrick",
+      "he": "אנדריק"
+    },
+    {
+      "providerId": "299456",
+      "en": "Enzo dos Santos",
+      "he": "אנזו דוס סנטוס"
+    },
+    {
+      "providerId": "102603",
+      "en": "Enzo Fernández",
+      "he": "אנזו פרננדס"
+    },
+    {
+      "providerId": "101345",
+      "en": "Eric García",
+      "he": "אריק גרסיה"
+    },
+    {
+      "providerId": "38510",
+      "en": "Erlend Jacobsen",
+      "he": "ארלנד יאקובסן"
+    },
+    {
+      "providerId": "38101",
+      "en": "Erling Haaland",
+      "he": "ארלינג הולאנד"
+    },
+    {
+      "providerId": "33242",
+      "en": "Ermedin Demirovic",
+      "he": "ארמדין דמירוביץ׳"
+    },
+    {
+      "providerId": "296854",
+      "en": "Ertugrul Yigit",
+      "he": "ארטורול ייט"
+    },
+    {
+      "providerId": "186380",
+      "en": "Esmir Bajraktarevic",
+      "he": "אסמיר ביירקטרביץ׳"
+    },
+    {
+      "providerId": "218468",
+      "en": "Ethan Mbappé",
+      "he": "איתן אמבפה"
+    },
+    {
+      "providerId": "188476",
+      "en": "Ethan Nwaneri",
+      "he": "איתן אנוואנרי"
+    },
+    {
+      "providerId": "526",
+      "en": "Evan N'Dicka",
+      "he": "אוואן אנדיקה"
+    },
+    {
+      "providerId": "145831",
+      "en": "Evren Eren Elmalı",
+      "he": "אוורן ארן אלמאלי"
+    },
+    {
+      "providerId": "172978",
+      "en": "Eyup Aydin",
+      "he": "איופ איידין"
+    },
+    {
+      "providerId": "175951",
+      "en": "Ezechiel Banzuzi",
+      "he": "אזכיאל בנזוזי"
+    },
+    {
+      "providerId": "6317",
+      "en": "Ezri Konsa",
+      "he": "אזרי קונסה"
+    },
+    {
+      "providerId": "6603",
+      "en": "Fabian Bredlow",
+      "he": "פביאן ברדלו"
+    },
+    {
+      "providerId": "278178",
+      "en": "Fabian Merién",
+      "he": "פביאן מריאן"
+    },
+    {
+      "providerId": "22",
+      "en": "Fabián Ruiz",
+      "he": "פביאן רואיס"
+    },
+    {
+      "providerId": "267813",
+      "en": "Fabian Schillinger",
+      "he": "פביאן שילינגר"
+    },
+    {
+      "providerId": "125151",
+      "en": "Fábio Silva",
+      "he": "פאביו סילבה"
+    },
+    {
+      "providerId": "245200",
+      "en": "Facundo Bernal",
+      "he": "פקונדו ברנאל"
+    },
+    {
+      "providerId": "1780",
+      "en": "Federico Chiesa",
+      "he": "פדריקו קייזה"
+    },
+    {
+      "providerId": "30821",
+      "en": "Federico Dimarco",
+      "he": "פדריקו דימרקו"
+    },
+    {
+      "providerId": "96",
+      "en": "Federico Valverde",
+      "he": "פדריקו ואלוורדה"
+    },
+    {
+      "providerId": "101074",
+      "en": "Felix Kalu Nmecha",
+      "he": "פליקס קאלו נמצ׳ה"
+    },
+    {
+      "providerId": "171406",
+      "en": "Felix Lemarechal",
+      "he": "פליקס למרשאל"
+    },
+    {
+      "providerId": "8458",
+      "en": "Ferland Mendy",
+      "he": "פרלאן מנדי"
+    },
+    {
+      "providerId": "214533",
+      "en": "Fermín López",
+      "he": "פרמין לופס"
+    },
+    {
+      "providerId": "33154",
+      "en": "Ferrán Torres",
+      "he": "פראן טורס"
+    },
+    {
+      "providerId": "3446",
+      "en": "Filip Kostić",
+      "he": "פיליפ קוסטיץ׳"
+    },
+    {
+      "providerId": "171346",
+      "en": "Filipe Relvas",
+      "he": "פיליפה רלבאש"
+    },
+    {
+      "providerId": "261058",
+      "en": "Filippo Mané",
+      "he": "פיליפו מאנה"
+    },
+    {
+      "providerId": "221768",
+      "en": "Finn Jeltsch",
+      "he": "פין ילטש"
+    },
+    {
+      "providerId": "280747",
+      "en": "Flávio Gonçalves",
+      "he": "פלאביו גונסאלבש"
+    },
+    {
+      "providerId": "10788",
+      "en": "Florian Flecker",
+      "he": "פלוריאן פלקאר"
+    },
+    {
+      "providerId": "65741",
+      "en": "Florian Kastenmeier",
+      "he": "פלוריאן קסטנמאייר"
+    },
+    {
+      "providerId": "64837",
+      "en": "Florian Sotoca",
+      "he": "פלוריאן סוטוקה"
+    },
+    {
+      "providerId": "3370",
+      "en": "Florian Thauvin",
+      "he": "פלוריאן תובאן"
+    },
+    {
+      "providerId": "19334",
+      "en": "Florian Wirtz",
+      "he": "פלוריאן וירץ"
+    },
+    {
+      "providerId": "186459",
+      "en": "Fotis Ioannidis",
+      "he": "פוטיס יואנידיס"
+    },
+    {
+      "providerId": "215433",
+      "en": "Francesco Esposito",
+      "he": "פרנצ׳סקו אספוזיטו"
+    },
+    {
+      "providerId": "99993",
+      "en": "Francisco Garcia",
+      "he": "פרנסיסקו גרסיה"
+    },
+    {
+      "providerId": "183643",
+      "en": "Franjo Ivanovic",
+      "he": "פראניו איבנוביץ׳"
+    },
+    {
+      "providerId": "74870",
+      "en": "Frantzdy Pierrot",
+      "he": "פרנזי פיירו"
+    },
+    {
+      "providerId": "176597",
+      "en": "Freddie Potts",
+      "he": "פרדי פוטס"
+    },
+    {
+      "providerId": "11629",
+      "en": "Freddie Woodman",
+      "he": "פרדי וודמן"
+    },
+    {
+      "providerId": "37913",
+      "en": "Fredrik Bjørkan",
+      "he": "פרדריק ביורקאן"
+    },
+    {
+      "providerId": "180517",
+      "en": "Fredrik Sjøvold",
+      "he": "פרדריק שיובולד"
+    },
+    {
+      "providerId": "7559",
+      "en": "Frenkie de Jong",
+      "he": "פרנקי דה יונג"
+    },
+    {
+      "providerId": "3236",
+      "en": "Gabriel Jesus",
+      "he": "גבריאל ז׳סוס"
+    },
+    {
+      "providerId": "23128",
+      "en": "Gabriel Magalhães",
+      "he": "גבריאל מגאליאש"
+    },
+    {
+      "providerId": "168955",
+      "en": "Gabriel Sara",
+      "he": "גבריאל סארה"
+    },
+    {
+      "providerId": "150519",
+      "en": "Gabriel Veiga",
+      "he": "גבריאל וייגה"
+    },
+    {
+      "providerId": "169080",
+      "en": "Gabriel Veron",
+      "he": "גבריאל ורון"
+    },
+    {
+      "providerId": "914",
+      "en": "Gaëtan Perrin",
+      "he": "גאטן פראן"
+    },
+    {
+      "providerId": "265472",
+      "en": "Gaoussou Diarra",
+      "he": "גאוסו דיארה"
+    },
+    {
+      "providerId": "128825",
+      "en": "Geny Catamo",
+      "he": "ג׳ני קטאמו"
+    },
+    {
+      "providerId": "76869",
+      "en": "George Bello",
+      "he": "ג׳ורג׳ בלו"
+    },
+    {
+      "providerId": "289528",
+      "en": "George Hemmings",
+      "he": "ג׳ורג׳ המינגס"
+    },
+    {
+      "providerId": "136646",
+      "en": "Georges Mikautadze",
+      "he": "ז׳ורז׳ מיקוטאדזה"
+    },
+    {
+      "providerId": "137045",
+      "en": "Georgios Vagiannidis",
+      "he": "גאורגיוס ואגיאנידיס"
+    },
+    {
+      "providerId": "264320",
+      "en": "Gerard Martín",
+      "he": "ג׳רארד מרטין"
+    },
+    {
+      "providerId": "32719",
+      "en": "Gerard Moreno",
+      "he": "ג׳רארד מורנו"
+    },
+    {
+      "providerId": "6",
+      "en": "Géronimo Rulli",
+      "he": "חרונימו רולי"
+    },
+    {
+      "providerId": "1837",
+      "en": "Gianluca Mancini",
+      "he": "ג׳אנלוקה מנצ׳יני"
+    },
+    {
+      "providerId": "1731",
+      "en": "Gianluigi Donnarumma",
+      "he": "ג׳אנלואיג׳י דונארומה"
+    },
+    {
+      "providerId": "113753",
+      "en": "Gianni Stensness",
+      "he": "ג׳אני סטנסנס"
+    },
+    {
+      "providerId": "156906",
+      "en": "Giannis Konstantelias",
+      "he": "יאניס קונסטנטליאס"
+    },
+    {
+      "providerId": "53430",
+      "en": "Gijs Smal",
+      "he": "חייס סמאל"
+    },
+    {
+      "providerId": "84506",
+      "en": "Giorgi Mamardashvili",
+      "he": "גיורגי ממארדשווילי"
+    },
+    {
+      "providerId": "273759",
+      "en": "Giorgio De Marzi",
+      "he": "ג׳ורג׳ו דה מארצי"
+    },
+    {
+      "providerId": "181795",
+      "en": "Giovane Nascimento",
+      "he": "ג׳ובאנה נסימנטו"
+    },
+    {
+      "providerId": "3216",
+      "en": "Giovani Lo Celso",
+      "he": "ג׳ובאני לו סלסו"
+    },
+    {
+      "providerId": "2487",
+      "en": "Giovanni Di Lorenzo",
+      "he": "ג׳ובאני די לורנצו"
+    },
+    {
+      "providerId": "192563",
+      "en": "Giovanni Leoni",
+      "he": "ג׳ובאני לאוני"
+    },
+    {
+      "providerId": "171964",
+      "en": "Giuliano Simeone",
+      "he": "ג׳וליאנו סימאונה"
+    },
+    {
+      "providerId": "186534",
+      "en": "Givairo Read",
+      "he": "חיבאיירו ריד"
+    },
+    {
+      "providerId": "215554",
+      "en": "Gjivai Zechiël",
+      "he": "חיבאי זכיאל"
+    },
+    {
+      "providerId": "250265",
+      "en": "Gleiker Mendoza",
+      "he": "גלייקר מנדוסה"
+    },
+    {
+      "providerId": "126149",
+      "en": "Gonçalo Borges",
+      "he": "גונסאלו בורזש"
+    },
+    {
+      "providerId": "145357",
+      "en": "Gonçalo Inácio",
+      "he": "גונסאלו אינאסיו"
+    },
+    {
+      "providerId": "334",
+      "en": "Gregor Kobel",
+      "he": "גרגור קובל"
+    },
+    {
+      "providerId": "6836",
+      "en": "Grischa Prömel",
+      "he": "גרישה פרומל"
+    },
+    {
+      "providerId": "30516",
+      "en": "Günay Güvenç",
+      "he": "גונאי גובנץ׳"
+    },
+    {
+      "providerId": "7688",
+      "en": "Guus Til",
+      "he": "חוס טיל"
+    },
+    {
+      "providerId": "207587",
+      "en": "Haitam Aleesami",
+      "he": "הייתם אליסאמי"
+    },
+    {
+      "providerId": "1754",
+      "en": "Hakan Çalhanoğlu",
+      "he": "הקאן צ׳להאנולו"
+    },
+    {
+      "providerId": "213520",
+      "en": "Hakim Sahabo",
+      "he": "חכים סהאבו"
+    },
+    {
+      "providerId": "117908",
+      "en": "Hákon Arnar Haraldsson",
+      "he": "האקון ארנאר האראלדסון"
+    },
+    {
+      "providerId": "274542",
+      "en": "Hamza Abdelkarim",
+      "he": "חמזה עבד אלכרים"
+    },
+    {
+      "providerId": "260879",
+      "en": "Hamza Igamane",
+      "he": "חמזה איגאמאן"
+    },
+    {
+      "providerId": "217715",
+      "en": "Han-bum Lee",
+      "he": "לי האן־בום"
+    },
+    {
+      "providerId": "8888",
+      "en": "Hans Vanaken",
+      "he": "האנס ואנאקן"
+    },
+    {
+      "providerId": "618",
+      "en": "Harold Moukoudi",
+      "he": "הרולד מוקודי"
+    },
+    {
+      "providerId": "210150",
+      "en": "Harry Amass",
+      "he": "הארי אמאס"
+    },
+    {
+      "providerId": "8004",
+      "en": "Harry Kane",
+      "he": "הארי קיין"
+    },
+    {
+      "providerId": "3326",
+      "en": "Harry Maguire",
+      "he": "הארי מגווייר"
+    },
+    {
+      "providerId": "165154",
+      "en": "Harvey Davies",
+      "he": "הארווי דייויס"
+    },
+    {
+      "providerId": "7783",
+      "en": "Héctor Bellerín",
+      "he": "הקטור ביירין"
+    },
+    {
+      "providerId": "135036",
+      "en": "Henrik Falchener",
+      "he": "הנריק פאלקנר"
+    },
+    {
+      "providerId": "144917",
+      "en": "Henrik Heggheim",
+      "he": "הנריק הגהיים"
+    },
+    {
+      "providerId": "7795",
+      "en": "Henrikh Mkhitaryan",
+      "he": "הנריך מחיטריאן"
+    },
+    {
+      "providerId": "144645",
+      "en": "Herman Haugen",
+      "he": "הרמן האוגן"
+    },
+    {
+      "providerId": "290972",
+      "en": "Hindrin Najah Chooly",
+      "he": "הינדרין נג׳אח צ׳ולי"
+    },
+    {
+      "providerId": "48657",
+      "en": "Hiroki Ito",
+      "he": "הירוקי איטו"
+    },
+    {
+      "providerId": "152454",
+      "en": "Hugo Ekitike",
+      "he": "הוגו אקיטיקה"
+    },
+    {
+      "providerId": "154080",
+      "en": "Hugo Siquet",
+      "he": "הוגו סיקה"
+    },
+    {
+      "providerId": "38417",
+      "en": "Hugo Vetlesen",
+      "he": "הוגו וטלאסן"
+    },
+    {
+      "providerId": "131120",
+      "en": "Ian Maatsen",
+      "he": "איאן מאטסן"
+    },
+    {
+      "providerId": "265040",
+      "en": "Ibrahim M'Baye",
+      "he": "איברהים אמבאי"
+    },
+    {
+      "providerId": "9542",
+      "en": "Ibrahima Konaté",
+      "he": "איברהימה קונאטה"
+    },
+    {
+      "providerId": "126913",
+      "en": "Iker Losada",
+      "he": "איקר לוסאדה"
+    },
+    {
+      "providerId": "278383",
+      "en": "Ilan Jourdren",
+      "he": "אילן ז׳ורדרן"
+    },
+    {
+      "providerId": "140738",
+      "en": "İlhami Siraçhan Nas",
+      "he": "אילהאמי סיראצ׳האן נאס"
+    },
+    {
+      "providerId": "176202",
+      "en": "Ilias Akhomach",
+      "he": "איליאס אחומאש"
+    },
+    {
+      "providerId": "94091",
+      "en": "Iliman Ndiaye",
+      "he": "אילימאן נדיאיי"
+    },
+    {
+      "providerId": "3182",
+      "en": "Ilkay Gündogan",
+      "he": "אילקאי גונדואן"
+    },
+    {
+      "providerId": "74831",
+      "en": "Illan Meslier",
+      "he": "אילן מלייה"
+    },
+    {
+      "providerId": "143573",
+      "en": "Illia Zabarnyi",
+      "he": "איליה זברני"
+    },
+    {
+      "providerId": "170561",
+      "en": "In-beom Hwang",
+      "he": "הוואנג אין־בום"
+    },
+    {
+      "providerId": "188125",
+      "en": "Irakli Azarovi",
+      "he": "אירקלי אזארובי"
+    },
+    {
+      "providerId": "180964",
+      "en": "İrfan Kahveci",
+      "he": "אירפאן קהבג׳י"
+    },
+    {
+      "providerId": "214386",
+      "en": "Isaac Babadi",
+      "he": "אייזק באבאדי"
+    },
+    {
+      "providerId": "270793",
+      "en": "Isaac Cossier",
+      "he": "אייזק קוסייה"
+    },
+    {
+      "providerId": "115436",
+      "en": "Isak Määttä",
+      "he": "איסאק מאטה"
+    },
+    {
+      "providerId": "273196",
+      "en": "Isaque",
+      "he": "איסאקה"
+    },
+    {
+      "providerId": "66",
+      "en": "Isco",
+      "he": "איסקו"
+    },
+    {
+      "providerId": "130173",
+      "en": "Ismael Saibari",
+      "he": "איסמעיל סאיבארי"
+    },
+    {
+      "providerId": "194",
+      "en": "Ismail Jakobs",
+      "he": "איסמעיל יאקובס"
+    },
+    {
+      "providerId": "148295",
+      "en": "İsmail Yüksek",
+      "he": "איסמעיל יוקסק"
+    },
+    {
+      "providerId": "188816",
+      "en": "Issa Doumbia",
+      "he": "איסה דומביה"
+    },
+    {
+      "providerId": "188367",
+      "en": "Ivan Dibango",
+      "he": "איבן דיבאנגו"
+    },
+    {
+      "providerId": "176840",
+      "en": "Ivan Fresneda",
+      "he": "איבן פרסנדה"
+    },
+    {
+      "providerId": "2004",
+      "en": "Ivan Perišić",
+      "he": "איבן פרישיץ׳"
+    },
+    {
+      "providerId": "2475",
+      "en": "Ivan Provedel",
+      "he": "איבן פרובדל"
+    },
+    {
+      "providerId": "114212",
+      "en": "Ivan Smolčić",
+      "he": "איבן סמולצ׳יץ׳"
+    },
+    {
+      "providerId": "271941",
+      "en": "Jack Fletcher",
+      "he": "ג׳ק פלטשר"
+    },
+    {
+      "providerId": "247056",
+      "en": "Jacobo Ramón",
+      "he": "חאקובו ראמון"
+    },
+    {
+      "providerId": "247035",
+      "en": "Jakob Hansen",
+      "he": "יאקוב האנסן"
+    },
+    {
+      "providerId": "147286",
+      "en": "Jakub Kiwior",
+      "he": "יאקוב קיוויור"
+    },
+    {
+      "providerId": "99952",
+      "en": "Jakub Moder",
+      "he": "יאקוב מודר"
+    },
+    {
+      "providerId": "144393",
+      "en": "Jamal Musiala",
+      "he": "ג׳מאל מוסיאלה"
+    },
+    {
+      "providerId": "34709",
+      "en": "James Penrice",
+      "he": "ג׳יימס פנרייס"
+    },
+    {
+      "providerId": "123333",
+      "en": "Jamie Leweling",
+      "he": "ג׳יימי לבלינג"
+    },
+    {
+      "providerId": "8086",
+      "en": "Jan Bednarek",
+      "he": "יאן בדנארק"
+    },
+    {
+      "providerId": "120",
+      "en": "Jan Oblak",
+      "he": "יאן אובלק"
+    },
+    {
+      "providerId": "285500",
+      "en": "Jan Virgili",
+      "he": "יאן וירז׳ילי"
+    },
+    {
+      "providerId": "171608",
+      "en": "Jankat Yilmaz",
+      "he": "ג׳אנקט ילמאז"
+    },
+    {
+      "providerId": "263221",
+      "en": "Jarzinho Malanga",
+      "he": "ז׳ארזיניו מלאנגה"
+    },
+    {
+      "providerId": "82120",
+      "en": "Javi López",
+      "he": "חאבי לופס"
+    },
+    {
+      "providerId": "178165",
+      "en": "Jayden Addai",
+      "he": "ג׳יידן אדאי"
+    },
+    {
+      "providerId": "150563",
+      "en": "Jayden Oosterwolde",
+      "he": "ג׳יידן אוסטרוולדה"
+    },
+    {
+      "providerId": "9186",
+      "en": "Jean Butez",
+      "he": "ז׳אן בוטז"
+    },
+    {
+      "providerId": "79903",
+      "en": "Jean-Clair Todibo",
+      "he": "ז׳אן־קלייר טודיבו"
+    },
+    {
+      "providerId": "37916",
+      "en": "Jens Hauge",
+      "he": "ינס האוגה"
+    },
+    {
+      "providerId": "9770",
+      "en": "Jerdy Schouten",
+      "he": "ירדי סחאוטן"
+    },
+    {
+      "providerId": "128954",
+      "en": "Jeremie Frimpong",
+      "he": "ג׳רמי פרימפונג"
+    },
+    {
+      "providerId": "215510",
+      "en": "Jeremy",
+      "he": "ג׳רמי"
+    },
+    {
+      "providerId": "99775",
+      "en": "Jeremy Doku",
+      "he": "ג׳רמי דוקו"
+    },
+    {
+      "providerId": "206127",
+      "en": "Jeremy Jacquet",
+      "he": "ז׳רמי ז׳אקה"
+    },
+    {
+      "providerId": "7465",
+      "en": "Jerry St. Juste",
+      "he": "ג׳רי סנט יוסטה"
+    },
+    {
+      "providerId": "116125",
+      "en": "Jesper Daland",
+      "he": "יספר דלאנד"
+    },
+    {
+      "providerId": "298634",
+      "en": "Jesse Bisiwu",
+      "he": "ג׳סי ביסיוו"
+    },
+    {
+      "providerId": "292473",
+      "en": "Jesse Derry",
+      "he": "ג׳סי דרי"
+    },
+    {
+      "providerId": "270254",
+      "en": "Jesús Rodríguez",
+      "he": "חסוס רודריגס"
+    },
+    {
+      "providerId": "169041",
+      "en": "Jhoanner Chavez",
+      "he": "ג׳ואנר צ׳אבס"
+    },
+    {
+      "providerId": "294282",
+      "en": "Jivayno Zinhagel",
+      "he": "ג׳יביינו זינהאחל"
+    },
+    {
+      "providerId": "152506",
+      "en": "Joan García",
+      "he": "ז׳ואן גרסיה"
+    },
+    {
+      "providerId": "245889",
+      "en": "João Afonso",
+      "he": "ז׳ואאו אפונסו"
+    },
+    {
+      "providerId": "2000",
+      "en": "João Cancelo",
+      "he": "ז׳ואאו קאנסלו"
+    },
+    {
+      "providerId": "80037",
+      "en": "João Costa Gomes",
+      "he": "ז׳ואאו קוסטה גומש"
+    },
+    {
+      "providerId": "138034",
+      "en": "João Gomes",
+      "he": "ז׳ואאו גומש"
+    },
+    {
+      "providerId": "190877",
+      "en": "Joao Neves",
+      "he": "ז׳ואאו נבש"
+    },
+    {
+      "providerId": "270551",
+      "en": "João Simões",
+      "he": "ז׳ואאו סימואש"
+    },
+    {
+      "providerId": "213534",
+      "en": "Joaquin Seys",
+      "he": "חואקין סייס"
+    },
+    {
+      "providerId": "171692",
+      "en": "Jobe Bellingham",
+      "he": "ג׳וב בלינגהאם"
+    },
+    {
+      "providerId": "144646",
+      "en": "Joe Bell",
+      "he": "ג׳ו בל"
+    },
+    {
+      "providerId": "7862",
+      "en": "Joe Gomez",
+      "he": "ג׳ו גומז"
+    },
+    {
+      "providerId": "153994",
+      "en": "Joel Mugisha",
+      "he": "ג׳ואל מוגישה"
+    },
+    {
+      "providerId": "178928",
+      "en": "Joel Ordoñez",
+      "he": "ג׳ואל אורדונייס"
+    },
+    {
+      "providerId": "218290",
+      "en": "Joel van den Berg",
+      "he": "יואל ואן דן ברג"
+    },
+    {
+      "providerId": "53426",
+      "en": "Joey Veerman",
+      "he": "יואי וירמן"
+    },
+    {
+      "providerId": "154110",
+      "en": "Johan Bakayoko",
+      "he": "יוהאן בקאיוקו"
+    },
+    {
+      "providerId": "212309",
+      "en": "Johan Manzambi",
+      "he": "יוהאן מנזמבי"
+    },
+    {
+      "providerId": "34646",
+      "en": "John McGinn",
+      "he": "ג׳ון מקגין"
+    },
+    {
+      "providerId": "3313",
+      "en": "John Stones",
+      "he": "ג׳ון סטונס"
+    },
+    {
+      "providerId": "123265",
+      "en": "Johnny",
+      "he": "ג׳וני"
+    },
+    {
+      "providerId": "172342",
+      "en": "Jonas Urbig",
+      "he": "יונאס אורביג"
+    },
+    {
+      "providerId": "8924",
+      "en": "Jonathan David",
+      "he": "ג׳ונתן דייוויד"
+    },
+    {
+      "providerId": "735",
+      "en": "Jonathan Gradit",
+      "he": "ז׳ונתן גראדי"
+    },
+    {
+      "providerId": "149",
+      "en": "Jonathan Tah",
+      "he": "יונתן טה"
+    },
+    {
+      "providerId": "176299",
+      "en": "Jordan Bos",
+      "he": "ג׳ורדן בוס"
+    },
+    {
+      "providerId": "16276",
+      "en": "Jordan Lotomba",
+      "he": "ג׳ורדן לוטומבה"
+    },
+    {
+      "providerId": "289908",
+      "en": "Jorge Cestero",
+      "he": "חורחה ססטרו"
+    },
+    {
+      "providerId": "295747",
+      "en": "Jorge Domínguez",
+      "he": "חורחה דומינגס"
+    },
+    {
+      "providerId": "161056",
+      "en": "Jorne Spileers",
+      "he": "יורנה ספילרס"
+    },
+    {
+      "providerId": "101415",
+      "en": "Josep Martinez",
+      "he": "ז׳וזפ מרטינס"
+    },
+    {
+      "providerId": "172791",
+      "en": "Josh Wilson-Esbrand",
+      "he": "ג׳וש וילסון־אסברנד"
+    },
+    {
+      "providerId": "6523",
+      "en": "Josha Vagnoman",
+      "he": "יושה ואגנומן"
+    },
+    {
+      "providerId": "359",
+      "en": "Joshua Kimmich",
+      "he": "יוזואה קימיך"
+    },
+    {
+      "providerId": "38122",
+      "en": "Joshua Kitolano",
+      "he": "ג׳ושוע קיטולאנו"
+    },
+    {
+      "providerId": "99731",
+      "en": "Joshua Zirkzee",
+      "he": "ג׳ושוע זירקזי"
+    },
+    {
+      "providerId": "122188",
+      "en": "Josip Stanišić",
+      "he": "יוסיפ סטאנישיץ׳"
+    },
+    {
+      "providerId": "122266",
+      "en": "Joško Gvardiol",
+      "he": "יושקו גבארדיול"
+    },
+    {
+      "providerId": "38516",
+      "en": "Jostein Gundersen",
+      "he": "יוסטיין גונדרסן"
+    },
+    {
+      "providerId": "7996",
+      "en": "Juan Foyth",
+      "he": "חואן פוית׳"
+    },
+    {
+      "providerId": "46554",
+      "en": "Juan Musso",
+      "he": "חואן מוסו"
+    },
+    {
+      "providerId": "125010",
+      "en": "Jude Bellingham",
+      "he": "ג׳וד בלינגהאם"
+    },
+    {
+      "providerId": "8499",
+      "en": "Jules Koundé",
+      "he": "ז׳ול קונדה"
+    },
+    {
+      "providerId": "98571",
+      "en": "Julián Álvarez",
+      "he": "חוליאן אלבארס"
+    },
+    {
+      "providerId": "7748",
+      "en": "Julian Chabot",
+      "he": "יוליאן שאבו"
+    },
+    {
+      "providerId": "44492",
+      "en": "Julian Lund",
+      "he": "יוליאן לונד"
+    },
+    {
+      "providerId": "44030",
+      "en": "Julian Ryerson",
+      "he": "יוליאן ריירסון"
+    },
+    {
+      "providerId": "33037",
+      "en": "Júnior Firpo",
+      "he": "ג׳וניור פירפו"
+    },
+    {
+      "providerId": "135484",
+      "en": "Junior Kadile",
+      "he": "ג׳וניור קדילה"
+    },
+    {
+      "providerId": "98816",
+      "en": "Jurrien Timber",
+      "he": "יוריין טימבר"
+    },
+    {
+      "providerId": "191191",
+      "en": "Justin Diehl",
+      "he": "יוסטין דיל"
+    },
+    {
+      "providerId": "250337",
+      "en": "Justin Lerma",
+      "he": "ג׳סטין לרמה"
+    },
+    {
+      "providerId": "9512",
+      "en": "Kaan Ayhan",
+      "he": "קאן אייהאן"
+    },
+    {
+      "providerId": "24213",
+      "en": "Kaan Kairinen",
+      "he": "קאן קאירינן"
+    },
+    {
+      "providerId": "171",
+      "en": "Kai Havertz",
+      "he": "קאי האברץ"
+    },
+    {
+      "providerId": "169670",
+      "en": "Kaiki",
+      "he": "קאיקי"
+    },
+    {
+      "providerId": "178927",
+      "en": "Kaique",
+      "he": "קאיקה"
+    },
+    {
+      "providerId": "213217",
+      "en": "Kang-in Lee",
+      "he": "לי קאנג־אין"
+    },
+    {
+      "providerId": "82515",
+      "en": "Karim Adeyemi",
+      "he": "קארים אדיימי"
+    },
+    {
+      "providerId": "7913",
+      "en": "Karl Darlow",
+      "he": "קארל דארלו"
+    },
+    {
+      "providerId": "113905",
+      "en": "Kasper Mølgaard Jørgensen",
+      "he": "קספר מולגארד יורגנסן"
+    },
+    {
+      "providerId": "297984",
+      "en": "Kasper Solhaug",
+      "he": "קספר סולהאוג"
+    },
+    {
+      "providerId": "276255",
+      "en": "Kaua Prates",
+      "he": "קאואה פראטס"
+    },
+    {
+      "providerId": "134780",
+      "en": "Kazımcan Karataş",
+      "he": "קאזימג׳אן קראטאש"
+    },
+    {
+      "providerId": "3189",
+      "en": "Kepa Arrizabalaga",
+      "he": "קפה אריסבלאגה"
+    },
+    {
+      "providerId": "3654",
+      "en": "Kevin De Bruyne",
+      "he": "קווין דה בריינה"
+    },
+    {
+      "providerId": "113285",
+      "en": "Khvicha Kvaratskhelia",
+      "he": "חביצ׳ה קברצחליה"
+    },
+    {
+      "providerId": "142790",
+      "en": "Kiliann Sildillia",
+      "he": "קיליאן סילדיליה"
+    },
+    {
+      "providerId": "133541",
+      "en": "Kiril Fesiun",
+      "he": "קיריל פסיון"
+    },
+    {
+      "providerId": "190797",
+      "en": "Kobbie Mainoo",
+      "he": "קובי מאינו"
+    },
+    {
+      "providerId": "217935",
+      "en": "Kodai Sano",
+      "he": "קודאי סאנו"
+    },
+    {
+      "providerId": "202896",
+      "en": "Kojo Peprah Oppong",
+      "he": "קוג׳ו פפרה אופונג"
+    },
+    {
+      "providerId": "112",
+      "en": "Koke",
+      "he": "קוקה"
+    },
+    {
+      "providerId": "9549",
+      "en": "Konrad Laimer",
+      "he": "קונראד ליימר"
+    },
+    {
+      "providerId": "246522",
+      "en": "Konstantinos Karetsas",
+      "he": "קונסטנטינוס קארצאס"
+    },
+    {
+      "providerId": "177590",
+      "en": "Konstantinos Koulierakis",
+      "he": "קונסטנטינוס קולייראקיס"
+    },
+    {
+      "providerId": "7383",
+      "en": "Kostas Tsimikas",
+      "he": "קוסטאס צימיקאס"
+    },
+    {
+      "providerId": "246542",
+      "en": "Kouakou Gadou",
+      "he": "קואקו גאדו"
+    },
+    {
+      "providerId": "118120",
+      "en": "Kristoffer Askildsen",
+      "he": "כריסטופר אסקילדסן"
+    },
+    {
+      "providerId": "38096",
+      "en": "Kristoffer Haugen",
+      "he": "כריסטופר האוגן"
+    },
+    {
+      "providerId": "184187",
+      "en": "Krystof Daněk",
+      "he": "קרישטוף דאנק"
+    },
+    {
+      "providerId": "3374",
+      "en": "Kylian Mbappé",
+      "he": "קיליאן אמבפה"
+    },
+    {
+      "providerId": "270890",
+      "en": "Kyllian Antonio",
+      "he": "קיליאן אנטוניו"
+    },
+    {
+      "providerId": "188877",
+      "en": "Kyriani Sabbe",
+      "he": "קיריאני סאבה"
+    },
+    {
+      "providerId": "172899",
+      "en": "Lamare Bogarde",
+      "he": "למארה בוחארדה"
+    },
+    {
+      "providerId": "202283",
+      "en": "Lamine Yamal",
+      "he": "לאמין ימאל"
+    },
+    {
+      "providerId": "33940",
+      "en": "Lassina Franck Traoré",
+      "he": "לאסינה פרנק טראורה"
+    },
+    {
+      "providerId": "3220",
+      "en": "Lautaro Martínez",
+      "he": "לאוטרו מרטינס"
+    },
+    {
+      "providerId": "277592",
+      "en": "Lennart Karl",
+      "he": "לנארט קארל"
+    },
+    {
+      "providerId": "181933",
+      "en": "Leny Yoro",
+      "he": "לני יורו"
+    },
+    {
+      "providerId": "214587",
+      "en": "Leo Sauer",
+      "he": "לאו סאואר"
+    },
+    {
+      "providerId": "3181",
+      "en": "Leon Goretzka",
+      "he": "לאון גורצקה"
+    },
+    {
+      "providerId": "82020",
+      "en": "Leonardo Balerdi",
+      "he": "לאונרדו באלרדי"
+    },
+    {
+      "providerId": "1842",
+      "en": "Leonardo Spinazzola",
+      "he": "לאונרדו ספינאצולה"
+    },
+    {
+      "providerId": "111071",
+      "en": "Leonidas Stergiou",
+      "he": "לאונידס סטרגיו"
+    },
+    {
+      "providerId": "45569",
+      "en": "Leopold Zingerle",
+      "he": "לאופולד צינגרלה"
+    },
+    {
+      "providerId": "3184",
+      "en": "Leroy Sané",
+      "he": "לירוי סאנה"
+    },
+    {
+      "providerId": "122685",
+      "en": "Levent Mercan",
+      "he": "לבנט מרג׳אן"
+    },
+    {
+      "providerId": "25610",
+      "en": "Liam Bossin",
+      "he": "ליאם בוסין"
+    },
+    {
+      "providerId": "46451",
+      "en": "Lisandro Martínez",
+      "he": "ליסנדרו מרטינס"
+    },
+    {
+      "providerId": "141441",
+      "en": "Llazaros Rota",
+      "he": "לזארוס רוטה"
+    },
+    {
+      "providerId": "814",
+      "en": "Logan Costa",
+      "he": "לוגאן קוסטה"
+    },
+    {
+      "providerId": "135485",
+      "en": "Lorenz Assignon",
+      "he": "לורנץ אסיניון"
+    },
+    {
+      "providerId": "40305",
+      "en": "Lorenzo Lucca",
+      "he": "לורנצו לוקה"
+    },
+    {
+      "providerId": "1819",
+      "en": "Lorenzo Pellegrini",
+      "he": "לורנצו פלגריני"
+    },
+    {
+      "providerId": "261543",
+      "en": "Loun Srdanovic",
+      "he": "לון סרדאנוביץ׳"
+    },
+    {
+      "providerId": "23214",
+      "en": "Lovro Majer",
+      "he": "לוברו מאייר"
+    },
+    {
+      "providerId": "147290",
+      "en": "Ľubomír Belko",
+      "he": "לובומיר בלקו"
+    },
+    {
+      "providerId": "176711",
+      "en": "Luca Jaquez",
+      "he": "לוקה ז׳אקה"
+    },
+    {
+      "providerId": "214546",
+      "en": "Luca Marianucci",
+      "he": "לוקה מריאנוצ׳י"
+    },
+    {
+      "providerId": "2196",
+      "en": "Luca Mazzitelli",
+      "he": "לוקה מציטלי"
+    },
+    {
+      "providerId": "272883",
+      "en": "Luca Meirelles",
+      "he": "לוקה מיירלס"
+    },
+    {
+      "providerId": "290034",
+      "en": "Luca Reggiani",
+      "he": "לוקה רג׳אני"
+    },
+    {
+      "providerId": "169204",
+      "en": "Lucas Beraldo",
+      "he": "לוקאס בראלדו"
+    },
+    {
+      "providerId": "147896",
+      "en": "Lucas Chevalier",
+      "he": "לוקאס שבלייה"
+    },
+    {
+      "providerId": "124620",
+      "en": "Lucas Da Cunha",
+      "he": "לוקאס דה קוניה"
+    },
+    {
+      "providerId": "3359",
+      "en": "Lucas Digne",
+      "he": "לוקא דין"
+    },
+    {
+      "providerId": "273332",
+      "en": "Lucas Ferreira",
+      "he": "לוקאס פריירה"
+    },
+    {
+      "providerId": "3365",
+      "en": "Lucas Hernández",
+      "he": "לוקא הרננדס"
+    },
+    {
+      "providerId": "2260",
+      "en": "Lucas Torreira",
+      "he": "לוקאס טוריירה"
+    },
+    {
+      "providerId": "169190",
+      "en": "Luciano Valente",
+      "he": "לוצ׳יאנו ואלנטה"
+    },
+    {
+      "providerId": "22396",
+      "en": "Luis Díaz",
+      "he": "לואיס דיאס"
+    },
+    {
+      "providerId": "192653",
+      "en": "Luis Guilherme",
+      "he": "לואיס גילרמה"
+    },
+    {
+      "providerId": "115074",
+      "en": "Luis Henrique",
+      "he": "לואיס הנריקה"
+    },
+    {
+      "providerId": "32449",
+      "en": "Luis Milla",
+      "he": "לואיס מייה"
+    },
+    {
+      "providerId": "32386",
+      "en": "Luis Suárez",
+      "he": "לואיס סוארס"
+    },
+    {
+      "providerId": "150899",
+      "en": "Luiz Lúcio Reis Júnior",
+      "he": "לואיז לוסיו רייש ג׳וניור"
+    },
+    {
+      "providerId": "6723",
+      "en": "Luka Jović",
+      "he": "לוקה יוביץ׳"
+    },
+    {
+      "providerId": "144419",
+      "en": "Lukas Jungwirth",
+      "he": "לוקאס יונגווירת׳"
+    },
+    {
+      "providerId": "9536",
+      "en": "Lukas Klostermann",
+      "he": "לוקאס קלוסטרמן"
+    },
+    {
+      "providerId": "7898",
+      "en": "Luke Shaw",
+      "he": "לוק שו"
+    },
+    {
+      "providerId": "7468",
+      "en": "Lutsharel Geertruida",
+      "he": "לוטשארל חירטרוידה"
+    },
+    {
+      "providerId": "147763",
+      "en": "Lynnt Audoor",
+      "he": "לינט אודור"
+    },
+    {
+      "providerId": "75739",
+      "en": "Maarten Vandevoordt",
+      "he": "מארטן ואנדוורדט"
+    },
+    {
+      "providerId": "175701",
+      "en": "Maghnes Akliouche",
+      "he": "מגנס אקליוש"
+    },
+    {
+      "providerId": "180430",
+      "en": "Magnus Riisnæs",
+      "he": "מגנוס ריסנס"
+    },
+    {
+      "providerId": "124469",
+      "en": "Maik Nawrocki",
+      "he": "מאיק נברוצקי"
+    },
+    {
+      "providerId": "206779",
+      "en": "Mamadou Diakhon",
+      "he": "ממאדו דיאחון"
+    },
+    {
+      "providerId": "215555",
+      "en": "Mannou Berger",
+      "he": "מאנו ברגר"
+    },
+    {
+      "providerId": "286032",
+      "en": "Manoël Verhaeghe",
+      "he": "מנואל ורהאחה"
+    },
+    {
+      "providerId": "102395",
+      "en": "Manu Koné",
+      "he": "מאנו קונה"
+    },
+    {
+      "providerId": "143",
+      "en": "Manuel Akanji",
+      "he": "מנואל אקנג׳י"
+    },
+    {
+      "providerId": "341",
+      "en": "Manuel Neuer",
+      "he": "מנואל נוייר"
+    },
+    {
+      "providerId": "28549",
+      "en": "Manuel Ugarte",
+      "he": "מנואל אוגרטה"
+    },
+    {
+      "providerId": "264321",
+      "en": "Marc Bernal",
+      "he": "מארק ברנאל"
+    },
+    {
+      "providerId": "118489",
+      "en": "Marc Guéhi",
+      "he": "מארק גהי"
+    },
+    {
+      "providerId": "207109",
+      "en": "Marc Guiu",
+      "he": "מארק גיו"
+    },
+    {
+      "providerId": "176745",
+      "en": "Marc Pubill",
+      "he": "מארק פוביל"
+    },
+    {
+      "providerId": "32710",
+      "en": "Marc Roca",
+      "he": "מארק רוקה"
+    },
+    {
+      "providerId": "9471",
+      "en": "Marc-Oliver Kempf",
+      "he": "מארק־אוליבר קמפף"
+    },
+    {
+      "providerId": "9551",
+      "en": "Marcel Sabitzer",
+      "he": "מרסל זאביצר"
+    },
+    {
+      "providerId": "52",
+      "en": "Marco Asensio",
+      "he": "מרקו אסנסיו"
+    },
+    {
+      "providerId": "7675",
+      "en": "Marco Bizot",
+      "he": "מרקו ביזוט"
+    },
+    {
+      "providerId": "70",
+      "en": "Marcos Llorente",
+      "he": "מרקוס יורנטה"
+    },
+    {
+      "providerId": "3953",
+      "en": "Marcus Bettinelli",
+      "he": "מרקוס בטינלי"
+    },
+    {
+      "providerId": "3331",
+      "en": "Marcus Rashford",
+      "he": "מרקוס רשפורד"
+    },
+    {
+      "providerId": "8685",
+      "en": "Marcus Thuram-Ulien",
+      "he": "מרקוס תוראם"
+    },
+    {
+      "providerId": "29016",
+      "en": "Marian Shved",
+      "he": "מריאן שבד"
+    },
+    {
+      "providerId": "32703",
+      "en": "Mario Hermoso",
+      "he": "מריו הרמוסו"
+    },
+    {
+      "providerId": "8097",
+      "en": "Mario Lemina",
+      "he": "מריו למינה"
+    },
+    {
+      "providerId": "281015",
+      "en": "Marios Balamotis",
+      "he": "מאריוס בלאמוטיס"
+    },
+    {
+      "providerId": "9888",
+      "en": "Marius Funk",
+      "he": "מריוס פונק"
+    },
+    {
+      "providerId": "8440",
+      "en": "Marlon",
+      "he": "מרלון"
+    },
+    {
+      "providerId": "181465",
+      "en": "Marlon Gomes",
+      "he": "מרלון גומס"
+    },
+    {
+      "providerId": "3225",
+      "en": "Marquinhos",
+      "he": "מרקיניוס"
+    },
+    {
+      "providerId": "1848",
+      "en": "Marten de Roon",
+      "he": "מרטן דה רון"
+    },
+    {
+      "providerId": "227047",
+      "en": "Martim Fernandes",
+      "he": "מרטים פרננדש"
+    },
+    {
+      "providerId": "156912",
+      "en": "Martin Baturina",
+      "he": "מרטין באטורינה"
+    },
+    {
+      "providerId": "256335",
+      "en": "Martin Georgiev",
+      "he": "מרטין גאורגייב"
+    },
+    {
+      "providerId": "7427",
+      "en": "Martin Ødegaard",
+      "he": "מרטין אודגור"
+    },
+    {
+      "providerId": "115035",
+      "en": "Martín Zubimendi",
+      "he": "מרטין סובימנדי"
+    },
+    {
+      "providerId": "101075",
+      "en": "Mason Greenwood",
+      "he": "מייסון גרינווד"
+    },
+    {
+      "providerId": "7599",
+      "en": "Mason Mount",
+      "he": "מייסון מאונט"
+    },
+    {
+      "providerId": "136350",
+      "en": "Matej Kovar",
+      "he": "מאטיי קובאר"
+    },
+    {
+      "providerId": "65",
+      "en": "Mateo Kovačić",
+      "he": "מתאו קובאצ׳יץ׳"
+    },
+    {
+      "providerId": "30842",
+      "en": "Matheus Cunha",
+      "he": "מתאוס קוניה"
+    },
+    {
+      "providerId": "91512",
+      "en": "Matheus Nunes",
+      "he": "מתאוס נונש"
+    },
+    {
+      "providerId": "32754",
+      "en": "Mathías Olivera",
+      "he": "מתיאס אוליברה"
+    },
+    {
+      "providerId": "278057",
+      "en": "Mathias Olsen",
+      "he": "מתיאס אולסן"
+    },
+    {
+      "providerId": "8449",
+      "en": "Mathieu Gorgelin",
+      "he": "מתייה גורז׳לאן"
+    },
+    {
+      "providerId": "279093",
+      "en": "Mathis Albert",
+      "he": "מתיס אלברט"
+    },
+    {
+      "providerId": "171121",
+      "en": "Matias Soule",
+      "he": "מתיאס סולה"
+    },
+    {
+      "providerId": "53317",
+      "en": "Mats Deijl",
+      "he": "מאטס דייל"
+    },
+    {
+      "providerId": "600",
+      "en": "Mattéo Guendouzi",
+      "he": "מתאו גנדוזי"
+    },
+    {
+      "providerId": "2193",
+      "en": "Matteo Politano",
+      "he": "מתאו פוליטאנו"
+    },
+    {
+      "providerId": "151241",
+      "en": "Matteo Ruggeri",
+      "he": "מתאו רוג׳רי"
+    },
+    {
+      "providerId": "8717",
+      "en": "Matthieu Udol",
+      "he": "מתייה אודול"
+    },
+    {
+      "providerId": "7549",
+      "en": "Matthijs de Ligt",
+      "he": "מתייס דה ליכט"
+    },
+    {
+      "providerId": "264826",
+      "en": "Mattia Liberali",
+      "he": "מתיה ליבראלי"
+    },
+    {
+      "providerId": "11644",
+      "en": "Matty Cash",
+      "he": "מאטי קאש"
+    },
+    {
+      "providerId": "49244",
+      "en": "Matvei Safonov",
+      "he": "מטביי סאפונוב"
+    },
+    {
+      "providerId": "124723",
+      "en": "Maurits Kjærgaard",
+      "he": "מאוריץ קיירגור"
+    },
+    {
+      "providerId": "7451",
+      "en": "Mauro Júnior",
+      "he": "מאורו ג׳וניור"
+    },
+    {
+      "providerId": "2715",
+      "en": "Mauro Vigorito",
+      "he": "מאורו ויגוריטו"
+    },
+    {
+      "providerId": "285128",
+      "en": "Max Dowman",
+      "he": "מקס דאומן"
+    },
+    {
+      "providerId": "214538",
+      "en": "Max Finkgräfe",
+      "he": "מקס פינקגרפה"
+    },
+    {
+      "providerId": "101350",
+      "en": "Maxence Caqueret",
+      "he": "מקסנס קאקרה"
+    },
+    {
+      "providerId": "175784",
+      "en": "Maxime Estève",
+      "he": "מקסים אסטב"
+    },
+    {
+      "providerId": "133903",
+      "en": "Maximilian Beier",
+      "he": "מקסימיליאן באייר"
+    },
+    {
+      "providerId": "6549",
+      "en": "Maximilian Mittelstädt",
+      "he": "מקסימיליאן מיטלשטדט"
+    },
+    {
+      "providerId": "28770",
+      "en": "Maximiliano Araújo",
+      "he": "מקסימיליאנו אראוחו"
+    },
+    {
+      "providerId": "179159",
+      "en": "Maximo Perrone",
+      "he": "מקסימו פרונה"
+    },
+    {
+      "providerId": "136731",
+      "en": "Melayro Bogarde",
+      "he": "מלאירו בוחארדה"
+    },
+    {
+      "providerId": "16641",
+      "en": "Mert Günok",
+      "he": "מרט גונוק"
+    },
+    {
+      "providerId": "30424",
+      "en": "Mert Hakan Yandaş",
+      "he": "מרט הקאן יאנדאש"
+    },
+    {
+      "providerId": "10647",
+      "en": "Mert Müldür",
+      "he": "מרט מולדור"
+    },
+    {
+      "providerId": "295255",
+      "en": "Mezian Soares",
+      "he": "מזיאן סוארש"
+    },
+    {
+      "providerId": "113765",
+      "en": "Michael Olise",
+      "he": "מייקל אוליסה"
+    },
+    {
+      "providerId": "99985",
+      "en": "Michał Skóraś",
+      "he": "מיכאל סקוראש"
+    },
+    {
+      "providerId": "6688",
+      "en": "Mickaël Cuisance",
+      "he": "מיקאל קוויזאנס"
+    },
+    {
+      "providerId": "210715",
+      "en": "Miguel Freckleton",
+      "he": "מיגל פרקלטון"
+    },
+    {
+      "providerId": "3443",
+      "en": "Mijat Gaćinović",
+      "he": "מיאט גאצ׳ינוביץ׳"
+    },
+    {
+      "providerId": "189574",
+      "en": "Mika Godts",
+      "he": "מיקה חודטס"
+    },
+    {
+      "providerId": "176832",
+      "en": "Mika Marmol",
+      "he": "מיקה מרמול"
+    },
+    {
+      "providerId": "7935",
+      "en": "Mikel Merino",
+      "he": "מיקל מרינו"
+    },
+    {
+      "providerId": "274833",
+      "en": "Mikkel Hansen",
+      "he": "מיקל האנסן"
+    },
+    {
+      "providerId": "2007",
+      "en": "Milan Škriniar",
+      "he": "מילאן שקריניאר"
+    },
+    {
+      "providerId": "16735",
+      "en": "Mile Svilar",
+      "he": "מילה סבילאר"
+    },
+    {
+      "providerId": "171141",
+      "en": "Milos Kerkez",
+      "he": "מילוש קרקז"
+    },
+    {
+      "providerId": "168299",
+      "en": "Min-Jae Kim",
+      "he": "קים מין־ג׳ה"
+    },
+    {
+      "providerId": "276000",
+      "en": "Modou Keba Cisse",
+      "he": "מודו קבה סיסה"
+    },
+    {
+      "providerId": "728",
+      "en": "Mohamed Bayo",
+      "he": "מוחמד באיו"
+    },
+    {
+      "providerId": "2171",
+      "en": "Moise Kean",
+      "he": "מויזה קן"
+    },
+    {
+      "providerId": "278384",
+      "en": "Moncef Zekri",
+      "he": "מונסף זקרי"
+    },
+    {
+      "providerId": "73998",
+      "en": "Morten Hjulmand",
+      "he": "מורטן היולמאנד"
+    },
+    {
+      "providerId": "184155",
+      "en": "Moses Usor",
+      "he": "מוזס אוסור"
+    },
+    {
+      "providerId": "98611",
+      "en": "Moura",
+      "he": "מורה"
+    },
+    {
+      "providerId": "149737",
+      "en": "Muhammed Kerem Aktürkoğlu",
+      "he": "מוחמד כרם אקטורקולו"
+    },
+    {
+      "providerId": "278316",
+      "en": "Mussa Kaba",
+      "he": "מוסא קאבה"
+    },
+    {
+      "providerId": "16475",
+      "en": "Mykola Matviienko",
+      "he": "מיקולה מטביינקו"
+    },
+    {
+      "providerId": "244120",
+      "en": "Myles Lewis-Skelly",
+      "he": "מיילס לואיס־סקלי"
+    },
+    {
+      "providerId": "3367",
+      "en": "N'Golo Kanté",
+      "he": "אנגולו קאנטה"
+    },
+    {
+      "providerId": "6503",
+      "en": "Nabil Bentaleb",
+      "he": "נביל בנטאלב"
+    },
+    {
+      "providerId": "189601",
+      "en": "Nacho Ferri",
+      "he": "נאצ׳ו פרי"
+    },
+    {
+      "providerId": "46452",
+      "en": "Nahuel Molina",
+      "he": "נאוול מולינה"
+    },
+    {
+      "providerId": "138031",
+      "en": "Natan",
+      "he": "נתן"
+    },
+    {
+      "providerId": "8240",
+      "en": "Nathan Aké",
+      "he": "נתן אקה"
+    },
+    {
+      "providerId": "192677",
+      "en": "Nathan Ngoy",
+      "he": "נתן נגוי"
+    },
+    {
+      "providerId": "171216",
+      "en": "Nathan-Dylan Saliba",
+      "he": "נתן־דילן סאליבה"
+    },
+    {
+      "providerId": "184533",
+      "en": "Nathaniel Brown",
+      "he": "נתנאל בראון"
+    },
+    {
+      "providerId": "45671",
+      "en": "Nehuén Pérez",
+      "he": "נהואן פרס"
+    },
+    {
+      "providerId": "170647",
+      "en": "Neil El Aynaoui",
+      "he": "ניל אל עינאווי"
+    },
+    {
+      "providerId": "179141",
+      "en": "Nelson Deossa",
+      "he": "נלסון דאוסה"
+    },
+    {
+      "providerId": "15862",
+      "en": "Nélson Semedo",
+      "he": "נלסון סמדו"
+    },
+    {
+      "providerId": "176991",
+      "en": "Nestor Irankunda",
+      "he": "נסטור איראנקונדה"
+    },
+    {
+      "providerId": "212742",
+      "en": "Newerton",
+      "he": "ניוורטון"
+    },
+    {
+      "providerId": "192666",
+      "en": "Ngal'ayel Mukau",
+      "he": "נגלאייל מוקאו"
+    },
+    {
+      "providerId": "127127",
+      "en": "Nianzou Kouassi",
+      "he": "ניאנזו קואסי"
+    },
+    {
+      "providerId": "192382",
+      "en": "Niccolo Pisilli",
+      "he": "ניקולו פיזילי"
+    },
+    {
+      "providerId": "7673",
+      "en": "Nick Olij",
+      "he": "ניק אוליי"
+    },
+    {
+      "providerId": "4404",
+      "en": "Niclas Eliasson",
+      "he": "ניקלאס אליאסון"
+    },
+    {
+      "providerId": "206743",
+      "en": "Nico O'Reilly",
+      "he": "ניקו אוריילי"
+    },
+    {
+      "providerId": "203511",
+      "en": "Nico Paz",
+      "he": "ניקו פאס"
+    },
+    {
+      "providerId": "75539",
+      "en": "Nico Schlotterbeck",
+      "he": "ניקו שלוטרבק"
+    },
+    {
+      "providerId": "113038",
+      "en": "Nicolas  Seiwald",
+      "he": "ניקולס זייבאלד"
+    },
+    {
+      "providerId": "152515",
+      "en": "Nicolas Jackson",
+      "he": "ניקולס ג׳קסון"
+    },
+    {
+      "providerId": "8412",
+      "en": "Nicolas Pépé",
+      "he": "ניקולה פפה"
+    },
+    {
+      "providerId": "1911",
+      "en": "Nicolò Barella",
+      "he": "ניקולו בארלה"
+    },
+    {
+      "providerId": "177321",
+      "en": "Nicolo Tresoldi",
+      "he": "ניקולו טרזולדי"
+    },
+    {
+      "providerId": "216398",
+      "en": "Nidal Čelik",
+      "he": "נידאל צ׳ליק"
+    },
+    {
+      "providerId": "74378",
+      "en": "Nikita Contini Baranovsky",
+      "he": "ניקיטה קונטיני ברנובסקי"
+    },
+    {
+      "providerId": "167067",
+      "en": "Nikita Haikin",
+      "he": "ניקיטה חייקין"
+    },
+    {
+      "providerId": "261513",
+      "en": "Niklas Fuglestad",
+      "he": "ניקלאס פוגלסטאד"
+    },
+    {
+      "providerId": "190",
+      "en": "Nikolas Nartey",
+      "he": "ניקולאס נארטי"
+    },
+    {
+      "providerId": "7565",
+      "en": "Noa Lang",
+      "he": "נואה לאנג"
+    },
+    {
+      "providerId": "283059",
+      "en": "Noah Fernandez",
+      "he": "נואה פרננדס"
+    },
+    {
+      "providerId": "167720",
+      "en": "Noni Madueke",
+      "he": "נוני מדואקה"
+    },
+    {
+      "providerId": "8959",
+      "en": "Nordin Jackers",
+      "he": "נורדין יאקרס"
+    },
+    {
+      "providerId": "7553",
+      "en": "Noussair Mazraoui",
+      "he": "נוסייר מזראווי"
+    },
+    {
+      "providerId": "144570",
+      "en": "Nuno Mendes",
+      "he": "נונו מנדש"
+    },
+    {
+      "providerId": "45463",
+      "en": "Nuno Santos",
+      "he": "נונו סנטוש"
+    },
+    {
+      "providerId": "170442",
+      "en": "Obed Vargas",
+      "he": "אובד ורגאס"
+    },
+    {
+      "providerId": "38125",
+      "en": "Odin Lurås Bjørtuft",
+      "he": "אודין לורוס ביורטופט"
+    },
+    {
+      "providerId": "16077",
+      "en": "Odsonne Edouard",
+      "he": "אודסון אדואר"
+    },
+    {
+      "providerId": "247103",
+      "en": "Ognjen Mimović",
+      "he": "אוגניין מימוביץ׳"
+    },
+    {
+      "providerId": "171972",
+      "en": "Oguz Aydin",
+      "he": "אואוז איידין"
+    },
+    {
+      "providerId": "38416",
+      "en": "Ola Brynhildsen",
+      "he": "אולה ברינהילדסן"
+    },
+    {
+      "providerId": "250758",
+      "en": "Ola Visted",
+      "he": "אולה ויסטד"
+    },
+    {
+      "providerId": "167108",
+      "en": "Ole Blomberg",
+      "he": "אולה בלומברג"
+    },
+    {
+      "providerId": "188110",
+      "en": "Oleg Ocheretko",
+      "he": "אולה אוצ׳רטקו"
+    },
+    {
+      "providerId": "168748",
+      "en": "Oleksandr Karavaev",
+      "he": "אולכסנדר קראבייב"
+    },
+    {
+      "providerId": "16486",
+      "en": "Oleksandr Zubkov",
+      "he": "אולכסנדר זובקוב"
+    },
+    {
+      "providerId": "3371",
+      "en": "Olivier Giroud",
+      "he": "אוליבייה ז׳ירו"
+    },
+    {
+      "providerId": "6843",
+      "en": "Ørjan Nyland",
+      "he": "אוריאן נילנד"
+    },
+    {
+      "providerId": "270728",
+      "en": "Orlando Gill",
+      "he": "אורלנדו חיל"
+    },
+    {
+      "providerId": "99722",
+      "en": "Osame Sahraoui",
+      "he": "אוסאמה סחראווי"
+    },
+    {
+      "providerId": "265174",
+      "en": "Oskar Pietuszewski",
+      "he": "אוסקר פייטושבסקי"
+    },
+    {
+      "providerId": "3373",
+      "en": "Ousmane Dembélé",
+      "he": "עוסמאן דמבלה"
+    },
+    {
+      "providerId": "157781",
+      "en": "Oussama Targhalline",
+      "he": "אוסאמה טרגלין"
+    },
+    {
+      "providerId": "191151",
+      "en": "Pablo Barrios",
+      "he": "פאבלו באריוס"
+    },
+    {
+      "providerId": "33117",
+      "en": "Pablo Fornals",
+      "he": "פאבלו פורנאלס"
+    },
+    {
+      "providerId": "171992",
+      "en": "Pablo Gavira",
+      "he": "גאבי"
+    },
+    {
+      "providerId": "7448",
+      "en": "Pablo Rosario",
+      "he": "פאבלו רוסאריו"
+    },
+    {
+      "providerId": "7668",
+      "en": "Paolo Fernandes",
+      "he": "פאולו פרננדס"
+    },
+    {
+      "providerId": "633",
+      "en": "Pape Gueye",
+      "he": "פאפ גיי"
+    },
+    {
+      "providerId": "37924",
+      "en": "Patrick Berg",
+      "he": "פטריק ברג"
+    },
+    {
+      "providerId": "211559",
+      "en": "Patrick Dorgu",
+      "he": "פטריק דורגו"
+    },
+    {
+      "providerId": "7109",
+      "en": "Patrick Drewes",
+      "he": "פטריק דרבס"
+    },
+    {
+      "providerId": "217540",
+      "en": "Pau Cubarsí",
+      "he": "פאו קובארסי"
+    },
+    {
+      "providerId": "217521",
+      "en": "Pau Navarro",
+      "he": "פאו נבארו"
+    },
+    {
+      "providerId": "33109",
+      "en": "Pau Torres",
+      "he": "פאו טורס"
+    },
+    {
+      "providerId": "176932",
+      "en": "Paul Wanner",
+      "he": "פאול ואנר"
+    },
+    {
+      "providerId": "2046",
+      "en": "Paulo Dybala",
+      "he": "פאולו דיבאלה"
+    },
+    {
+      "providerId": "133860",
+      "en": "Pedri",
+      "he": "פדרי"
+    },
+    {
+      "providerId": "157679",
+      "en": "Pedrinho",
+      "he": "פדריניו"
+    },
+    {
+      "providerId": "1448",
+      "en": "Pedrinho",
+      "he": "פדריניו"
+    },
+    {
+      "providerId": "283413",
+      "en": "Pedro Fernández",
+      "he": "פדרו פרננדס"
+    },
+    {
+      "providerId": "192912",
+      "en": "Pedro Lima",
+      "he": "פדרו לימה"
+    },
+    {
+      "providerId": "1166",
+      "en": "Pepê",
+      "he": "פפה"
+    },
+    {
+      "providerId": "154013",
+      "en": "Petar Sucic",
+      "he": "פטר סוצ׳יץ׳"
+    },
+    {
+      "providerId": "81019",
+      "en": "Peter Christiansen",
+      "he": "פטר כריסטיאנסן"
+    },
+    {
+      "providerId": "9533",
+      "en": "Péter Gulácsi",
+      "he": "פטר גולאצ׳י"
+    },
+    {
+      "providerId": "15797",
+      "en": "Petros Mantalos",
+      "he": "פטרוס מנטאלוס"
+    },
+    {
+      "providerId": "7888",
+      "en": "Phil Foden",
+      "he": "פיל פודן"
+    },
+    {
+      "providerId": "1829",
+      "en": "Pierluigi Gollini",
+      "he": "פיירלואיג׳י גוליני"
+    },
+    {
+      "providerId": "125674",
+      "en": "Piero Hincapié",
+      "he": "פיירו אינקפייה"
+    },
+    {
+      "providerId": "188468",
+      "en": "Pierre Ganiou",
+      "he": "פייר גניו"
+    },
+    {
+      "providerId": "2097",
+      "en": "Piotr Zieliński",
+      "he": "פיוטר ז׳לינסקי"
+    },
+    {
+      "providerId": "263586",
+      "en": "Prosper Obah",
+      "he": "פרוספר אובה"
+    },
+    {
+      "providerId": "278406",
+      "en": "Quentin Ndjantou",
+      "he": "קנטן נדג׳אנטו"
+    },
+    {
+      "providerId": "176758",
+      "en": "Rafa Marin",
+      "he": "רפא מרין"
+    },
+    {
+      "providerId": "15892",
+      "en": "Rafael Leão",
+      "he": "רפאל לאאו"
+    },
+    {
+      "providerId": "247303",
+      "en": "Rafael Nel",
+      "he": "רפאל נל"
+    },
+    {
+      "providerId": "2819",
+      "en": "Raffaele Di Gennaro",
+      "he": "רפאלה די ג׳נארו"
+    },
+    {
+      "providerId": "263659",
+      "en": "Ramiz Harakaté",
+      "he": "ראמיז הראקטה"
+    },
+    {
+      "providerId": "157263",
+      "en": "Ramon Hendriks",
+      "he": "ראמון הנדריקס"
+    },
+    {
+      "providerId": "8805",
+      "en": "Ramy Bensebaini",
+      "he": "ראמי בנסבאיני"
+    },
+    {
+      "providerId": "37428",
+      "en": "Raphinha",
+      "he": "ראפיניה"
+    },
+    {
+      "providerId": "152770",
+      "en": "Rasmus Højlund",
+      "he": "ראסמוס הוילונד"
+    },
+    {
+      "providerId": "272712",
+      "en": "Raúl",
+      "he": "ראול"
+    },
+    {
+      "providerId": "8642",
+      "en": "Rayan Aït Nouri",
+      "he": "ראיין אייט נורי"
+    },
+    {
+      "providerId": "133242",
+      "en": "Rayan Cherki",
+      "he": "ראיין שרקי"
+    },
+    {
+      "providerId": "9237",
+      "en": "Răzvan Marin",
+      "he": "רזבאן מרין"
+    },
+    {
+      "providerId": "8579",
+      "en": "Régis Gurtner",
+      "he": "רג׳יס גורטנר"
+    },
+    {
+      "providerId": "277805",
+      "en": "Renato Nhaga",
+      "he": "רנאטו ניאגה"
+    },
+    {
+      "providerId": "178769",
+      "en": "Renato Veiga",
+      "he": "רנאטו וייגה"
+    },
+    {
+      "providerId": "119731",
+      "en": "Ricardo Pepi",
+      "he": "ריקרדו פפי"
+    },
+    {
+      "providerId": "133512",
+      "en": "Riccardo Calafiori",
+      "he": "ריקרדו קלאפיורי"
+    },
+    {
+      "providerId": "187202",
+      "en": "Rico Lewis",
+      "he": "ריקו לואיס"
+    },
+    {
+      "providerId": "6634",
+      "en": "Ridle Baku",
+      "he": "רידלה באקו"
+    },
+    {
+      "providerId": "273453",
+      "en": "Rio Ngumoha",
+      "he": "ריו נגומוהה"
+    },
+    {
+      "providerId": "10933",
+      "en": "Robert Ljubicic",
+      "he": "רוברט ליוביצ׳יץ׳"
+    },
+    {
+      "providerId": "135555",
+      "en": "Robert Sánchez",
+      "he": "רוברט סאנצ׳ס"
+    },
+    {
+      "providerId": "99791",
+      "en": "Robin Le Normand",
+      "he": "רובין לה נורמן"
+    },
+    {
+      "providerId": "188389",
+      "en": "Robin Risser",
+      "he": "רובין ריסר"
+    },
+    {
+      "providerId": "150517",
+      "en": "Rocco Reitz",
+      "he": "רוקו רייץ"
+    },
+    {
+      "providerId": "3199",
+      "en": "Rodri",
+      "he": "רודרי"
+    },
+    {
+      "providerId": "1367",
+      "en": "Rodrigo Becão",
+      "he": "רודריגו בקאו"
+    },
+    {
+      "providerId": "282392",
+      "en": "Rodrigo Dias",
+      "he": "רודריגו דיאס"
+    },
+    {
+      "providerId": "189617",
+      "en": "Rodrigo Mendoza",
+      "he": "רודריגו מנדוסה"
+    },
+    {
+      "providerId": "261273",
+      "en": "Rodrigo Mora",
+      "he": "רודריגו מורה"
+    },
+    {
+      "providerId": "128731",
+      "en": "Rodrigo Riquelme",
+      "he": "רודריגו ריקלמה"
+    },
+    {
+      "providerId": "121007",
+      "en": "Rodrigo Zalazar",
+      "he": "רודריגו סלאסאר"
+    },
+    {
+      "providerId": "1324",
+      "en": "Rodrygo",
+      "he": "רודריגו"
+    },
+    {
+      "providerId": "16119",
+      "en": "Roland Sallai",
+      "he": "רולנד שאלאי"
+    },
+    {
+      "providerId": "8435",
+      "en": "Romain Perraud",
+      "he": "רומן פרו"
+    },
+    {
+      "providerId": "127032",
+      "en": "Romano Postema",
+      "he": "רומאנו פוסטמה"
+    },
+    {
+      "providerId": "3662",
+      "en": "Romelu Lukaku",
+      "he": "רומלו לוקאקו"
+    },
+    {
+      "providerId": "147776",
+      "en": "Romeo Vermant",
+      "he": "רומאו ורמאנט"
+    },
+    {
+      "providerId": "178783",
+      "en": "Romulo Cruz",
+      "he": "רומולו קרוז"
+    },
+    {
+      "providerId": "28292",
+      "en": "Ronald Araújo",
+      "he": "רונאלד אראוחו"
+    },
+    {
+      "providerId": "184723",
+      "en": "Roony Bardghji",
+      "he": "רוני ברדג׳י"
+    },
+    {
+      "providerId": "7817",
+      "en": "Ross Barkley",
+      "he": "רוס בארקלי"
+    },
+    {
+      "providerId": "8372",
+      "en": "Ruben Aguilar",
+      "he": "רובן אגילאר"
+    },
+    {
+      "providerId": "146606",
+      "en": "Ruben Alte",
+      "he": "רובן אלטה"
+    },
+    {
+      "providerId": "10183",
+      "en": "Rúben Dias",
+      "he": "רובן דיאש"
+    },
+    {
+      "providerId": "188765",
+      "en": "Ruben Gomez",
+      "he": "רובן גומס"
+    },
+    {
+      "providerId": "181984",
+      "en": "Ruben van Bommel",
+      "he": "רובן ואן בומל"
+    },
+    {
+      "providerId": "32014",
+      "en": "Rui Silva",
+      "he": "רוי סילבה"
+    },
+    {
+      "providerId": "184642",
+      "en": "Ryan Flamingo",
+      "he": "ריאן פלמינגו"
+    },
+    {
+      "providerId": "81793",
+      "en": "Ryan Gravenberch",
+      "he": "ראיין חראבנברך"
+    },
+    {
+      "providerId": "286950",
+      "en": "Ryan McAidoo",
+      "he": "ראיין מקאדו"
+    },
+    {
+      "providerId": "114915",
+      "en": "Sacha Boey",
+      "he": "סאשה בואי"
+    },
+    {
+      "providerId": "282381",
+      "en": "Salvador Blopa",
+      "he": "סלבדור בלופה"
+    },
+    {
+      "providerId": "279062",
+      "en": "Salvi Esquivel",
+      "he": "סאלבי אסקיבל"
+    },
+    {
+      "providerId": "53281",
+      "en": "Sam Beukema",
+      "he": "סאם בוקמה"
+    },
+    {
+      "providerId": "289697",
+      "en": "Samba Konaté",
+      "he": "סמבה קונאטה"
+    },
+    {
+      "providerId": "187040",
+      "en": "Sami Ouaissa",
+      "he": "סמי אואיסה"
+    },
+    {
+      "providerId": "188148",
+      "en": "Samson Baidoo",
+      "he": "סמסון באידו"
+    },
+    {
+      "providerId": "215434",
+      "en": "Samu Omorodion",
+      "he": "סאמו אומורודיון"
+    },
+    {
+      "providerId": "149976",
+      "en": "Samuel Adeniran",
+      "he": "סמואל אדניראן"
+    },
+    {
+      "providerId": "279090",
+      "en": "Samuele Inácio",
+      "he": "סמואלה אינאסיו"
+    },
+    {
+      "providerId": "115245",
+      "en": "Samuele Ricci",
+      "he": "סמואלה ריצ׳י"
+    },
+    {
+      "providerId": "170891",
+      "en": "Santiago Castro",
+      "he": "סנטיאגו קסטרו"
+    },
+    {
+      "providerId": "32114",
+      "en": "Santiago Comesaña",
+      "he": "סנטיאגו קומסאניה"
+    },
+    {
+      "providerId": "39635",
+      "en": "Santiago Giménez",
+      "he": "סנטיאגו חימנס"
+    },
+    {
+      "providerId": "212858",
+      "en": "Santiago Mouriño",
+      "he": "סנטיאגו מוריניו"
+    },
+    {
+      "providerId": "10761",
+      "en": "Saša Kalajdžić",
+      "he": "סאשה קלאידז׳יץ׳"
+    },
+    {
+      "providerId": "9971",
+      "en": "Sascha Horvath",
+      "he": "סאשה הורבאט"
+    },
+    {
+      "providerId": "129098",
+      "en": "Saud Abdulhamid",
+      "he": "סעוד עבד אלחמיד"
+    },
+    {
+      "providerId": "7905",
+      "en": "Scott McTominay",
+      "he": "סקוט מקטומיניי"
+    },
+    {
+      "providerId": "211",
+      "en": "Sehrou Guirassy",
+      "he": "סרו גיראסי"
+    },
+    {
+      "providerId": "2126",
+      "en": "Seko Fofana",
+      "he": "סקו פופאנה"
+    },
+    {
+      "providerId": "80161",
+      "en": "Sem Steijn",
+      "he": "סם סטיין"
+    },
+    {
+      "providerId": "129946",
+      "en": "Senne Lammens",
+      "he": "סנה לאמנס"
+    },
+    {
+      "providerId": "246066",
+      "en": "Senny Mayulu",
+      "he": "סני מאיולו"
+    },
+    {
+      "providerId": "311",
+      "en": "Serge Gnabry",
+      "he": "סרג׳ גנאברי"
+    },
+    {
+      "providerId": "212861",
+      "en": "Sergi Altimira",
+      "he": "סרג׳י אלטימירה"
+    },
+    {
+      "providerId": "180289",
+      "en": "Sergi Cardona",
+      "he": "סרג׳י קרדונה"
+    },
+    {
+      "providerId": "97534",
+      "en": "Sergiño Dest",
+      "he": "סרג׳יניו דסט"
+    },
+    {
+      "providerId": "289520",
+      "en": "Shaqueel van Persie",
+      "he": "שאקיל ואן פרסי"
+    },
+    {
+      "providerId": "289557",
+      "en": "Shea Lacey",
+      "he": "שיי לייסי"
+    },
+    {
+      "providerId": "217997",
+      "en": "Silas Andersen",
+      "he": "סילאס אנדרסן"
+    },
+    {
+      "providerId": "176268",
+      "en": "Silas Ostrzinski",
+      "he": "סילאס אוסטרזינסקי"
+    },
+    {
+      "providerId": "180511",
+      "en": "Simen Kvia-Egeskog",
+      "he": "סימן קביה־אגסקוג"
+    },
+    {
+      "providerId": "144662",
+      "en": "Sondre Auklend",
+      "he": "סונדרה אוקלנד"
+    },
+    {
+      "providerId": "44577",
+      "en": "Sondre Bjørshol",
+      "he": "סונדרה ביורשול"
+    },
+    {
+      "providerId": "44413",
+      "en": "Sondre Fet",
+      "he": "סונדרה פט"
+    },
+    {
+      "providerId": "275537",
+      "en": "Soriba Diaoune",
+      "he": "סוריבה דיאונה"
+    },
+    {
+      "providerId": "130062",
+      "en": "Sotiris Alexandropoulos",
+      "he": "סוטיריס אלכסנדרופולוס"
+    },
+    {
+      "providerId": "276665",
+      "en": "Souleymane Sagnan",
+      "he": "סולימאן סניאן"
+    },
+    {
+      "providerId": "249465",
+      "en": "Souza",
+      "he": "סוזה"
+    },
+    {
+      "providerId": "33628",
+      "en": "Stanislav Lobotka",
+      "he": "סטניסלב לובוטקה"
+    },
+    {
+      "providerId": "102417",
+      "en": "Stavros Pilios",
+      "he": "סטברוס פיליוס"
+    },
+    {
+      "providerId": "67401",
+      "en": "Stefan Drljača",
+      "he": "שטפן דרליאצ׳ה"
+    },
+    {
+      "providerId": "290739",
+      "en": "Suleman Sani",
+      "he": "סולימאן סאני"
+    },
+    {
+      "providerId": "151271",
+      "en": "Suliman Mustapha",
+      "he": "סולימאן מוסטפא"
+    },
+    {
+      "providerId": "115116",
+      "en": "Sven Mijnans",
+      "he": "סוון מיינאנס"
+    },
+    {
+      "providerId": "342",
+      "en": "Sven Ulreich",
+      "he": "סוון אולרייך"
+    },
+    {
+      "providerId": "113175",
+      "en": "Tajon Buchanan",
+      "he": "טייג׳ון ביוקנן"
+    },
+    {
+      "providerId": "3234",
+      "en": "Talisca",
+      "he": "טאליסקה"
+    },
+    {
+      "providerId": "7985",
+      "en": "Tammy Abraham",
+      "he": "טאמי אברהם"
+    },
+    {
+      "providerId": "177826",
+      "en": "Tani Oluwaseyi",
+      "he": "טאני אולואסיי"
+    },
+    {
+      "providerId": "125485",
+      "en": "Tarık Çetin",
+      "he": "טאריק צ׳טין"
+    },
+    {
+      "providerId": "131035",
+      "en": "Taylor Harwood-Bellis",
+      "he": "טיילור הארווד־בליס"
+    },
+    {
+      "providerId": "250722",
+      "en": "Teo Ingilæ",
+      "he": "תאו אינגילה"
+    },
+    {
+      "providerId": "283110",
+      "en": "Thiago Pitarch",
+      "he": "תיאגו פיטארץ׳"
+    },
+    {
+      "providerId": "3641",
+      "en": "Thibaut Courtois",
+      "he": "טיבו קורטואה"
+    },
+    {
+      "providerId": "276431",
+      "en": "Thijs Kraaijeveld",
+      "he": "תייס קראייבלד"
+    },
+    {
+      "providerId": "179504",
+      "en": "Thomas Beelen",
+      "he": "תומאס ביילן"
+    },
+    {
+      "providerId": "2050",
+      "en": "Thomas Strakosha",
+      "he": "תומאס סטרקושה"
+    },
+    {
+      "providerId": "3655",
+      "en": "Thorgan Hazard",
+      "he": "תורגן הזאר"
+    },
+    {
+      "providerId": "150925",
+      "en": "Tiago Fonseca Morais",
+      "he": "טיאגו פונסקה מוראיש"
+    },
+    {
+      "providerId": "188087",
+      "en": "Tiago Santos",
+      "he": "טיאגו סנטוש"
+    },
+    {
+      "providerId": "145057",
+      "en": "Tiago Tomás",
+      "he": "טיאגו תומאש"
+    },
+    {
+      "providerId": "290794",
+      "en": "Tian Koren",
+      "he": "טיאן קורן"
+    },
+    {
+      "providerId": "211796",
+      "en": "Tidiam Gomis",
+      "he": "טידיאם גומיס"
+    },
+    {
+      "providerId": "298630",
+      "en": "Tijme Wessels",
+      "he": "טיימה וסלס"
+    },
+    {
+      "providerId": "188079",
+      "en": "Tijn Smolenaars",
+      "he": "טיין סמולנארס"
+    },
+    {
+      "providerId": "177312",
+      "en": "Tjark Ernst",
+      "he": "טיארק ארנסט"
+    },
+    {
+      "providerId": "250749",
+      "en": "Tobias Moi",
+      "he": "טוביאס מוי"
+    },
+    {
+      "providerId": "10873",
+      "en": "Tobias Schützenauer",
+      "he": "טוביאס שוצנאואר"
+    },
+    {
+      "providerId": "275067",
+      "en": "Tobias van den Elshout",
+      "he": "טוביאס ואן דן אלסהאוט"
+    },
+    {
+      "providerId": "172574",
+      "en": "Tom Bischof",
+      "he": "טום בישוף"
+    },
+    {
+      "providerId": "8035",
+      "en": "Tom Heaton",
+      "he": "טום היטון"
+    },
+    {
+      "providerId": "7867",
+      "en": "Trent Alexander-Arnold",
+      "he": "טרנט אלכסנדר־ארנולד"
+    },
+    {
+      "providerId": "7810",
+      "en": "Trevoh Chalobah",
+      "he": "טרבו צ׳אלובה"
+    },
+    {
+      "providerId": "230517",
+      "en": "Trey Nyoni",
+      "he": "טריי ניוני"
+    },
+    {
+      "providerId": "131041",
+      "en": "Troy Parrott",
+      "he": "טרוי פארוט"
+    },
+    {
+      "providerId": "113595",
+      "en": "Tsuyoshi Watanabe",
+      "he": "טסויושי ואטנאבה"
+    },
+    {
+      "providerId": "290139",
+      "en": "Tyler Fletcher",
+      "he": "טיילר פלטשר"
+    },
+    {
+      "providerId": "189613",
+      "en": "Tymur Puzankov",
+      "he": "טימור פוזנקוב"
+    },
+    {
+      "providerId": "8235",
+      "en": "Tyrone Mings",
+      "he": "טיירון מינגס"
+    },
+    {
+      "providerId": "30283",
+      "en": "Uğurcan Çakır",
+      "he": "אורצ׳אן צ׳קיר"
+    },
+    {
+      "providerId": "37925",
+      "en": "Ulrik Saltnes",
+      "he": "אולריק סלטנס"
+    },
+    {
+      "providerId": "179155",
+      "en": "Valentín Gómez",
+      "he": "ולנטין גומס"
+    },
+    {
+      "providerId": "111974",
+      "en": "Valerii Bondar",
+      "he": "ואלרי בונדר"
+    },
+    {
+      "providerId": "2275",
+      "en": "Vanja Milinković-Savić",
+      "he": "ואניה מילינקוביץ׳־סאביץ׳"
+    },
+    {
+      "providerId": "178712",
+      "en": "Vasco Sousa",
+      "he": "ואסקו סוזה"
+    },
+    {
+      "providerId": "30059",
+      "en": "Vedat Muriqi",
+      "he": "ודאט מוריצ׳י"
+    },
+    {
+      "providerId": "250188",
+      "en": "Vetle Auklend",
+      "he": "וטלה אוקלנד"
+    },
+    {
+      "providerId": "221262",
+      "en": "Victor Froholdt",
+      "he": "ויקטור פרוהולט"
+    },
+    {
+      "providerId": "273423",
+      "en": "Víctor Muñoz",
+      "he": "ויקטור מוניוס"
+    },
+    {
+      "providerId": "3492",
+      "en": "Victor Nilsson-Lindelöf",
+      "he": "ויקטור לינדלוף"
+    },
+    {
+      "providerId": "9434",
+      "en": "Victor Osimhen",
+      "he": "ויקטור אוסימן"
+    },
+    {
+      "providerId": "264272",
+      "en": "Viggo Gebel",
+      "he": "ויגו גבל"
+    },
+    {
+      "providerId": "8279",
+      "en": "Viktor Gyökeres",
+      "he": "ויקטור יוקרס"
+    },
+    {
+      "providerId": "123406",
+      "en": "Viktor Korniienko",
+      "he": "ויקטור קורניינקו"
+    },
+    {
+      "providerId": "247308",
+      "en": "Viktor Tsukanov",
+      "he": "ויקטור צוקאנוב"
+    },
+    {
+      "providerId": "44028",
+      "en": "Viljar Vevatne",
+      "he": "ויליאר ובאטנה"
+    },
+    {
+      "providerId": "250420",
+      "en": "Villads Nielsen",
+      "he": "וילאדס נילסן"
+    },
+    {
+      "providerId": "1556",
+      "en": "Vinicius Junior",
+      "he": "ויניסיוס ג׳וניור"
+    },
+    {
+      "providerId": "178049",
+      "en": "Vinicius Tobias",
+      "he": "ויניסיוס טוביאס"
+    },
+    {
+      "providerId": "7869",
+      "en": "Virgil van Dijk",
+      "he": "וירג׳יל ואן דייק"
+    },
+    {
+      "providerId": "152579",
+      "en": "Vítězslav Jaroš",
+      "he": "ויטזסלב יארוש"
+    },
+    {
+      "providerId": "178722",
+      "en": "Vitinha",
+      "he": "ויטיניה"
+    },
+    {
+      "providerId": "249196",
+      "en": "Vitor Reis",
+      "he": "ויטור רייש"
+    },
+    {
+      "providerId": "379",
+      "en": "Waldemar Anton",
+      "he": "ולדמר אנטון"
+    },
+    {
+      "providerId": "186089",
+      "en": "Warren Zaïre-Emery",
+      "he": "וורן זאיר־אמרי"
+    },
+    {
+      "providerId": "3269",
+      "en": "Wataru Endō",
+      "he": "ואטארו אנדו"
+    },
+    {
+      "providerId": "179164",
+      "en": "Wesley",
+      "he": "וסלי"
+    },
+    {
+      "providerId": "113375",
+      "en": "Wilfried Singo",
+      "he": "וילפריד סינגו"
+    },
+    {
+      "providerId": "9537",
+      "en": "Willi Orban",
+      "he": "וילי אורבן"
+    },
+    {
+      "providerId": "39102",
+      "en": "William da Silva",
+      "he": "ויליאם דה סילבה"
+    },
+    {
+      "providerId": "114102",
+      "en": "William Pacho",
+      "he": "ויליאם פאצ׳ו"
+    },
+    {
+      "providerId": "80171",
+      "en": "William Saliba",
+      "he": "ויליאם סאליבה"
+    },
+    {
+      "providerId": "244860",
+      "en": "Willy Kambwala",
+      "he": "וילי קמבוואלה"
+    },
+    {
+      "providerId": "275164",
+      "en": "Wisdom Mike",
+      "he": "ויזדום מייק"
+    },
+    {
+      "providerId": "2022",
+      "en": "Wojciech Szczęsny",
+      "he": "וויצ׳ך שצ׳סני"
+    },
+    {
+      "providerId": "287848",
+      "en": "Xavi Espart",
+      "he": "צ׳אבי אספרט"
+    },
+    {
+      "providerId": "175854",
+      "en": "Xavier Mbuyamba",
+      "he": "קסבייה מבויאמבה"
+    },
+    {
+      "providerId": "261523",
+      "en": "Yacine Titraoui",
+      "he": "יאסין טיטראווי"
+    },
+    {
+      "providerId": "144283",
+      "en": "Yan Couto",
+      "he": "יאן קוטו"
+    },
+    {
+      "providerId": "277484",
+      "en": "Yan Diomandé",
+      "he": "יאן דיומאנדה"
+    },
+    {
+      "providerId": "193",
+      "en": "Yann Aurel Bisseck",
+      "he": "יאן אורל ביסק"
+    },
+    {
+      "providerId": "3470",
+      "en": "Yann Sommer",
+      "he": "יאן זומר"
+    },
+    {
+      "providerId": "221412",
+      "en": "Yarek Gasiorowski",
+      "he": "יארק גסיורובסקי"
+    },
+    {
+      "providerId": "205296",
+      "en": "Yegor Nazaryna",
+      "he": "יהור נזארינה"
+    },
+    {
+      "providerId": "189168",
+      "en": "Yigit Efe Demir",
+      "he": "ייט אפה דמיר"
+    },
+    {
+      "providerId": "3658",
+      "en": "Youri Tielemans",
+      "he": "יורי טילמאנס"
+    },
+    {
+      "providerId": "79906",
+      "en": "Yunus Akgün",
+      "he": "יונוס אקגון"
+    },
+    {
+      "providerId": "125160",
+      "en": "Zaidu Sanusi",
+      "he": "זאידו סאנוסי"
+    },
+    {
+      "providerId": "160926",
+      "en": "Zeno Debast",
+      "he": "זנו דבאסט"
+    },
+    {
+      "providerId": "209536",
+      "en": "Zini",
+      "he": "זיני"
+    },
+    {
+      "providerId": "118920",
+      "en": "Zion Suzuki",
+      "he": "זיון סוזוקי"
+    },
+    {
+      "providerId": "44024",
+      "en": "Zlatko Tripić",
+      "he": "זלאטקו טריפיץ׳"
+    },
+    {
+      "providerId": "289742",
+      "en": "Zois Karargyris",
+      "he": "זואיס קרארגיריס"
+    }
+  ],
+  "otherNames": {
+    "Carlos Augusto Lobaton": "קרלוס אוגוסטו לובטון",
+    "Danijel Sturm": "דניאל שטורם",
+    "Joy-Lance Mickels": "ג׳וי־לאנס מיקלס",
+    "Kaheem Parris": "קאהים פאריס",
+    "Lewis Koumas": "לואיס קומאס",
+    "Suleiman Camara Sanneh": "סולימאן קמארה סאנה"
+  }
+}

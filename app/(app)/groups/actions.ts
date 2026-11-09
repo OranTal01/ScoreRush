@@ -5,19 +5,8 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentParticipant } from "@/lib/tournaments/current";
 
-/**
- * Group ranking prediction submit/edit — screen 11 (UX-BLUEPRINT.md §3).
- * Orchestration only (ARCHITECTURE.md §2): the real backstop is the
- * `group_predictions_write_own_before_finalized` RLS policy
- * (lib/db/migrations/0001_rls_policies.sql), which keys off
- * `group_predictions.finalized` — set once SCORING-RULES.md §5's "entire
- * group stage complete" condition is met (lib/scoring/group-standings.ts
- * `isGroupStageComplete`), by the recompute pipeline (ROADMAP.md Phase 5).
- * Unlike match predictions there's no pre-stage lock time here: a
- * participant can edit their predicted order any time before finalization,
- * exactly as the RLS policy allows — this action doesn't invent a stricter
- * rule the database wouldn't itself enforce.
- */
+/** Ownership, complete roster validation and the shared database deadline
+ * protect both exact rankings and band predictions. No administrator bypass. */
 
 const inputSchema = z.object({
   group: z.string().trim().min(1),
@@ -71,8 +60,7 @@ export async function submitGroupPrediction(
   }
   const { participantId, tournamentId } = current;
 
-  // Defense in depth beyond RLS (which only checks ownership + finalized,
-  // not group membership): the submitted order must be exactly the set of
+  // Validate the complete roster in addition to the database guard: the submitted order must be exactly the set of
   // teams actually in this group, no more, no less, no duplicates.
   const { data: groupTeams } = await supabase
     .from("teams")
@@ -91,15 +79,17 @@ export async function submitGroupPrediction(
     return { status: "error", code: "invalid_input" };
   }
 
-  const { error: upsertError } = await supabase.from("group_predictions").upsert(
-    {
-      tournament_id: tournamentId,
-      participant_id: participantId,
-      group,
-      predicted_order: predictedOrder,
-    },
-    { onConflict: "tournament_id,participant_id,group" },
-  );
+  const { error: upsertError } = await supabase
+    .from("group_predictions")
+    .upsert(
+      {
+        tournament_id: tournamentId,
+        participant_id: participantId,
+        group,
+        predicted_order: predictedOrder,
+      },
+      { onConflict: "tournament_id,participant_id,group" },
+    );
 
   if (upsertError) {
     return { status: "error", code: classifyWriteError(upsertError.message) };

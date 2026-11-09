@@ -43,6 +43,9 @@ export const footballDataAdapter: MatchDataAdapter = {
     const payload = await fetchFootballDataMatches(
       config.competitionCode,
       config.season,
+      typeof config.dateFrom === "string" && typeof config.dateTo === "string"
+        ? { from: config.dateFrom, to: config.dateTo }
+        : undefined,
     );
     return normalizeFootballDataResponse(payload);
   },

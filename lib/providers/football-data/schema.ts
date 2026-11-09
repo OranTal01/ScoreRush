@@ -8,8 +8,8 @@
 import { z } from "zod";
 
 const scorePairSchema = z.object({
-  home: z.number().int().nullable(),
-  away: z.number().int().nullable(),
+  home: z.number().int().nonnegative().nullable(),
+  away: z.number().int().nonnegative().nullable(),
 });
 
 const teamRefSchema = z.object({
@@ -24,6 +24,8 @@ export const fdMatchStatusValues = [
   "TIMED",
   "IN_PLAY",
   "PAUSED",
+  "EXTRA_TIME",
+  "PENALTY_SHOOTOUT",
   "FINISHED",
   "SUSPENDED",
   "POSTPONED",
@@ -54,6 +56,24 @@ export const fdMatchSchema = z.object({
   homeTeam: teamRefSchema,
   awayTeam: teamRefSchema,
   score: matchScoreSchema,
+  minute: z.number().int().nonnegative().nullable().optional().catch(null),
+  lastUpdated: z.string().datetime().nullable().optional().catch(null),
+  bookings: z
+    .array(
+      z.object({
+        minute: z.number().int().nullable().optional(),
+        team: z.object({ id: z.number() }),
+        player: z
+          .object({ id: z.number(), name: z.string() })
+          .nullable()
+          .optional(),
+        card: z.enum(["YELLOW", "YELLOW_RED", "RED"]),
+      }),
+    )
+    .nullable()
+    .optional()
+    // Optional event coverage must not discard an otherwise valid score.
+    .catch(null),
 });
 
 export const fdMatchesResponseSchema = z.object({

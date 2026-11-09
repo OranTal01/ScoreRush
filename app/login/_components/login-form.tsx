@@ -30,20 +30,20 @@ export function LoginForm({ next }: { next: string }) {
     <div className="flex flex-col gap-4">
       <button
         type="button"
-        disabled={isGooglePending}
+        disabled={isGooglePending || isMagicLinkPending}
         onClick={() => {
-          startGoogleTransition(() => {
-            void signInWithGoogle(next);
+          startGoogleTransition(async () => {
+            await signInWithGoogle(next);
           });
         }}
-        className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-[var(--text-primary)] transition-opacity disabled:opacity-60"
+        className="flex min-h-12 items-center justify-center gap-3 py-3 text-sm font-bold text-[#101522] transition-opacity hover:opacity-90 disabled:opacity-60"
         style={{
-          background: colors.surfaceCard2,
+          background: "#f2f4f8",
           borderRadius: "var(--radius-button)",
         }}
       >
         <IconGoogle width={18} height={18} aria-hidden />
-        {content.googleCta}
+        {isGooglePending ? "מתחברים ל־Google…" : content.googleCta}
       </button>
 
       <div className="flex items-center gap-3 text-[11px] font-semibold text-[var(--text-muted)]">
@@ -105,7 +105,7 @@ export function LoginForm({ next }: { next: string }) {
           )}
           <button
             type="submit"
-            disabled={isMagicLinkPending}
+            disabled={isMagicLinkPending || isGooglePending}
             className="py-3 text-sm font-bold text-[#080B14] transition-opacity disabled:opacity-60"
             style={{
               background: colors.interactive,

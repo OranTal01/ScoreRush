@@ -30,14 +30,22 @@ function getToken(): string {
 export async function fetchFootballDataMatches(
   competitionCode: string,
   season?: number,
+  dates?: { from: string; to: string },
 ): Promise<unknown> {
   const token = getToken();
-  const query = season ? `?season=${encodeURIComponent(String(season))}` : "";
+  const params = new URLSearchParams();
+  if (season) params.set("season", String(season));
+  if (dates) {
+    params.set("dateFrom", dates.from);
+    params.set("dateTo", dates.to);
+  }
+  const query = params.size ? `?${params}` : "";
   const res = await fetch(
     `${BASE_URL}/competitions/${encodeURIComponent(competitionCode)}/matches${query}`,
     {
-      headers: { "X-Auth-Token": token },
+      headers: { "X-Auth-Token": token, "X-Unfold-Bookings": "true" },
       cache: "no-store",
+      signal: AbortSignal.timeout(20000),
     },
   );
 

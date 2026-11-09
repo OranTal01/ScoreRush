@@ -96,6 +96,26 @@ export function GroupPredictionForm({
               {team.label}
             </span>
             <span className="flex items-center gap-1">
+              <select
+                aria-label={`המיקום של ${team.label}`}
+                value={index}
+                className="h-11 rounded-xl bg-[var(--bg-elevated)] px-2 text-sm tabular-nums"
+                onChange={(event) => {
+                  const target = Number(event.target.value);
+                  setOrder((previous) => {
+                    const next = [...previous];
+                    const [moved] = next.splice(index, 1);
+                    next.splice(target, 0, moved);
+                    return next;
+                  });
+                }}
+              >
+                {order.map((_, position) => (
+                  <option key={position} value={position}>
+                    {position + 1}
+                  </option>
+                ))}
+              </select>
               <button
                 type="button"
                 aria-label={content.moveUp}

@@ -50,6 +50,7 @@ export interface CanonicalMatchResult {
 
 /** One match, normalized to ScoreRush's canonical shape — ready to upsert into `matches`. */
 export interface CanonicalMatch {
+  liveDetails?: import("@/lib/live/types").LiveDetails;
   /** External provider's match id, stringified — null for manually-entered matches. */
   providerId: string | null;
   stage: string;
